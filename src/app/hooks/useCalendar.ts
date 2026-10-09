@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
+import { days, type ScheduleBlock, type ScheduleFormData, type ScheduleTask } from './scheduleData';
+import { useScheduleData } from './scheduleStore';
+import {
+  useCalendarData,
+  addCalendarBlock,
+  updateCalendarBlock,
+  deleteCalendarBlock,
+  dateKey,
+} from './calendarStore';
 
 export const weekDays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
+export type CalendarSchedule = ScheduleBlock & { source: 'weekday' | 'date' };
 
 export const holidays: Record<number, string> = {
   1: 'Ngày Quốc tế',
   19: 'Tết Đoan Ngọ',
 };
-
-export interface DaySchedule {
-  id: string;
-  title: string;
-  time: string;
-  color: string;
-  tasks?: string[];
-}
 
 export const scheduleColors = [
   'bg-blue-400', 'bg-purple-400', 'bg-green-400', 'bg-orange-400', 'bg-pink-400',
@@ -24,26 +27,23 @@ export const monthNames = [
   'Thg 7','Thg 8','Thg 9','Thg 10','Thg 11','Thg 12',
 ];
 
-const sampleSchedules: Record<number, DaySchedule[]> = {
-  17: [
-    { id: '1', title: 'Toán học', time: '9:00 - 10:30', color: 'bg-blue-400' },
-    { id: '2', title: 'Vật lý', time: '11:00 - 12:30', color: 'bg-purple-400' },
-  ],
-};
-
 interface UseCalendarProps {
-  onAddTasks?: (tasks: string[], scheduleName: string, day: string) => void;
+  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
 }
 
 export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
-  const [currentMonth, setCurrentMonth] = useState(5); // June (0-indexed = 5)
-  const [currentYear] = useState(2026);
-  const [selectedDay, setSelectedDay] = useState(16);
-  const [lockedDays, setLockedDays] = useState<Set<number>>(new Set([15, 20]));
-  const [daySchedules, setDaySchedules] = useState<Record<number, DaySchedule[]>>(sampleSchedules);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const today = new Date();
+
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear] = useState(today.getFullYear());
+  const [selectedDay, setSelectedDay] = useState(today.getDate());
+  const [lockedDays, setLockedDays] = useState<Set<number>>(new Set([15, 20]));
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingBlock, setEditingBlock] = useState<ScheduleBlock | null>(null);
+
+  const scheduleData = useScheduleData();
+  const calendarData = useCalendarData();
+
   const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
   const todayDate = isCurrentMonth ? today.getDate() : -1;
 
@@ -51,8 +51,25 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
   const offset = firstDay === 0 ? 6 : firstDay - 1;
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
+  const dayNameForDate = (day: number) => {
+    const weekday = new Date(currentYear, currentMonth, day).getDay();
+    return days[weekday === 0 ? 6 : weekday - 1];
+  };
+
+  const getDaySchedules = (day: number): CalendarSchedule[] => {
+    const weekdayBlocks = (scheduleData[dayNameForDate(day)] || []).map(block => ({
+      ...block,
+      source: 'weekday' as const,
+    }));
+    const dateBlocks = (calendarData[dateKey(currentYear, currentMonth, day)] || []).map(block => ({
+      ...block,
+      source: 'date' as const,
+    }));
+    return [...weekdayBlocks, ...dateBlocks];
+  };
+
   const isLocked = lockedDays.has(selectedDay);
-  const currentSchedules = daySchedules[selectedDay] || [];
+  const currentSchedules = getDaySchedules(selectedDay);
 
   const toggleLock = (day: number) => {
     setLockedDays(prev => {
@@ -62,30 +79,48 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
     });
   };
 
-  const handleCreateSchedule = (data: { name: string; tasks: string[]; timeStart: string; timeEnd: string }) => {
-    const colorIdx = (daySchedules[selectedDay]?.length || 0) % scheduleColors.length;
-    const newSchedule: DaySchedule = {
-      id: Date.now().toString(),
+  const openCreateSchedule = () => {
+    setEditingBlock(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditSchedule = (block: ScheduleBlock) => {
+    setEditingBlock(block);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingBlock(null);
+  };
+
+  const handleSaveSchedule = (data: ScheduleFormData) => {
+    const key = dateKey(currentYear, currentMonth, selectedDay);
+    const block: ScheduleBlock = {
+      id: data.id ?? Date.now().toString(),
       title: data.name,
       time: `${data.timeStart} - ${data.timeEnd}`,
-      color: scheduleColors[colorIdx],
+      color: data.color,
       tasks: data.tasks,
     };
-    setDaySchedules(prev => ({ ...prev, [selectedDay]: [...(prev[selectedDay] || []), newSchedule] }));
+
+    if (data.id) {
+      updateCalendarBlock(key, data.id, block);
+    } else {
+      addCalendarBlock(key, block);
+    }
+
     if (data.tasks.length > 0 && onAddTasks) {
-      onAddTasks(data.tasks, data.name, `${selectedDay} tháng ${currentMonth + 1}`);
+      onAddTasks(data.tasks, data.name, `${selectedDay} tháng ${currentMonth + 1}`, key);
     }
   };
 
   const handleDeleteSchedule = (id: string) => {
-    setDaySchedules(prev => ({
-      ...prev,
-      [selectedDay]: (prev[selectedDay] || []).filter(s => s.id !== id),
-    }));
+    deleteCalendarBlock(dateKey(currentYear, currentMonth, selectedDay), id);
   };
 
   useEffect(() => {
-    const handler = () => setIsModalOpen(true);
+    const handler = () => openCreateSchedule();
     window.addEventListener('nav:quick-action', handler);
     return () => window.removeEventListener('nav:quick-action', handler);
   }, []);
@@ -97,17 +132,21 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
     selectedDay,
     setSelectedDay,
     lockedDays,
-    daySchedules,
     isModalOpen,
     setIsModalOpen,
+    editingBlock,
+    openCreateSchedule,
+    openEditSchedule,
+    closeModal,
     offset,
     daysInMonth,
     isLocked,
     currentSchedules,
+    getDaySchedules,
     todayDate,
     isCurrentMonth,
     toggleLock,
-    handleCreateSchedule,
+    handleSaveSchedule,
     handleDeleteSchedule,
   };
 }

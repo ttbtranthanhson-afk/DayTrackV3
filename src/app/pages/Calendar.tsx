@@ -1,9 +1,10 @@
-import { ChevronLeft, ChevronRight, Lock, Unlock, Plus, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Lock, Unlock, Plus, Trash2, Pencil } from 'lucide-react';
 import { CreateScheduleModal } from '../components/CreateScheduleModal';
 import { useCalendar, weekDays, holidays, monthNames } from '../hooks/useCalendar';
+import type { ScheduleTask } from '../hooks/scheduleData';
 
 interface CalendarProps {
-  onAddTasks?: (tasks: string[], scheduleName: string, day: string) => void;
+  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
 }
 
 export function Calendar({ onAddTasks }: CalendarProps) {
@@ -13,16 +14,19 @@ export function Calendar({ onAddTasks }: CalendarProps) {
     currentYear,
     selectedDay,
     setSelectedDay,
-    daySchedules,
     isModalOpen,
-    setIsModalOpen,
+    editingBlock,
+    openCreateSchedule,
+    openEditSchedule,
+    closeModal,
     offset,
     daysInMonth,
     isLocked,
     currentSchedules,
+    getDaySchedules,
     todayDate,
     toggleLock,
-    handleCreateSchedule,
+    handleSaveSchedule,
     handleDeleteSchedule,
   } = useCalendar({ onAddTasks });
 
@@ -62,7 +66,8 @@ export function Calendar({ onAddTasks }: CalendarProps) {
             const isToday = day === todayDate;
             const isSelected = day === selectedDay;
             const holiday = holidays[day];
-            const hasSchedule = (daySchedules[day]?.length || 0) > 0;
+            const dayScheduleList = getDaySchedules(day);
+            const hasSchedule = dayScheduleList.length > 0;
 
             return (
               <button
@@ -86,7 +91,7 @@ export function Calendar({ onAddTasks }: CalendarProps) {
                 )}
                 {hasSchedule && !holiday && (
                   <div className="flex gap-0.5 mt-0.5">
-                    {(daySchedules[day] || []).slice(0, 3).map((s, i) => (
+                    {dayScheduleList.slice(0, 3).map((s, i) => (
                       <div key={i} className={`w-1 h-1 rounded-full ${s.color}`} />
                     ))}
                   </div>
@@ -122,25 +127,50 @@ export function Calendar({ onAddTasks }: CalendarProps) {
 
           {/* Schedule list */}
           <div className="space-y-px mb-4">
-            {currentSchedules.length > 0 ? currentSchedules.map(s => (
-              <div key={s.id} className="flex items-center group">
-                <div className={`w-1 self-stretch rounded-full mr-3 flex-shrink-0 ${s.color}`}
-                  style={{ minHeight: '48px' }} />
-                <div className="flex-1 py-3 border-b border-gray-50">
-                  <p className="text-sm font-semibold text-gray-800">{s.title}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{s.time}</p>
-                  {s.tasks && s.tasks.length > 0 && (
-                    <p className="text-xs text-gray-400">{s.tasks.length} nhiệm vụ</p>
+            {currentSchedules.length > 0 ? currentSchedules.map(s => {
+              const editable = s.source === 'date';
+              return (
+                <div
+                  key={s.id}
+                  role={editable ? 'button' : undefined}
+                  tabIndex={editable ? 0 : undefined}
+                  onClick={editable ? () => openEditSchedule(s) : undefined}
+                  onKeyDown={editable ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openEditSchedule(s);
+                    }
+                  } : undefined}
+                  className={`flex items-center group ${editable ? 'cursor-pointer' : ''}`}
+                >
+                  <div className={`w-1 self-stretch rounded-full mr-3 flex-shrink-0 ${s.color}`}
+                    style={{ minHeight: '48px' }} />
+                  <div className="flex-1 py-3 border-b border-gray-50">
+                    <p className="text-sm font-semibold text-gray-800">{s.title}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{s.time}</p>
+                    {s.tasks && s.tasks.length > 0 && (
+                      <p className="text-xs text-gray-400">{s.tasks.length} nhiệm vụ</p>
+                    )}
+                  </div>
+                  {editable && (
+                    <div className="flex items-center ml-2">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openEditSchedule(s); }}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-purple-50 text-purple-400 transition-all"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleDeleteSchedule(s.id); }}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-rose-50 text-rose-400 transition-all"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   )}
                 </div>
-                <button
-                  onClick={() => handleDeleteSchedule(s.id)}
-                  className="opacity-0 group-hover:opacity-100 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-rose-50 text-rose-400 transition-all ml-2"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            )) : (
+              );
+            }) : (
               <div className="text-center py-8">
                 <p className="text-sm text-gray-300 font-semibold">Chưa có lịch</p>
               </div>
@@ -148,7 +178,7 @@ export function Calendar({ onAddTasks }: CalendarProps) {
           </div>
 
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={openCreateSchedule}
             className="w-full flex items-center gap-2 py-3 px-4 rounded-2xl border border-dashed border-purple-200 text-purple-500 hover:bg-purple-50 transition-colors"
           >
             <Plus className="w-4 h-4" />
@@ -159,9 +189,10 @@ export function Calendar({ onAddTasks }: CalendarProps) {
 
       <CreateScheduleModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleCreateSchedule}
+        onClose={closeModal}
+        onSave={handleSaveSchedule}
         day={`${selectedDay} tháng ${currentMonth + 1}, ${currentYear}`}
+        initialData={editingBlock}
       />
     </div>
   );

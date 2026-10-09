@@ -1,4 +1,4 @@
-import { Circle, CheckCircle2, X } from 'lucide-react';
+import { Circle, CheckCircle2, X, Tag, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTasks, priorityConfig } from '../hooks/useTasks';
 import type { Task } from '../hooks/useTasks';
@@ -18,12 +18,21 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
     setNewTitle,
     newPriority,
     setNewPriority,
+    newDaily,
+    setNewDaily,
     inputRef,
     todayStr,
     weekDays,
     groupedByPriority,
     toggleTask,
     handleAddTask,
+    editingId,
+    editingTitle,
+    setEditingTitle,
+    startEdit,
+    cancelEdit,
+    commitEdit,
+    handleDeleteTask,
   } = useTasks({ tasks: propTasks, onUpdateTasks });
 
   return (
@@ -91,17 +100,48 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
                         ? <CheckCircle2 className="w-5 h-5 text-green-400" />
                         : <Circle className="w-5 h-5 text-gray-300" />}
                     </button>
-                    <div className="flex-1 py-3 border-b border-gray-50">
-                      <p className={`text-sm font-semibold ${task.completed ? 'line-through text-gray-300' : 'text-gray-800'}`}>
-                        {task.title}
-                      </p>
-                      {(task.dueDate || task.scheduleName) && (
-                        <div className="flex gap-2 mt-0.5 flex-wrap">
-                          {task.dueDate && <span className="text-xs text-gray-400">{task.dueDate}</span>}
-                          {task.scheduleName && <span className="text-xs text-gray-400">· {task.scheduleName}</span>}
-                        </div>
+                    <div className="flex-1 py-3 border-b border-gray-50 min-w-0">
+                      {editingId === task.id ? (
+                        <input
+                          autoFocus
+                          value={editingTitle}
+                          onChange={e => setEditingTitle(e.target.value)}
+                          onBlur={commitEdit}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              commitEdit();
+                            } else if (e.key === 'Escape') {
+                              e.preventDefault();
+                              cancelEdit();
+                            }
+                          }}
+                          className="w-full px-2 py-1 -ml-2 bg-gray-50 rounded-lg border border-gray-200 text-sm font-semibold text-gray-800 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
+                        />
+                      ) : (
+                        <button
+                          onClick={() => startEdit(task)}
+                          className="text-left w-full"
+                        >
+                          <p className={`text-sm font-semibold ${task.completed ? 'line-through text-gray-300' : 'text-gray-800'}`}>
+                            {task.title}
+                          </p>
+                          {(task.dueDate || task.scheduleName || task.recurrence === 'daily') && (
+                            <div className="flex gap-2 mt-0.5 flex-wrap">
+                              {task.recurrence === 'daily' && <span className="text-xs text-blue-400 font-semibold">Hằng ngày</span>}
+                              {task.dueDate && <span className="text-xs text-gray-400">{task.dueDate}</span>}
+                              {task.scheduleName && <span className="text-xs text-gray-400">· {task.scheduleName}</span>}
+                            </div>
+                          )}
+                        </button>
                       )}
                     </div>
+                    <button
+                      onClick={() => handleDeleteTask(task.id)}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-100 text-rose-400 transition-all ml-2 flex-shrink-0"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -123,64 +163,121 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/30 z-50"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
               onClick={() => setShowAddModal(false)}
             />
-            {/* Sheet */}
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl px-5 pt-5 pb-10 max-w-md mx-auto"
-            >
-              {/* Handle */}
-              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
-
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-bold text-gray-900">Thêm nhiệm vụ</h3>
-                <button onClick={() => setShowAddModal(false)}
-                  className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center">
-                  <X className="w-4 h-4 text-gray-600" />
-                </button>
-              </div>
-
-              <form onSubmit={handleAddTask} className="space-y-4">
-                <input
-                  ref={inputRef}
-                  value={newTitle}
-                  onChange={e => setNewTitle(e.target.value)}
-                  placeholder="Tên nhiệm vụ..."
-                  className="w-full px-4 py-3.5 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-semibold text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300"
-                />
-
-                {/* Priority selector */}
-                <div className="flex gap-2">
-                  {(['high', 'medium', 'low'] as const).map(p => (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => setNewPriority(p)}
-                      className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                        newPriority === p
-                          ? `${priorityConfig[p].badge} ring-2 ring-offset-1 ring-current`
-                          : 'bg-gray-50 text-gray-500'
-                      }`}
-                    >
-                      {priorityConfig[p].label.replace('Ưu tiên ', '')}
-                    </button>
-                  ))}
+            {/* Centered card */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+                className="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto pointer-events-auto shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-orange-50 flex items-center justify-center">
+                      <CheckCircle2 className="w-5 h-5 text-orange-500" />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-bold text-gray-900">Thêm nhiệm vụ</h2>
+                      <p className="text-xs text-gray-400 mt-0.5">{todayStr}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowAddModal(false)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  >
+                    <X className="w-5 h-5 text-gray-500" />
+                  </button>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={!newTitle.trim()}
-                  className="w-full py-4 bg-orange-400 text-white rounded-2xl font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-orange-500 transition-colors"
-                >
-                  Thêm nhiệm vụ
-                </button>
-              </form>
-            </motion.div>
+                <form onSubmit={handleAddTask} className="p-6 space-y-6">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                      Tên nhiệm vụ
+                    </label>
+                    <div className="relative">
+                      <input
+                        ref={inputRef}
+                        value={newTitle}
+                        onChange={e => setNewTitle(e.target.value)}
+                        placeholder="VD: Ôn tập Toán"
+                        className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-2xl border border-gray-200 text-sm font-semibold text-gray-800 placeholder:text-gray-300 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
+                        required
+                      />
+                      <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    </div>
+                  </div>
+
+                  {/* Priority selector */}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                      Mức ưu tiên
+                    </label>
+                    <div className="flex gap-2">
+                      {(['high', 'medium', 'low'] as const).map(p => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => setNewPriority(p)}
+                          className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                            newPriority === p
+                              ? `${priorityConfig[p].badge} ring-2 ring-offset-1 ring-current`
+                              : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+                          }`}
+                        >
+                          {priorityConfig[p].label.replace('Ưu tiên ', '')}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Daily recurrence */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      Diễn ra hằng ngày
+                    </span>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={newDaily}
+                      aria-label="Diễn ra hằng ngày"
+                      onClick={() => setNewDaily(v => !v)}
+                      className={`relative w-11 h-6 rounded-full transition-colors ${
+                        newDaily ? 'bg-blue-500' : 'bg-gray-200'
+                      }`}
+                    >
+                      <span
+                        className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                          newDaily ? 'translate-x-5' : ''
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="flex gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowAddModal(false)}
+                      className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-2xl font-semibold text-sm hover:bg-gray-200 transition-colors"
+                    >
+                      Hủy
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={!newTitle.trim()}
+                      className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      Thêm nhiệm vụ
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>

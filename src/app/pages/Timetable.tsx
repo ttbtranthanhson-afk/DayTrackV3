@@ -3,10 +3,10 @@ import { CreateScheduleModal } from '../components/CreateScheduleModal';
 import { AIScheduleSuggestion } from '../components/AIScheduleSuggestion';
 import { BusyHoursModal } from '../components/BusyHoursModal';
 import { motion, AnimatePresence } from 'motion/react';
-import { useTimetable, days, dayShorts, colorMap } from '../hooks/useTimetable';
+import { useTimetable, days, dayShorts, colorMap, type ScheduleTask } from '../hooks/useTimetable';
 
 interface TimetableProps {
-  onAddTasks?: (tasks: string[], scheduleName: string, day: string) => void;
+  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
 }
 
 export function Timetable({ onAddTasks }: TimetableProps) {
@@ -14,7 +14,10 @@ export function Timetable({ onAddTasks }: TimetableProps) {
     currentDayIndex,
     setCurrentDayIndex,
     isModalOpen,
-    setIsModalOpen,
+    editingBlock,
+    openCreateSchedule,
+    openEditSchedule,
+    closeModal,
     isBusyOpen,
     setIsBusyOpen,
     isTodayMode,
@@ -24,7 +27,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
     todayDayIndex,
     currentDay,
     schedule,
-    handleCreateSchedule,
+    handleSaveSchedule,
     handleDelete,
   } = useTimetable({ onAddTasks });
 
@@ -94,12 +97,19 @@ export function Timetable({ onAddTasks }: TimetableProps) {
             return (
               <div key={block.id} className="group">
                 <div
-                  role={isTodayMode ? 'button' : undefined}
-                  tabIndex={isTodayMode ? 0 : undefined}
-                  className={`w-full text-left ${c.bg} rounded-2xl border ${c.border} p-4 shadow-sm hover:shadow-md transition-all ${isTodayMode ? 'cursor-pointer' : ''}`}
-                  onClick={() => isTodayMode && setExpandedScheduleId(
-                    expandedScheduleId === block.id ? null : block.id
-                  )}
+                  role="button"
+                  tabIndex={0}
+                  className={`w-full text-left ${c.bg} rounded-2xl border ${c.border} p-4 shadow-sm hover:shadow-md transition-all cursor-pointer`}
+                  onClick={() => isTodayMode
+                    ? setExpandedScheduleId(expandedScheduleId === block.id ? null : block.id)
+                    : openEditSchedule(block)}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    isTodayMode
+                      ? setExpandedScheduleId(expandedScheduleId === block.id ? null : block.id)
+                      : openEditSchedule(block);
+                  }}
                 >
                   <div className="flex items-start gap-3">
                     {/* Color dot */}
@@ -126,7 +136,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
                       {!isTodayMode && (
                         <button
                           onClick={e => { e.stopPropagation(); handleDelete(block.id); }}
-                          className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-100 text-rose-400 transition-all"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-100 text-rose-400 transition-all"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -167,7 +177,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
         {!isTodayMode ? (
           <div className="px-5 space-y-2">
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={openCreateSchedule}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-dashed border-blue-200 text-blue-400 hover:bg-blue-50 transition-colors"
             >
               <Plus className="w-4 h-4" />
@@ -198,9 +208,10 @@ export function Timetable({ onAddTasks }: TimetableProps) {
 
       <CreateScheduleModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleCreateSchedule}
+        onClose={closeModal}
+        onSave={handleSaveSchedule}
         day={currentDay}
+        initialData={editingBlock}
       />
 
       <BusyHoursModal

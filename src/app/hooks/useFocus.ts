@@ -1,12 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
+import {
+  musicCategories,
+  allSongs,
+  CUSTOM_CATEGORY,
+  NONE_CATEGORY,
+  type Song,
+  type MusicCategory,
+} from './musicData';
+import { musicEngine } from './musicEngine';
 
-export const musicCategories = [
-  { id: 'study', name: 'Học tập', color: 'bg-blue-100 text-blue-700', dot: 'bg-blue-400' },
-  { id: 'work', name: 'Làm việc', color: 'bg-purple-100 text-purple-700', dot: 'bg-purple-400' },
-  { id: 'exercise', name: 'Tập luyện', color: 'bg-orange-100 text-orange-700', dot: 'bg-orange-400' },
-  { id: 'relax', name: 'Thư giãn', color: 'bg-green-100 text-green-700', dot: 'bg-green-400' },
-  { id: 'focus', name: 'Tập trung sâu', color: 'bg-indigo-100 text-indigo-700', dot: 'bg-indigo-400' },
-];
+export { musicCategories, allSongs, CUSTOM_CATEGORY, NONE_CATEGORY };
+export type { Song, MusicCategory };
 
 export const presetTimes = [
   { label: '25 phút', seconds: 25 * 60 },
@@ -14,20 +18,35 @@ export const presetTimes = [
   { label: '60 phút', seconds: 60 * 60 },
 ];
 
-export const tabs = ['Bộ đếm', 'Nhạc nền'] as const;
+export const tabs = ['Hướng dẫn', 'Nhạc nền'] as const;
 export type Tab = typeof tabs[number];
 
+const CUSTOM_STORAGE_KEY = 'daytrack_custom_music';
+
+function loadCustomPlaylist(): string[] {
+  try {
+    const raw = localStorage.getItem(CUSTOM_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export function useFocus() {
-  const [activeTab, setActiveTab] = useState<Tab>('Bộ đếm');
+  const [activeTab, setActiveTab] = useState<Tab>('Hướng dẫn');
   const [isRunning, setIsRunning] = useState(false);
   const [totalTime, setTotalTime] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
-  const [selectedMusic, setSelectedMusic] = useState<string | null>(null);
-  const [showMusicPlayer, setShowMusicPlayer] = useState(false);
-  const [videoUrl, setVideoUrl] = useState('');
+  const [selectedMusic, setSelectedMusic] = useState<string>('none');
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [customPlaylist, setCustomPlaylist] = useState<string[]>(loadCustomPlaylist);
+  const [customSelection, setCustomSelection] = useState<string[]>([]);
+  const [customEditing, setCustomEditing] = useState(false);
+  const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [circleScale, setCircleScale] = useState(1);
   const [isShaking, setIsShaking] = useState(false);
   const timerRef = useRef<number | null>(null);
@@ -43,6 +62,7 @@ export function useFocus() {
         setCurrentTime(prev => {
           if (prev <= 1) {
             setIsRunning(false);
+            musicEngine.stop();
             return 0;
           }
           return prev - 1;
@@ -53,6 +73,51 @@ export function useFocus() {
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [isRunning, currentTime]);
+
+  useEffect(() => () => musicEngine.stop(), []);
+
+  const getSongs = (categoryId: string): Song[] => {
+    if (categoryId === 'custom') {
+      return allSongs.filter(song => customPlaylist.includes(song.id));
+    }
+    return musicCategories.find(cat => cat.id === categoryId)?.songs ?? [];
+  };
+
+  const selectCategory = (id: string) => {
+    if (id === 'none') {
+      setSelectedMusic('none');
+      setExpandedCategory(null);
+      setCustomEditing(false);
+      return;
+    }
+    if (id === 'custom') {
+      setSelectedMusic('custom');
+      setCustomSelection([...customPlaylist]);
+      setCustomEditing(true);
+      setExpandedCategory('custom');
+      return;
+    }
+    setSelectedMusic(id);
+    setExpandedCategory(prev => (prev === id ? null : id));
+  };
+
+  const toggleCustomSong = (songId: string) => {
+    setCustomSelection(prev =>
+      prev.includes(songId) ? prev.filter(id => id !== songId) : [...prev, songId]
+    );
+  };
+
+  const saveCustomPlaylist = () => {
+    const next = [...customSelection];
+    setCustomPlaylist(next);
+    localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(next));
+    setCustomEditing(false);
+  };
+
+  const previewSong = (song: Song) => {
+    musicEngine.play(song);
+    setCurrentSong(song);
+  };
 
   const updateTime = (type: 'hours' | 'minutes' | 'seconds', increment: number) => {
     if (type === 'hours') {
@@ -94,12 +159,20 @@ export function useFocus() {
       setTotalTime(total);
       setCurrentTime(total);
       setIsRunning(true);
-      setShowMusicPlayer(true);
-      setVideoUrl('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&playlist=dQw4w9WgXcQ');
+
+      const songs = getSongs(selectedMusic);
+      if (selectedMusic !== 'none' && songs.length > 0) {
+        const chosen = songs[Math.floor(Math.random() * songs.length)];
+        musicEngine.play(chosen);
+        setCurrentSong(chosen);
+      }
+
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 500);
     } else {
       setIsRunning(false);
+      musicEngine.stop();
+      setCurrentSong(null);
     }
   };
 
@@ -107,7 +180,7 @@ export function useFocus() {
     const handler = () => toggleTimer();
     window.addEventListener('nav:quick-action', handler);
     return () => window.removeEventListener('nav:quick-action', handler);
-  }, [hours, minutes, seconds, isRunning, currentTime]);
+  }, [hours, minutes, seconds, isRunning, currentTime, selectedMusic, customPlaylist]);
 
   const resetTimer = () => {
     setIsRunning(false);
@@ -116,8 +189,8 @@ export function useFocus() {
     setHours(0);
     setMinutes(0);
     setSeconds(0);
-    setShowMusicPlayer(false);
-    setVideoUrl('');
+    setCurrentSong(null);
+    musicEngine.stop();
   };
 
   const setPresetTime = (presetSeconds: number) => {
@@ -145,8 +218,16 @@ export function useFocus() {
     seconds,
     selectedMusic,
     setSelectedMusic,
-    showMusicPlayer,
-    videoUrl,
+    expandedCategory,
+    selectCategory,
+    getSongs,
+    customPlaylist,
+    customSelection,
+    customEditing,
+    toggleCustomSong,
+    saveCustomPlaylist,
+    currentSong,
+    previewSong,
     circleScale,
     isShaking,
     timerRef,

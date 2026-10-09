@@ -13,6 +13,7 @@ import { Notifications } from './pages/Notifications';
 import { Appearance } from './pages/Appearance';
 import { About } from './pages/About';
 import { achievementGroupsData } from './data/achievements';
+import { days, type ScheduleTask } from './hooks/scheduleData';
 
 interface UserData {
   name: string;
@@ -31,6 +32,11 @@ export interface Task {
   dueDate?: string;
   source?: string;
   scheduleName?: string;
+  scheduleTaskId?: string;
+  weekday?: number;
+  dateKey?: string;
+  recurrence?: 'daily';
+  completedDate?: string;
 }
 
 function AppContent() {
@@ -64,20 +70,31 @@ function AppContent() {
     localStorage.removeItem('daytrack_user_data');
   };
 
-  const handleAddTasksFromSchedule = (tasks: string[], scheduleName: string, day: string) => {
-    const newTasks: Task[] = tasks.map(taskTitle => ({
-      id: Date.now().toString() + Math.random(),
-      title: taskTitle,
-      priority: 'medium',
-      completed: false,
-      dueDate: day,
-      source: 'schedule',
-      scheduleName: scheduleName,
-    }));
+  const handleAddTasksFromSchedule = (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => {
+    const weekday = days.indexOf(day);
+    const next = [...globalTasks];
 
-    const updatedTasks = [...globalTasks, ...newTasks];
-    setGlobalTasks(updatedTasks);
-    localStorage.setItem('daytrack_tasks', JSON.stringify(updatedTasks));
+    tasks.forEach(task => {
+      const existingIndex = next.findIndex(t => t.scheduleTaskId === task.id);
+      if (existingIndex >= 0) {
+        next[existingIndex] = { ...next[existingIndex], title: task.title, priority: task.priority };
+      } else {
+        next.push({
+          id: Date.now().toString() + Math.random(),
+          title: task.title,
+          priority: task.priority,
+          completed: false,
+          dueDate: day,
+          source: 'schedule',
+          scheduleName: scheduleName,
+          scheduleTaskId: task.id,
+          ...(dateKey ? { dateKey } : weekday >= 0 ? { weekday } : {}),
+        });
+      }
+    });
+
+    setGlobalTasks(next);
+    localStorage.setItem('daytrack_tasks', JSON.stringify(next));
   };
 
   const handleUpdateTasks = (tasks: Task[]) => {
