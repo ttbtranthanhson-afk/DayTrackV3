@@ -33,7 +33,7 @@ export class MusicEngine {
     el.loop = true;
     el.preload = 'auto';
     el.volume = 0;
-    el.src = song.src;
+    el.src = `${import.meta.env.BASE_URL}${song.src.replace(/^\//, '')}`;
     void el.play().catch(() => { /* user gesture may be required; ignored */ });
     this.audio = el;
     this.fadeTo(el, FILE_VOLUME, 1.2);
