@@ -16,7 +16,9 @@ function figmaAssetResolver() {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  // GitHub Pages project site is served from /DayTrackV3/. Keep dev at root.
+  base: command === 'build' ? '/DayTrackV3/' : '/',
   plugins: [
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
@@ -33,4 +35,10 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
-})
+
+  // GitHub Pages "main /docs" deployment: emit the production build into docs/.
+  build: {
+    outDir: 'docs',
+    emptyOutDir: true,
+  },
+}))
