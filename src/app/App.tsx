@@ -4,6 +4,9 @@ import { Toaster } from 'sonner';
 import { useNotificationScheduler } from './hooks/useNotificationScheduler';
 import { useAppTheme } from './hooks/useAppTheme';
 import { BottomNav } from './components/BottomNav';
+import { useIsDesktop } from './desktop/useIsDesktop';
+import { DesktopApp } from './desktop/DesktopApp';
+import { DesktopLogin } from './desktop/DesktopLogin';
 import { Timetable } from './pages/Timetable';
 import { Calendar } from './pages/Calendar';
 import { Tasks } from './pages/Tasks';
@@ -48,6 +51,7 @@ function AppContent() {
   const [userData, setUserData] = useState<UserData>({ name: '', email: '' });
   const [globalTasks, setGlobalTasks] = useState<Task[]>([]);
   const location = useLocation();
+  const isDesktop = useIsDesktop();
 
   useNotificationScheduler();
   useAppTheme();
@@ -113,7 +117,24 @@ function AppContent() {
   const showBottomNav = isLoggedIn;
 
   if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />;
+    return isDesktop
+      ? <DesktopLogin onLogin={handleLogin} />
+      : <Login onLogin={handleLogin} />;
+  }
+
+  if (isDesktop) {
+    return (
+      <div className="size-full">
+        <DesktopApp
+          userData={userData}
+          onLogout={handleLogout}
+          tasks={globalTasks}
+          onUpdateTasks={handleUpdateTasks}
+          onAddTasks={handleAddTasksFromSchedule}
+        />
+        <Toaster position="top-center" richColors />
+      </div>
+    );
   }
 
   return (

@@ -362,3 +362,25 @@
     line-height: 1.5;
   }
 }
+
+/**
+ * Desktop UI: scale typography up so text/content proportionally matches the
+ * larger desktop block layout. These rules are intentionally unlayered so they
+ * override Tailwind's layered utilities inside the .desktop-ui subtree only.
+ */
+.desktop-ui .text-\[8px\]  { font-size: 0.625rem;  line-height: 0.875rem; }
+.desktop-ui .text-\[10px\] { font-size: 0.75rem;   line-height: 1rem; }
+.desktop-ui .text-\[11px\] { font-size: 0.75rem;   line-height: 1rem; }
+.desktop-ui .text-xs  { font-size: 0.875rem;  line-height: 1.25rem; }
+.desktop-ui .text-sm  { font-size: 1rem;      line-height: 1.5rem; }
+.desktop-ui .text-base { font-size: 1.125rem; line-height: 1.75rem; }
+.desktop-ui .text-lg  { font-size: 1.25rem;   line-height: 1.75rem; }
+.desktop-ui .text-xl  { font-size: 1.5rem;    line-height: 2rem; }
+.desktop-ui .text-2xl { font-size: 1.875rem;  line-height: 2.25rem; }
+.desktop-ui .text-3xl { font-size: 2.25rem;   line-height: 2.5rem; }
+.desktop-ui .text-5xl { font-size: 3.75rem;   line-height: 1; }
+
+/* Keep explicit leading utilities authoritative inside desktop */
+.desktop-ui .leading-none   { line-height: 1; }
+.desktop-ui .leading-tight  { line-height: 1.25; }
+.desktop-ui .leading-relaxed { line-height: 1.625; }

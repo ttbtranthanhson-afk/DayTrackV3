@@ -1,0 +1,127 @@
+import { Globe, MessageCircle, Mail, Instagram, FileText, Shield, ExternalLink, Send } from 'lucide-react';
+import { Logo } from '../../components/Logo';
+import { motion } from 'motion/react';
+import { DesktopPageHeader, DesktopCard } from '../DesktopUI';
+
+const team = [
+  { name: 'Trần Thanh Sơn', role: 'Trưởng nhóm', avatar: 'S', color: 'bg-blue-500' },
+  { name: 'Lương Hà Quân', role: 'Lập trình viên', avatar: 'Q', color: 'bg-purple-500' },
+  { name: 'Nguyễn Vũ Thu Thảo', role: 'Trưởng ban nội dung và chiến lược', avatar: 'T', color: 'bg-orange-500' },
+];
+
+const social = [
+  { icon: Globe, label: 'Website', value: 'daytrack.app', color: 'bg-blue-500' },
+  { icon: MessageCircle, label: 'Discord', value: 'Tham gia cộng đồng', color: 'bg-indigo-500' },
+  { icon: Mail, label: 'Email', value: 'hello@daytrack.app', color: 'bg-orange-500' },
+  { icon: Instagram, label: 'Instagram', value: '@daytrack', color: 'bg-pink-500' },
+];
+
+export function DesktopAbout() {
+  return (
+    <div>
+      <DesktopPageHeader title="Giới thiệu" subtitle="Về DayTrack" />
+
+      <div className="grid grid-cols-3 gap-6">
+        <div className="col-span-1 space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-3xl p-6 text-white text-center relative overflow-hidden"
+          >
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full" />
+            <div className="relative z-10">
+              <div className="w-20 h-20 mx-auto mb-4 bg-white/20 rounded-2xl flex items-center justify-center">
+                <Logo size={48} />
+              </div>
+              <h2 className="text-2xl font-bold">DayTrack</h2>
+              <p className="text-white/80 mt-1 font-medium italic">"Xây dựng ngày hoàn hảo của bạn."</p>
+            </div>
+          </motion.div>
+
+          <DesktopCard title="Thông tin ứng dụng" bodyClassName="">
+            <div className="divide-y divide-gray-50">
+              {[
+                { label: 'Phiên bản', value: '1.0.0' },
+                { label: 'Cập nhật gần nhất', value: '18/6/2026' },
+                { label: 'Số bản dựng', value: '2026.06.001' },
+              ].map(item => (
+                <div key={item.label} className="flex items-center justify-between px-5 py-3.5">
+                  <span className="text-sm text-gray-500 font-medium">{item.label}</span>
+                  <span className="text-sm font-bold text-gray-800">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </DesktopCard>
+        </div>
+
+        <div className="col-span-2 space-y-6">
+          <DesktopCard title="Đội ngũ" bodyClassName="p-5">
+            <div className="grid grid-cols-3 gap-3">
+              {team.map(m => (
+                <div key={m.name} className="bg-gray-50 rounded-2xl p-4 text-center">
+                  <div className={`w-14 h-14 mx-auto mb-3 rounded-2xl ${m.color} flex items-center justify-center text-white text-xl font-bold`}>
+                    {m.avatar}
+                  </div>
+                  <p className="text-xs font-bold text-gray-800 leading-tight">{m.name}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5 font-medium">{m.role}</p>
+                </div>
+              ))}
+            </div>
+          </DesktopCard>
+
+          <div className="grid grid-cols-2 gap-6">
+            <DesktopCard title="Liên hệ" bodyClassName="">
+              <div className="divide-y divide-gray-50">
+                {social.map(item => {
+                  const Icon = item.icon;
+                  return (
+                    <button key={item.label} className="w-full flex items-center gap-4 px-5 py-3.5 hover:bg-gray-50 transition-colors">
+                      <div className={`w-9 h-9 rounded-xl ${item.color} flex items-center justify-center flex-shrink-0`}>
+                        <Icon className="w-[18px] h-[18px] text-white" />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{item.label}</p>
+                        <p className="text-sm font-bold text-gray-800">{item.value}</p>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-300" />
+                    </button>
+                  );
+                })}
+              </div>
+            </DesktopCard>
+
+            <DesktopCard title="Pháp lý" bodyClassName="">
+              <div className="divide-y divide-gray-50">
+                {[
+                  { icon: Shield, label: 'Chính sách bảo mật' },
+                  { icon: FileText, label: 'Điều khoản dịch vụ' },
+                  { icon: FileText, label: 'Giấy phép mã nguồn mở' },
+                ].map(item => {
+                  const Icon = item.icon;
+                  return (
+                    <button key={item.label} className="w-full flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors">
+                      <Icon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span className="flex-1 text-left text-sm font-bold text-gray-700">{item.label}</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-gray-300" />
+                    </button>
+                  );
+                })}
+              </div>
+            </DesktopCard>
+          </div>
+
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl py-4 font-bold text-sm shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
+          >
+            <Send className="w-4 h-4" /> Gửi phản hồi
+          </motion.button>
+
+          <p className="text-center text-xs text-gray-400 font-medium">
+            Được tạo ra cho những sinh viên quan tâm đến sự cân bằng · © 2026 DayTrack. Mọi quyền được bảo lưu.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
