@@ -1,6 +1,9 @@
-import { ChevronLeft, ChevronRight, Lock, Unlock, Plus, Trash2, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Lock, Unlock, Trash2, Pencil, Search } from 'lucide-react';
 import { CreateScheduleModal } from '../components/CreateScheduleModal';
+import { BusyHoursModal } from '../components/BusyHoursModal';
+import { AiPlannerModal } from '../components/AiPlannerModal';
 import { useCalendar, weekDays, holidays, monthNames } from '../hooks/useCalendar';
+import { useAiPlanner } from '../hooks/useAiPlanner';
 import type { ScheduleTask } from '../hooks/scheduleData';
 
 interface CalendarProps {
@@ -16,19 +19,25 @@ export function Calendar({ onAddTasks }: CalendarProps) {
     setSelectedDay,
     isModalOpen,
     editingBlock,
-    openCreateSchedule,
     openEditSchedule,
     closeModal,
     offset,
     daysInMonth,
     isLocked,
     currentSchedules,
+    weekdayForSelected,
+    weekdaySchedule,
     getDaySchedules,
     todayDate,
     toggleLock,
     handleSaveSchedule,
     handleDeleteSchedule,
   } = useCalendar({ onAddTasks });
+
+  const planner = useAiPlanner(weekdayForSelected, weekdaySchedule, {
+    onAddTasks,
+    successMessage: `Đã áp dụng lịch AI cho ${weekdayForSelected}`,
+  });
 
   return (
     <div className="min-h-screen bg-white pb-28">
@@ -178,11 +187,11 @@ export function Calendar({ onAddTasks }: CalendarProps) {
           </div>
 
           <button
-            onClick={openCreateSchedule}
-            className="w-full flex items-center gap-2 py-3 px-4 rounded-2xl border border-dashed border-purple-200 text-purple-500 hover:bg-purple-50 transition-colors"
+            onClick={planner.openSurvey}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-dashed border-green-200 text-green-500 hover:bg-green-50 transition-colors"
           >
-            <Plus className="w-4 h-4" />
-            <span className="text-sm font-semibold">Thêm lịch trình</span>
+            <Search className="w-4 h-4" />
+            <span className="text-sm font-semibold">Khảo sát</span>
           </button>
         </div>
       </div>
@@ -193,6 +202,23 @@ export function Calendar({ onAddTasks }: CalendarProps) {
         onSave={handleSaveSchedule}
         day={`${selectedDay} tháng ${currentMonth + 1}, ${currentYear}`}
         initialData={editingBlock}
+      />
+
+      <BusyHoursModal
+        isOpen={planner.busyOpen}
+        onClose={planner.closeSurvey}
+        schedule={weekdaySchedule}
+        day={weekdayForSelected}
+        onGeneratePlan={planner.generate}
+      />
+
+      <AiPlannerModal
+        isOpen={planner.plannerOpen}
+        onClose={planner.closePlanner}
+        schedule={weekdaySchedule}
+        day={weekdayForSelected}
+        busy={planner.busy}
+        onApply={planner.apply}
       />
     </div>
   );

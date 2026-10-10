@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { Play, Pause, RotateCcw, Music, Volume2, MoreHorizontal, Check, ChevronDown, Ban } from 'lucide-react';
 import { motion } from 'motion/react';
 import {
@@ -11,6 +12,49 @@ import {
   type MusicCategory,
   type Song,
 } from '../hooks/useFocus';
+
+type TimeType = 'hours' | 'minutes' | 'seconds';
+
+function TimeDigit({
+  type,
+  value,
+  onWheel,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
+}: {
+  type: TimeType;
+  value: number;
+  onWheel: (type: TimeType, delta: number) => void;
+  onTouchStart: (e: React.TouchEvent, type: TimeType) => void;
+  onTouchMove: (e: React.TouchEvent) => void;
+  onTouchEnd: () => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onNativeWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      onWheel(type, e.deltaY);
+    };
+    el.addEventListener('wheel', onNativeWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onNativeWheel);
+  }, [type, onWheel]);
+
+  return (
+    <div
+      ref={ref}
+      onTouchStart={e => onTouchStart(e, type)}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      className="cursor-ns-resize select-none touch-none"
+    >
+      <span className="text-4xl font-bold text-white">{String(value).padStart(2, '0')}</span>
+    </div>
+  );
+}
 
 export function Focus() {
   const {
@@ -86,7 +130,10 @@ export function Focus() {
           <span className={`block text-xs font-semibold truncate ${isPlaying ? 'text-green-700' : 'text-gray-700'}`}>
             {song.title}
           </span>
-          <span className="block text-[10px] text-gray-400 truncate">{song.artist}</span>
+          <span className="block text-[10px] text-gray-400 truncate">
+            {song.artist}
+            {song.license && <span className="text-gray-300"> · {song.license}</span>}
+          </span>
         </span>
         {isPlaying && playingBars}
       </button>
@@ -204,17 +251,14 @@ export function Focus() {
                       {(['hours', 'minutes', 'seconds'] as const).map((type, i) => (
                         <div key={type} className="flex items-center gap-0.5">
                           {i > 0 && <span className="text-4xl font-light text-white/80">:</span>}
-                          <div
-                            onWheel={e => { e.preventDefault(); handleWheel(type, e.deltaY); }}
-                            onTouchStart={e => handleTouchStart(e, type)}
+                          <TimeDigit
+                            type={type}
+                            value={type === 'hours' ? hours : type === 'minutes' ? minutes : seconds}
+                            onWheel={handleWheel}
+                            onTouchStart={handleTouchStart}
                             onTouchMove={handleTouchMove}
                             onTouchEnd={handleTouchEnd}
-                            className="cursor-ns-resize select-none touch-none"
-                          >
-                            <span className="text-4xl font-bold text-white">
-                              {String(type === 'hours' ? hours : type === 'minutes' ? minutes : seconds).padStart(2, '0')}
-                            </span>
-                          </div>
+                          />
                         </div>
                       ))}
                     </div>
@@ -321,7 +365,10 @@ export function Focus() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-800 truncate">{currentSong.title}</p>
-                    <p className="text-xs text-gray-500 truncate">{currentSong.artist}</p>
+                    <p className="text-xs text-gray-500 truncate">
+                    {currentSong.artist}
+                    {currentSong.license && <span className="text-gray-400"> · {currentSong.license}</span>}
+                  </p>
                   </div>
                   <div className="flex gap-0.5 items-end h-5">
                     {[4, 6, 4, 6, 4].map((h, i) => (
@@ -348,6 +395,11 @@ export function Focus() {
                   <Ban className="w-3 h-3" /> Danh sách Custom đang trống.
                 </p>
               )}
+
+              <p className="text-[10px] text-gray-300 mt-5 leading-relaxed">
+                Nhạc gốc từ Free Music Archive (FMA) theo giấy phép CC0 / CC BY / CC BY-SA — ghi công đầy đủ tại
+                ATTRIBUTIONS.md.
+              </p>
             </div>
           )}
         </div>

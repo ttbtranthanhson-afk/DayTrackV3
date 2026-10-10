@@ -1,9 +1,12 @@
-import { Plus, Sparkles, Sun, Calendar, Trash2, ChevronDown, ChevronUp, Search } from 'lucide-react';
+import { Sparkles, Sun, Calendar, Trash2, ChevronDown, ChevronUp, Search, Loader2 } from 'lucide-react';
 import { CreateScheduleModal } from '../components/CreateScheduleModal';
 import { AIScheduleSuggestion } from '../components/AIScheduleSuggestion';
 import { BusyHoursModal } from '../components/BusyHoursModal';
+import { AiPlannerModal } from '../components/AiPlannerModal';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTimetable, days, dayShorts, colorMap, type ScheduleTask } from '../hooks/useTimetable';
+import { useAiPlanner } from '../hooks/useAiPlanner';
+import { useDailyInsight } from '../hooks/useDailyInsight';
 
 interface TimetableProps {
   onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
@@ -15,21 +18,33 @@ export function Timetable({ onAddTasks }: TimetableProps) {
     setCurrentDayIndex,
     isModalOpen,
     editingBlock,
-    openCreateSchedule,
     openEditSchedule,
     closeModal,
-    isBusyOpen,
-    setIsBusyOpen,
     isTodayMode,
     setIsTodayMode,
     expandedScheduleId,
     setExpandedScheduleId,
+    recentlyChanged,
+    clearRecentlyChanged,
     todayDayIndex,
+    weekDates,
+    currentDate,
     currentDay,
     schedule,
     handleSaveSchedule,
     handleDelete,
   } = useTimetable({ onAddTasks });
+
+  const dailyInsight = useDailyInsight(currentDay, schedule, isTodayMode);
+
+  const planner = useAiPlanner(currentDay, schedule, {
+    onAddTasks,
+    successMessage: 'Đã áp dụng lịch AI cho hôm nay',
+    onApplied: () => {
+      setIsTodayMode(true);
+      clearRecentlyChanged();
+    },
+  });
 
   return (
     <div className="min-h-screen bg-white pb-28">
@@ -45,7 +60,10 @@ export function Timetable({ onAddTasks }: TimetableProps) {
             </p>
           </div>
           <button
-            onClick={() => setIsTodayMode(v => !v)}
+            onClick={() => setIsTodayMode(v => {
+              if (!v) setCurrentDayIndex(todayDayIndex);
+              return !v;
+            })}
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
               isTodayMode ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
             }`}
@@ -75,7 +93,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
                 }`}>
                   <span className={`text-xs font-bold ${
                     isActive ? 'text-white' : isToday ? 'text-blue-600' : 'text-gray-600'
-                  }`}>{i + 2 <= 7 ? i + 16 : i + 16 - 7}</span>
+                  }`}>{weekDates[i].getDate()}</span>
                 </div>
               </button>
             );
@@ -85,6 +103,9 @@ export function Timetable({ onAddTasks }: TimetableProps) {
         {/* Day label */}
         <div className="px-5 mb-4">
           <span className="text-base font-bold text-gray-800">{currentDay}</span>
+          <span className="ml-2 text-sm text-gray-400">
+            {currentDate.getDate()}/{currentDate.getMonth() + 1}
+          </span>
           {schedule.length > 0 && (
             <span className="ml-2 text-sm text-gray-400">{schedule.length} lịch</span>
           )}
@@ -159,6 +180,8 @@ export function Timetable({ onAddTasks }: TimetableProps) {
                         <AIScheduleSuggestion
                           scheduleTitle={block.title}
                           scheduleTime={block.time}
+                          day={currentDay}
+                          tasks={block.tasks?.map(task => task.title)}
                         />
                       </div>
                     </motion.div>
@@ -173,33 +196,33 @@ export function Timetable({ onAddTasks }: TimetableProps) {
           )}
         </div>
 
-        {/* Add button + Survey button */}
+        {/* Survey button */}
         {!isTodayMode ? (
-          <div className="px-5 space-y-2">
+          <div className="px-5">
             <button
-              onClick={openCreateSchedule}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-dashed border-blue-200 text-blue-400 hover:bg-blue-50 transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="text-sm font-semibold">Tạo khối lịch trình mới</span>
-            </button>
-            <button
-              onClick={() => setIsBusyOpen(true)}
+              onClick={planner.openSurvey}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-dashed border-green-200 text-green-500 hover:bg-green-50 transition-colors"
             >
               <Search className="w-4 h-4" />
-              <span className="text-sm font-semibold">Khảo sát giờ bận</span>
+              <span className="text-sm font-semibold">Khảo sát</span>
             </button>
           </div>
         ) : (
           <div className="px-5">
             <div className="bg-blue-50 rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-4 h-4 text-blue-500" />
+                {dailyInsight.loading
+                  ? <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                  : <Sparkles className="w-4 h-4 text-blue-500" />}
                 <span className="text-sm font-bold text-blue-800">Gợi ý AI</span>
               </div>
-              <p className="text-xs text-blue-700 leading-relaxed">
-                Lịch của bạn trông cân bằng! Hãy xem xét thêm 15 phút nghỉ giữa các lớp buổi sáng để tập trung tốt hơn.
+              <p className="text-xs text-blue-700 leading-relaxed whitespace-pre-line">
+                {dailyInsight.error
+                  ? dailyInsight.error
+                  : dailyInsight.text
+                    || (schedule.length === 0
+                      ? 'Thêm lịch cho hôm nay để nhận gợi ý từ AI.'
+                      : 'Đang phân tích lịch của bạn...')}
               </p>
             </div>
           </div>
@@ -215,10 +238,21 @@ export function Timetable({ onAddTasks }: TimetableProps) {
       />
 
       <BusyHoursModal
-        isOpen={isBusyOpen}
-        onClose={() => setIsBusyOpen(false)}
+        isOpen={planner.busyOpen}
+        onClose={planner.closeSurvey}
         schedule={schedule}
         day={currentDay}
+        onGeneratePlan={planner.generate}
+      />
+
+      <AiPlannerModal
+        isOpen={planner.plannerOpen}
+        onClose={planner.closePlanner}
+        schedule={schedule}
+        day={currentDay}
+        busy={planner.busy}
+        focusTitles={recentlyChanged}
+        onApply={planner.apply}
       />
     </div>
   );

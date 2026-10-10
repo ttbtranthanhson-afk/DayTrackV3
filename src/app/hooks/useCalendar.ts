@@ -70,6 +70,8 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
 
   const isLocked = lockedDays.has(selectedDay);
   const currentSchedules = getDaySchedules(selectedDay);
+  const weekdayForSelected = dayNameForDate(selectedDay);
+  const weekdaySchedule = scheduleData[weekdayForSelected] || [];
 
   const toggleLock = (day: number) => {
     setLockedDays(prev => {
@@ -142,6 +144,8 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
     daysInMonth,
     isLocked,
     currentSchedules,
+    weekdayForSelected,
+    weekdaySchedule,
     getDaySchedules,
     todayDate,
     isCurrentMonth,

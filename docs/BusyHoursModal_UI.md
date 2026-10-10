@@ -106,7 +106,7 @@ Bảng **Cài đặt Giờ Bận** là một bottom sheet modal (tấm trượt 
 #### Tỉ lệ thời gian:
 - 1 giờ = 64px chiều cao
 - 1 phút = 64/60 ≈ 1.067px chiều cao
-- Snap tự động mỗi 15 phút (= 16px)
+- Snap tự động mỗi 5 phút (= 64/30 ≈ 5.33px)
 - Tổng chiều cao: 24 × 64 = 1.536px
 
 #### Cột giờ (Hour Labels + Grid Lines):
@@ -156,7 +156,7 @@ Hiển thị các buổi học đã được tạo sẵn tại vị trí thời 
 
 **Bước 3 — Kéo để tạo vùng:**
 - Người dùng kéo ngón tay lên hoặc xuống
-- Kim số 2 di chuyển theo ngón tay (snap 15 phút)
+- Kim số 2 di chuyển theo ngón tay (snap 5 phút)
 - Vùng giữa 2 kim bôi màu đỏ nhạt (`bg-rose-500/25`)
 
 **Bước 4 — Thả tay:**
@@ -226,9 +226,9 @@ Hiển thị các buổi học đã được tạo sẵn tại vị trí thời 
 
 #### Kéo kim độc lập sau khi tạo:
 
-- Người dùng nhấn vào tay cầm tam giác của kim A hoặc B
+- Người dùng nhấn vào bất kỳ đâu trên đường kẻ của kim A hoặc B (kể cả nhãn giờ hoặc tay cầm tam giác)
 - Nếu di chuyển ngón tay > 4px trong vòng 420ms: kích hoạt kéo
-- Kim di chuyển theo ngón tay, snap mỗi 15 phút
+- Kim di chuyển theo ngón tay, snap mỗi 5 phút
 - Vùng đỏ tự động cập nhật theo vị trí 2 kim
 - Nhãn thời gian cập nhật theo thời gian thực
 
@@ -376,7 +376,7 @@ Nhấn ✕ hoặc backdrop để đóng modal
 | Thời gian nhấn giữ để tạo kim | 420ms |
 | Ngưỡng di chuyển hủy nhấn giữ | 6px |
 | Ngưỡng di chuyển để kéo kim | 4px |
-| Snap thời gian | 15 phút |
+| Snap thời gian | 5 phút |
 | Tỉ lệ pixel/giờ | 64px |
 | Tỉ lệ pixel/phút | 64/60 ≈ 1.067px |
 | Tổng chiều cao timeline | 1.536px (24 × 64) |

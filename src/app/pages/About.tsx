@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 
 const team = [
-  { name: 'Alex Chen', role: 'Người sáng lập', avatar: 'A', color: 'bg-blue-500' },
-  { name: 'Sarah Kim', role: 'Nhà thiết kế', avatar: 'S', color: 'bg-pink-500' },
-  { name: 'David Lee', role: 'Lập trình viên', avatar: 'D', color: 'bg-green-500' },
+  { name: 'Trần Thanh Sơn', role: 'Trưởng nhóm', avatar: 'S', color: 'bg-blue-500' },
+  { name: 'Lương Hà Quân', role: 'Lập trình viên', avatar: 'Q', color: 'bg-purple-500' },
+  { name: 'Nguyễn Vũ Thu Thảo', role: 'Trưởng ban nội dung và chiến lược', avatar: 'T', color: 'bg-orange-500' },
 ];
 
 const social = [
@@ -20,7 +20,7 @@ export function About() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen bg-gray-50 pb-28">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="px-5 pt-14 pb-4">

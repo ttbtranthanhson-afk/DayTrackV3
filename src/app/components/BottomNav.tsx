@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { Calendar, CheckSquare, Clock, Award, CalendarDays, Settings, Plus, Play } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
+import { motion } from 'motion/react';
 
 const navItems = [
   { path: '/timetable', icon: CalendarDays, label: 'Lịch học' },
@@ -39,6 +40,8 @@ export function BottomNav() {
 
   const fireAction = () =>
     window.dispatchEvent(new CustomEvent('nav:quick-action'));
+
+  const ActionIcon = action ? action.icon : Plus;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-3 pb-4 pointer-events-none">
@@ -90,19 +93,20 @@ export function BottomNav() {
         </div>
 
         {/* ── Right: contextual action button ── */}
-        <div
-          className="flex-shrink-0 transition-all duration-300"
-          style={{ opacity: action ? 1 : 0, pointerEvents: action ? 'auto' : 'none' }}
+        <motion.div
+          initial={false}
+          animate={{ width: action ? 62 : 0, opacity: action ? 1 : 0 }}
+          transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+          className="flex-shrink-0 overflow-hidden"
+          style={{ pointerEvents: action ? 'auto' : 'none' }}
         >
-          {action && (
-            <button
-              onClick={fireAction}
-              className={`w-[62px] h-[62px] ${action.bg} rounded-[22px] shadow-xl shadow-black/15 flex items-center justify-center active:scale-95 transition-transform`}
-            >
-              <action.icon className="w-7 h-7 text-white" strokeWidth={2.5} />
-            </button>
-          )}
-        </div>
+          <button
+            onClick={fireAction}
+            className={`w-[62px] h-[62px] ${action ? action.bg : 'bg-gray-300'} rounded-[22px] shadow-xl shadow-black/15 flex items-center justify-center active:scale-95 transition-all duration-300`}
+          >
+            <ActionIcon className="w-7 h-7 text-white" strokeWidth={2.5} />
+          </button>
+        </motion.div>
 
       </div>
     </div>

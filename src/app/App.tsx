@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router';
+import { Toaster } from 'sonner';
+import { useNotificationScheduler } from './hooks/useNotificationScheduler';
+import { useAppTheme } from './hooks/useAppTheme';
 import { BottomNav } from './components/BottomNav';
 import { Timetable } from './pages/Timetable';
 import { Calendar } from './pages/Calendar';
@@ -13,6 +16,7 @@ import { Notifications } from './pages/Notifications';
 import { Appearance } from './pages/Appearance';
 import { About } from './pages/About';
 import { achievementGroupsData } from './data/achievements';
+import { syncAchievementsWithTasks } from './hooks/achievementStore';
 import { days, type ScheduleTask } from './hooks/scheduleData';
 
 interface UserData {
@@ -44,6 +48,9 @@ function AppContent() {
   const [userData, setUserData] = useState<UserData>({ name: '', email: '' });
   const [globalTasks, setGlobalTasks] = useState<Task[]>([]);
   const location = useLocation();
+
+  useNotificationScheduler();
+  useAppTheme();
 
   useEffect(() => {
     const savedUserData = localStorage.getItem('daytrack_user_data');
@@ -98,6 +105,7 @@ function AppContent() {
   };
 
   const handleUpdateTasks = (tasks: Task[]) => {
+    syncAchievementsWithTasks(globalTasks, tasks);
     setGlobalTasks(tasks);
     localStorage.setItem('daytrack_tasks', JSON.stringify(tasks));
   };
@@ -124,6 +132,7 @@ function AppContent() {
         <Route path="/about" element={<About />} />
       </Routes>
       {showBottomNav && <BottomNav />}
+      <Toaster position="top-center" richColors />
     </div>
   );
 }

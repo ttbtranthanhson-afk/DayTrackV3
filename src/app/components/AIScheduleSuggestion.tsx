@@ -1,199 +1,67 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Clock, Apple, Dumbbell, BookOpen, Info } from 'lucide-react';
+import { Clock, Apple, Dumbbell, BookOpen, Info, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { suggestForBlock, type AiSuggestion } from '../services/gemini';
 
 interface AIScheduleSuggestionProps {
   scheduleTitle: string;
   scheduleTime: string;
+  day?: string;
+  tasks?: string[];
 }
 
-export function AIScheduleSuggestion({ scheduleTitle, scheduleTime }: AIScheduleSuggestionProps) {
-  const getCategory = () => {
-    const title = scheduleTitle.toLowerCase();
-    if (title.includes('ăn') || title.includes('bữa') || title.includes('sáng') || title.includes('trưa') || title.includes('tối') || title.includes('eat') || title.includes('meal') || title.includes('breakfast') || title.includes('lunch') || title.includes('dinner')) {
-      return 'eating';
-    } else if (title.includes('tập') || title.includes('thể dục') || title.includes('gym') || title.includes('thể thao') || title.includes('exercise') || title.includes('workout') || title.includes('sport')) {
-      return 'exercise';
-    } else {
-      return 'study';
-    }
-  };
+type Category = 'eating' | 'exercise' | 'study';
 
-  const category = getCategory();
+function categoryOf(title: string): Category {
+  const t = title.toLowerCase();
+  if (t.includes('ăn') || t.includes('bữa') || t.includes('sáng') || t.includes('trưa') || t.includes('tối') || t.includes('eat') || t.includes('meal') || t.includes('breakfast') || t.includes('lunch') || t.includes('dinner')) {
+    return 'eating';
+  }
+  if (t.includes('tập') || t.includes('thể dục') || t.includes('gym') || t.includes('thể thao') || t.includes('exercise') || t.includes('workout') || t.includes('sport')) {
+    return 'exercise';
+  }
+  return 'study';
+}
 
-  const renderEatingSuggestion = () => (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-3">
-        <Apple className="w-5 h-5 text-orange-500" />
-        <h4 className="font-medium text-gray-800">Gợi ý dinh dưỡng</h4>
-      </div>
+const CATEGORY_META: Record<Category, { icon: typeof Apple; color: string; bg: string }> = {
+  eating: { icon: Apple, color: 'text-orange-500', bg: 'bg-orange-50' },
+  exercise: { icon: Dumbbell, color: 'text-green-500', bg: 'bg-green-50' },
+  study: { icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-50' },
+};
 
-      {/* Goals */}
-      <div>
-        <p className="text-xs text-gray-500 mb-2">Mục tiêu của bạn:</p>
-        <div className="flex gap-2">
-          <button className="px-3 py-1.5 bg-orange-100 text-orange-600 rounded-lg text-sm">
-            Tăng cân
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            Giảm cân
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            Tăng cơ
-          </button>
-        </div>
-      </div>
+export function AIScheduleSuggestion({ scheduleTitle, scheduleTime, day = '', tasks }: AIScheduleSuggestionProps) {
+  const category = categoryOf(scheduleTitle);
+  const meta = CATEGORY_META[category];
+  const Icon = meta.icon;
 
-      {/* Suggested Time */}
-      <div>
-        <p className="text-xs text-gray-500 mb-2">Thời gian gợi ý:</p>
-        <div className="flex gap-2">
-          <button className="px-3 py-1.5 bg-blue-100 text-blue-600 rounded-lg text-sm">
-            16:00 - 17:00
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            16:30 - 17:30
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            17:00 - 18:00
-          </button>
-        </div>
-      </div>
+  const [data, setData] = useState<AiSuggestion | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
-      {/* Food Suggestions */}
-      <div className="bg-orange-50 rounded-xl p-3">
-        <p className="text-sm font-medium text-gray-800 mb-2">Bữa ăn được đề xuất:</p>
-        <ul className="space-y-1 text-sm text-gray-700">
-          <li>• Ức gà - 150g (protein)</li>
-          <li>• Gạo lứt - 100g (carbs)</li>
-          <li>• Rau củ hỗn hợp - 80g (chất xơ, vitamin)</li>
-          <li>• Dầu ô liu - 1 tbsp (chất béo lành mạnh)</li>
-        </ul>
-      </div>
+  const tasksKey = (tasks ?? []).join('|');
 
-      {/* Explanation */}
-      <div className="bg-blue-50 rounded-xl p-3 flex gap-2">
-        <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-gray-700">
-          Bữa ăn này cung cấp macro cân bằng cho tăng cơ: protein cao để phục hồi,
-          carb phức tạp để tạo năng lượng, và chất béo lành mạnh cho sản xuất hormone.
-        </p>
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setData(null);
 
-  const renderStudySuggestion = () => (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-3">
-        <BookOpen className="w-5 h-5 text-purple-500" />
-        <h4 className="font-medium text-gray-800">Gợi ý phương pháp học tập</h4>
-      </div>
+    suggestForBlock({ day, title: scheduleTitle, time: scheduleTime, tasks })
+      .then(result => {
+        if (!cancelled) setData(result);
+      })
+      .catch(err => {
+        if (!cancelled) setError(err instanceof Error ? err.message : 'Không thể tạo gợi ý AI.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
-      {/* Suggested Time */}
-      <div>
-        <p className="text-xs text-gray-500 mb-2">Thời gian học gợi ý:</p>
-        <div className="flex gap-2">
-          <button className="px-3 py-1.5 bg-purple-100 text-purple-600 rounded-lg text-sm">
-            16:00 - 17:00
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            16:30 - 17:30
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            17:00 - 18:00
-          </button>
-        </div>
-      </div>
-
-      {/* Study Method */}
-      <div className="bg-purple-50 rounded-xl p-3">
-        <p className="text-sm font-medium text-gray-800 mb-2">Phương pháp được đề xuất:</p>
-        <ul className="space-y-1 text-sm text-gray-700">
-          <li>• Sử dụng kỹ thuật Pomodoro (25p tập trung + 5p nghỉ)</li>
-          <li>• Gợi nhớ chủ động: tự kiểm tra không xem ghi chú</li>
-          <li>• Ghi chép tay để ghi nhớ tốt hơn</li>
-          <li>• Ôn tập tài liệu trong vòng 24 giờ</li>
-        </ul>
-      </div>
-
-      {/* Posture & Health */}
-      <div className="bg-green-50 rounded-xl p-3">
-        <p className="text-sm font-medium text-gray-800 mb-2">Mẹo học tập lành mạnh:</p>
-        <ul className="space-y-1 text-sm text-gray-700">
-          <li>• Ngồi thẳng, chân phẳng trên sàn</li>
-          <li>• Màn hình ngang tầm mắt, cách 50cm</li>
-          <li>• Nghỉ 5 phút sau mỗi 25 phút</li>
-          <li>• Duỗi người và nhìn ra xa màn hình</li>
-        </ul>
-      </div>
-
-      {/* Explanation */}
-      <div className="bg-blue-50 rounded-xl p-3 flex gap-2">
-        <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-gray-700">
-          Phương pháp này tối đa hóa sự tập trung và ghi nhớ trong khi ngăn ngừa kiệt sức.
-          Nghỉ ngơi thường xuyên giúp duy trì sự tập trung và bảo vệ sức khỏe thể chất.
-        </p>
-      </div>
-    </div>
-  );
-
-  const renderExerciseSuggestion = () => (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-3">
-        <Dumbbell className="w-5 h-5 text-green-500" />
-        <h4 className="font-medium text-gray-800">Gợi ý tập luyện</h4>
-      </div>
-
-      {/* Goals */}
-      <div>
-        <p className="text-xs text-gray-500 mb-2">Mục tiêu của bạn:</p>
-        <div className="flex gap-2">
-          <button className="px-3 py-1.5 bg-green-100 text-green-600 rounded-lg text-sm">
-            Tăng cơ
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            Giảm cân
-          </button>
-        </div>
-      </div>
-
-      {/* Suggested Time */}
-      <div>
-        <p className="text-xs text-gray-500 mb-2">Thời gian gợi ý:</p>
-        <div className="flex gap-2">
-          <button className="px-3 py-1.5 bg-green-100 text-green-600 rounded-lg text-sm">
-            16:00 - 17:00
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            16:30 - 17:30
-          </button>
-          <button className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            17:00 - 18:00
-          </button>
-        </div>
-      </div>
-
-      {/* Exercise Plan */}
-      <div className="bg-green-50 rounded-xl p-3">
-        <p className="text-sm font-medium text-gray-800 mb-2">Bài tập hôm nay:</p>
-        <ul className="space-y-1 text-sm text-gray-700">
-          <li>• Chạy bộ - 3km (khởi động cardio)</li>
-          <li>• Chống đẩy - 3 sets 15 lần</li>
-          <li>• Plank - 3 sets 45 giây</li>
-          <li>• Squat - 3 sets 20 lần</li>
-        </ul>
-      </div>
-
-      {/* Explanation */}
-      <div className="bg-blue-50 rounded-xl p-3 flex gap-2">
-        <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-gray-700">
-          Bài tập này kết hợp cardio và rèn luyện sức mạnh để tăng cơ tối ưu.
-          Các bài tập nhắm vào các nhóm cơ chính trong khi cải thiện sức bền.
-        </p>
-      </div>
-    </div>
-  );
+    return () => {
+      cancelled = true;
+    };
+  }, [scheduleTitle, scheduleTime, day, tasksKey, reloadKey]);
 
   return (
     <motion.div
@@ -204,9 +72,63 @@ export function AIScheduleSuggestion({ scheduleTitle, scheduleTime }: AISchedule
       className="overflow-hidden"
     >
       <div className="px-4 pt-3 pb-4 border-t border-gray-200">
-        {category === 'eating' && renderEatingSuggestion()}
-        {category === 'study' && renderStudySuggestion()}
-        {category === 'exercise' && renderExerciseSuggestion()}
+        {loading && (
+          <div className="flex flex-col items-center justify-center gap-2 py-6 text-gray-400">
+            <Loader2 className="w-5 h-5 animate-spin text-purple-500" />
+            <p className="text-xs font-medium">AI đang phân tích khối lịch...</p>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="bg-red-50 rounded-xl p-3">
+            <div className="flex gap-2">
+              <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-red-600 leading-relaxed flex-1">{error}</p>
+            </div>
+            <button
+              onClick={() => setReloadKey(k => k + 1)}
+              className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-white border border-red-200 text-red-600 text-xs font-bold hover:bg-red-100 transition-colors"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              Thử lại
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && data && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Icon className={`w-5 h-5 ${meta.color}`} />
+              <h4 className="font-medium text-gray-800">{data.title}</h4>
+            </div>
+
+            {data.sections.map((section, index) => (
+              <div
+                key={index}
+                className={`rounded-xl p-3 ${index === 0 ? meta.bg : 'bg-blue-50'}`}
+              >
+                <p className="text-sm font-medium text-gray-800 mb-2">{section.heading}</p>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  {section.items.map((item, i) => (
+                    <li key={i}>• {item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+
+            {data.note && (
+              <div className="bg-blue-50 rounded-xl p-3 flex gap-2">
+                <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-gray-700">{data.note}</p>
+              </div>
+            )}
+
+            <div className="flex items-center gap-1.5 text-[11px] text-gray-300 font-medium">
+              <Clock className="w-3 h-3" />
+              Phân tích cho khung {scheduleTime}
+            </div>
+          </div>
+        )}
       </div>
     </motion.div>
   );

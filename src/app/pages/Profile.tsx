@@ -1,5 +1,4 @@
-import { ChevronLeft, User, Briefcase, Heart, Target, Award, Calendar } from 'lucide-react';
-import { PageContainer } from '../components/PageContainer';
+import { ChevronLeft, Mail, Calendar, Briefcase, Heart, Target, Award } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 interface UserData {
@@ -24,145 +23,174 @@ interface ProfileProps {
 export function Profile({ userData, achievements }: ProfileProps) {
   const navigate = useNavigate();
 
+  const initials = userData.name
+    .split(' ')
+    .map(w => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
   return (
-    <PageContainer className="bg-gradient-to-b from-blue-50/30 to-white" showSettings={false}>
-      {/* Header */}
-      <div className="sticky top-0 bg-white/80 backdrop-blur-lg z-10 px-6 py-6 border-b border-gray-100">
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-gray-50 pb-28">
+      <div className="max-w-md mx-auto">
+        {/* Header */}
+        <div className="px-5 pt-14 pb-4 bg-gray-50">
           <button
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors mb-4"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <ChevronLeft className="w-4 h-4" />
+            Cài đặt
           </button>
+          <h1 className="text-3xl font-bold text-gray-900">Hồ sơ</h1>
+          <p className="text-sm text-gray-400 mt-0.5 font-medium">Thông tin của bạn</p>
+        </div>
+
+        {/* Profile Card */}
+        <div className="mx-5 mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl p-5 text-white relative overflow-hidden">
+          <div className="absolute -top-6 -right-6 w-28 h-28 bg-white/10 rounded-full" />
+          <div className="absolute bottom-0 right-8 w-16 h-16 bg-white/10 rounded-full" />
+
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-2xl font-bold flex-shrink-0">
+              {initials}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg font-bold truncate">{userData.name}</h2>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <Mail className="w-3.5 h-3.5 text-white/60" />
+                <p className="text-sm text-white/70 truncate">{userData.email}</p>
+              </div>
+            </div>
+          </div>
+
+          {(userData.age || userData.job || userData.goals) && (
+            <div className="flex gap-2 mt-4 relative z-10 flex-wrap">
+              {userData.age && (
+                <span className="text-xs font-semibold bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {userData.age} tuổi
+                </span>
+              )}
+              {userData.job && (
+                <span className="text-xs font-semibold bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-1">
+                  <Briefcase className="w-3 h-3" />
+                  {userData.job}
+                </span>
+              )}
+              {userData.goals && (
+                <span className="text-xs font-semibold bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-1">
+                  <Target className="w-3 h-3" />
+                  Có mục tiêu
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="px-5 space-y-5">
+          {/* Personal Information */}
           <div>
-            <h1 className="text-2xl text-gray-800">Hồ sơ</h1>
-            <p className="text-sm text-gray-500">Thông tin của bạn</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="px-6 py-6">
-        {/* User Avatar & Name */}
-        <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl p-6 mb-6 text-center">
-          <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center text-white text-4xl shadow-xl">
-            {userData.name.charAt(0).toUpperCase()}
-          </div>
-          <h2 className="text-2xl text-gray-800 mb-1">{userData.name}</h2>
-          <p className="text-sm text-gray-600">{userData.email}</p>
-        </div>
-
-        {/* Personal Information */}
-        <div className="space-y-4 mb-6">
-          <h3 className="text-lg font-medium text-gray-800">Thông tin cá nhân</h3>
-
-          {userData.age && (
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                  <Calendar className="w-5 h-5 text-blue-500" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-500 mb-1">Tuổi</p>
-                  <p className="text-gray-800">{userData.age} tuổi</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {userData.job && (
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
-                  <Briefcase className="w-5 h-5 text-purple-500" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-500 mb-1">Nghề nghiệp</p>
-                  <p className="text-gray-800">{userData.job}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {userData.habits && (
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center flex-shrink-0">
-                  <Heart className="w-5 h-5 text-pink-500" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-500 mb-1">Thói quen & Sở thích</p>
-                  <p className="text-gray-800">{userData.habits}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {userData.goals && (
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0">
-                  <Target className="w-5 h-5 text-orange-500" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-500 mb-1">Mục tiêu với DayTrack</p>
-                  <p className="text-gray-800">{userData.goals}</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Achievements Section */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-800">Thành tựu gần đây</h3>
-            <button
-              onClick={() => navigate('/achive')}
-              className="text-sm text-blue-500 hover:text-blue-600"
-            >
-              Xem tất cả
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            {achievements.slice(0, 4).map((achievement) => {
-              const Icon = achievement.icon;
-              return (
-                <div
-                  key={achievement.id}
-                  className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
-                >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${achievement.color} flex items-center justify-center mb-3 shadow-lg`}>
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <h4 className="text-sm font-medium text-gray-800">
-                    {achievement.title}
-                  </h4>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Stats Overview */}
-        <div className="mt-6 bg-gradient-to-br from-pink-100 to-purple-100 rounded-3xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-white/60 flex items-center justify-center">
-              <Award className="w-6 h-6 text-pink-600" />
-            </div>
-            <div>
-              <h2 className="text-2xl text-gray-800">{achievements.length}</h2>
-              <p className="text-sm text-gray-600">Nhóm thành tựu</p>
-            </div>
-          </div>
-          <div className="bg-white/40 rounded-2xl p-4">
-            <p className="text-sm text-gray-700">
-              Tiếp tục xây dựng thói quen năng suất lành mạnh! Bạn đang đi đúng hướng.
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-1">
+              Thông tin cá nhân
             </p>
+            <div className="bg-white rounded-2xl overflow-hidden divide-y divide-gray-50">
+              {userData.age && (
+                <div className="flex items-center gap-4 px-4 py-4">
+                  <div className="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+                    <Calendar className="w-[18px] h-[18px] text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-400 mb-0.5">Tuổi</p>
+                    <p className="text-sm font-bold text-gray-800">{userData.age} tuổi</p>
+                  </div>
+                </div>
+              )}
+              {userData.job && (
+                <div className="flex items-center gap-4 px-4 py-4">
+                  <div className="w-9 h-9 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
+                    <Briefcase className="w-[18px] h-[18px] text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-400 mb-0.5">Nghề nghiệp</p>
+                    <p className="text-sm font-bold text-gray-800">{userData.job}</p>
+                  </div>
+                </div>
+              )}
+              {userData.habits && (
+                <div className="flex items-center gap-4 px-4 py-4">
+                  <div className="w-9 h-9 rounded-xl bg-pink-500 flex items-center justify-center flex-shrink-0">
+                    <Heart className="w-[18px] h-[18px] text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-400 mb-0.5">Thói quen & Sở thích</p>
+                    <p className="text-sm font-bold text-gray-800">{userData.habits}</p>
+                  </div>
+                </div>
+              )}
+              {userData.goals && (
+                <div className="flex items-center gap-4 px-4 py-4">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
+                    <Target className="w-[18px] h-[18px] text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-400 mb-0.5">Mục tiêu với DayTrack</p>
+                    <p className="text-sm font-bold text-gray-800">{userData.goals}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Achievements */}
+          <div>
+            <div className="flex items-center justify-between mb-2 px-1">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                Thành tựu gần đây
+              </p>
+              <button
+                onClick={() => navigate('/achive')}
+                className="text-sm font-semibold text-blue-500 hover:text-blue-600"
+              >
+                Xem tất cả
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {achievements.slice(0, 4).map((achievement) => {
+                const Icon = achievement.icon;
+                return (
+                  <div key={achievement.id} className="bg-white rounded-2xl p-4">
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${achievement.color} flex items-center justify-center mb-3`}>
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    <h4 className="text-sm font-bold text-gray-800">
+                      {achievement.title}
+                    </h4>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Stats Overview */}
+          <div className="bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-100 rounded-2xl p-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center flex-shrink-0">
+                <Award className="w-6 h-6 text-pink-500" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">{achievements.length}</h2>
+                <p className="text-sm text-gray-400">Nhóm thành tựu</p>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-pink-100">
+              <p className="text-sm text-gray-500">
+                Tiếp tục xây dựng thói quen năng suất lành mạnh! Bạn đang đi đúng hướng.
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </PageContainer>
+    </div>
   );
 }

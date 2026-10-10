@@ -8,6 +8,7 @@ import {
   type MusicCategory,
 } from './musicData';
 import { musicEngine } from './musicEngine';
+import { consumePendingFocus } from './focusLauncher';
 
 export { musicCategories, allSongs, CUSTOM_CATEGORY, NONE_CATEGORY };
 export type { Song, MusicCategory };
@@ -152,23 +153,28 @@ export function useFocus() {
 
   const handleTouchEnd = () => { touchStartRef.current = null; };
 
+  const startTimer = (totalSeconds: number) => {
+    if (totalSeconds <= 0) return;
+    setTotalTime(totalSeconds);
+    setCurrentTime(totalSeconds);
+    setIsRunning(true);
+
+    const songs = getSongs(selectedMusic);
+    if (selectedMusic !== 'none' && songs.length > 0) {
+      const chosen = songs[Math.floor(Math.random() * songs.length)];
+      musicEngine.play(chosen);
+      setCurrentSong(chosen);
+    }
+
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 500);
+  };
+
   const toggleTimer = () => {
     if (!isRunning) {
       const total = hours * 3600 + minutes * 60 + seconds;
       if (total === 0) return;
-      setTotalTime(total);
-      setCurrentTime(total);
-      setIsRunning(true);
-
-      const songs = getSongs(selectedMusic);
-      if (selectedMusic !== 'none' && songs.length > 0) {
-        const chosen = songs[Math.floor(Math.random() * songs.length)];
-        musicEngine.play(chosen);
-        setCurrentSong(chosen);
-      }
-
-      setIsShaking(true);
-      setTimeout(() => setIsShaking(false), 500);
+      startTimer(total);
     } else {
       setIsRunning(false);
       musicEngine.stop();
@@ -181,6 +187,18 @@ export function useFocus() {
     window.addEventListener('nav:quick-action', handler);
     return () => window.removeEventListener('nav:quick-action', handler);
   }, [hours, minutes, seconds, isRunning, currentTime, selectedMusic, customPlaylist]);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      consumePendingFocus();
+      const secs = (e as CustomEvent<{ seconds: number }>).detail?.seconds;
+      if (typeof secs === 'number' && secs > 0) startTimer(secs);
+    };
+    window.addEventListener('focus:auto-start', handler);
+    const pending = consumePendingFocus();
+    if (pending !== null) startTimer(pending);
+    return () => window.removeEventListener('focus:auto-start', handler);
+  }, [selectedMusic, customPlaylist]);
 
   const resetTimer = () => {
     setIsRunning(false);

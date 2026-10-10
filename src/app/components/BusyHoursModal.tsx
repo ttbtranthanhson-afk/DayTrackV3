@@ -1,12 +1,12 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { X, Trash2, Sparkles } from 'lucide-react';
+import { X, Trash2, Sparkles, CalendarOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { ScheduleBlock } from '../hooks/useTimetable';
 import { colorMap } from '../hooks/useTimetable';
 
 const HOUR_H = 64;
 const MIN_PX = HOUR_H / 60;
-const SNAP = 15;
+const SNAP = 5;
 const LONG_MS = 420;
 const MOVE_THRESH = 6;
 
@@ -33,18 +33,17 @@ interface Props {
   onClose: () => void;
   schedule: ScheduleBlock[];
   day: string;
+  onGeneratePlan?: (busy: string[]) => void;
 }
 
 type Mode = 'idle' | 'pending' | 'scrolling' | 'creating';
 
-export function BusyHoursModal({ isOpen, onClose, schedule, day }: Props) {
+export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [creating, setCreating] = useState<{ a: number; b: number } | null>(null);
   const [dragging, setDragging] = useState<{ pairId: string; which: 'a' | 'b' } | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiResult, setAiResult] = useState<string | null>(null);
 
   const modeRef = useRef<Mode>('idle');
   const lpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -158,18 +157,21 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day }: Props) {
     e.stopPropagation();
     const o = { x: e.clientX, y: e.clientY };
     let moved = false;
-    const t = setTimeout(() => { if (!moved) setDeleteTarget(pairId); }, LONG_MS);
+    const canDelete = Boolean((e.target as Element).closest('[data-del]'));
+    const t = canDelete
+      ? setTimeout(() => { if (!moved) setDeleteTarget(pairId); }, LONG_MS)
+      : null;
     const mv = (me: PointerEvent) => {
       if (!moved && (Math.abs(me.clientX - o.x) > 4 || Math.abs(me.clientY - o.y) > 4)) {
         moved = true;
-        clearTimeout(t);
+        if (t) clearTimeout(t);
         window.removeEventListener('pointermove', mv);
         window.removeEventListener('pointerup', up);
         setDragging({ pairId, which });
       }
     };
     const up = () => {
-      clearTimeout(t);
+      if (t) clearTimeout(t);
       window.removeEventListener('pointermove', mv);
       window.removeEventListener('pointerup', up);
     };
@@ -178,25 +180,8 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day }: Props) {
   };
 
   const handleAI = () => {
-    setAiLoading(true);
-    setAiResult(null);
-    const busy = pairs.length > 0
-      ? pairs.map(p => `${fmt(Math.min(p.a, p.b))}–${fmt(Math.max(p.a, p.b))}`).join(', ')
-      : 'Không có';
-    setTimeout(() => {
-      const sb = schedule.length > 0
-        ? schedule.map(s => `• ${s.title} (${s.time})`).join('\n')
-        : '• Chưa có lịch nào trong ngày';
-      setAiResult(
-        `📅 Lịch ${day}:\n${sb}\n\n⛔ Giờ bận: ${busy}\n\n` +
-        `💡 Gợi ý sắp xếp khoa học:\n` +
-        `• Học lý thuyết buổi sáng (8:00–12:00) khi não ở trạng thái tập trung tốt nhất\n` +
-        `• Nghỉ 10–15 phút giữa các buổi để não phục hồi hiệu quả\n` +
-        `• Dành 13:30–15:30 cho bài tập thực hành và ôn tập kiến thức\n` +
-        `• Đọc tóm tắt nhẹ buổi tối, tránh học nặng sau 21:00 để bảo vệ giấc ngủ`
-      );
-      setAiLoading(false);
-    }, 2000);
+    const busy = pairs.map(p => `${fmt(Math.min(p.a, p.b))}–${fmt(Math.max(p.a, p.b))}`);
+    onGeneratePlan?.(busy);
   };
 
   const blocks = schedule.map(b => ({ ...b, range: parseRange(b.time) })).filter(b => b.range);
@@ -208,39 +193,44 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day }: Props) {
         <>
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 z-50" onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={onClose}
           />
 
-          <motion.div
-            initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl max-w-md mx-auto flex flex-col"
-            style={{ maxHeight: '90vh' }}
-            onClick={e => e.stopPropagation()}
-          >
-            {/* Handle */}
-            <div className="pt-3 pb-0 flex-shrink-0">
-              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto" />
-            </div>
-
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3 flex-shrink-0 border-b border-gray-50">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">Cài đặt giờ bận</h3>
-                <p className="text-[11px] text-gray-400 mt-0.5 font-medium">Nhấn giữ trên đường thời gian để đánh dấu giờ bận</p>
-              </div>
-              <button onClick={onClose}
-                className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
-                <X className="w-4 h-4 text-gray-600" />
-              </button>
-            </div>
-
-            {/* Timeline scroll container */}
-            <div
-              ref={scrollRef}
-              className="flex-shrink-0 overflow-hidden"
-              style={{ height: 320 }}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              className="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto pointer-events-auto shadow-xl flex flex-col"
+              onClick={e => e.stopPropagation()}
             >
+              {/* Header */}
+              <div className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between rounded-t-3xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-rose-50 flex items-center justify-center flex-shrink-0">
+                    <CalendarOff className="w-5 h-5 text-rose-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-gray-900">Cài đặt giờ bận</h2>
+                    <p className="text-xs text-gray-400 mt-0.5">{day}</p>
+                  </div>
+                </div>
+                <button onClick={onClose}
+                  className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0">
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              {/* Timeline card */}
+              <div className="rounded-2xl border border-gray-200 overflow-hidden">
+                <div
+                  ref={scrollRef}
+                  className="overflow-hidden bg-white"
+                  style={{ height: 300 }}
+                >
               {/* Inner div handles all pointer events and manual scroll */}
               <div
                 className="relative"
@@ -320,73 +310,65 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day }: Props) {
                   );
                 })()}
               </div>
-            </div>
+                </div>
 
-            {/* Hint bar */}
-            <div className="flex-shrink-0 flex items-center justify-center gap-2 py-2 bg-amber-50 border-t border-b border-amber-100">
-              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              <p className="text-[11px] font-semibold text-amber-700">Nhấn giữ trên đường thời gian → kéo để chọn vùng bận</p>
-            </div>
-
-            {/* Body */}
-            <div className="flex-1 overflow-y-auto px-5 pt-4 pb-6 space-y-3">
+                {/* Hint */}
+                <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-50 border-t border-gray-100">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+                  <p className="text-[11px] font-semibold text-gray-400">Nhấn giữ trên đường thời gian → kéo để chọn vùng bận</p>
+                </div>
+              </div>
               {/* Busy summary chips */}
-              {pairs.length > 0 && (
-                <div className="bg-rose-50 border border-rose-100 rounded-2xl p-3">
-                  <p className="text-xs font-bold text-rose-600 mb-2">Khung giờ bận đã đặt</p>
+              <div className="rounded-2xl border border-gray-200 p-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Khung giờ bận đã đặt</p>
+                {pairs.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
                     {pairs.map(p => {
                       const lo = Math.min(p.a, p.b);
                       const hi = Math.max(p.a, p.b);
                       return (
                         <button key={p.id} onClick={() => setDeleteTarget(p.id)}
-                          className="flex items-center gap-1.5 text-[11px] font-bold text-rose-600 bg-white border border-rose-200 px-2.5 py-1 rounded-full hover:bg-rose-50 transition-colors">
+                          className="flex items-center gap-1.5 text-[11px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-full hover:bg-rose-100 transition-colors">
                           {fmt(lo)}–{fmt(hi)}
-                          <X className="w-2.5 h-2.5" />
+                          <X className="w-3 h-3" />
                         </button>
                       );
                     })}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p className="text-xs text-gray-300">Chưa có khung giờ bận nào</p>
+                )}
+              </div>
 
               {/* AI button */}
               <button
                 onClick={handleAI}
-                disabled={aiLoading}
-                className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 text-white text-sm font-bold shadow-md shadow-violet-100 disabled:opacity-70 transition-all active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl bg-violet-50 border border-violet-100 text-violet-600 text-sm font-bold hover:bg-violet-100 transition-all active:scale-[0.98]"
               >
-                {aiLoading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Đang phân tích lịch...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    Gọi AI sắp xếp lịch
-                  </>
-                )}
+                <Sparkles className="w-4 h-4" />
+                Gọi AI sắp xếp lịch
               </button>
+            </div>
 
-              <AnimatePresence>
-                {aiResult && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-100 rounded-2xl p-4"
-                  >
-                    <div className="flex items-center gap-2 mb-2.5">
-                      <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center flex-shrink-0">
-                        <Sparkles className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-sm font-bold text-violet-800">Phân tích từ AI</span>
-                    </div>
-                    <p className="text-xs text-violet-700 leading-relaxed whitespace-pre-line">{aiResult}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            {/* Footer */}
+            <div className="sticky bottom-0 z-10 bg-white/95 backdrop-blur border-t border-gray-100 px-6 py-4 flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-2xl font-semibold text-sm hover:bg-gray-200 transition-colors"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all"
+              >
+                Xong
+              </button>
             </div>
           </motion.div>
+          </div>
 
           {/* Delete confirm dialog */}
           <AnimatePresence>
@@ -442,8 +424,10 @@ function NeedleRow({ min, pairId, which, onNeedleDown }: {
 }) {
   return (
     <div
-      className="absolute left-0 right-0 z-10 flex items-center"
-      style={{ top: min * MIN_PX, transform: 'translateY(-50%)' }}
+      data-nh="true"
+      className="absolute left-0 right-0 z-10 flex items-center cursor-grab active:cursor-grabbing"
+      style={{ top: min * MIN_PX, transform: 'translateY(-50%)', touchAction: 'none' }}
+      onPointerDown={e => onNeedleDown(e, pairId, which)}
     >
       <div className="w-11 flex-shrink-0 flex justify-end pr-1">
         <span className="text-[9px] font-bold text-rose-500 bg-white border border-rose-300 px-1 py-0.5 rounded leading-none whitespace-nowrap">
@@ -452,10 +436,8 @@ function NeedleRow({ min, pairId, which, onNeedleDown }: {
       </div>
       <div className="flex-1 h-px bg-rose-400" />
       <div
-        data-nh="true"
-        className="w-8 h-8 flex items-center justify-center flex-shrink-0 cursor-grab active:cursor-grabbing"
-        style={{ touchAction: 'none' }}
-        onPointerDown={e => onNeedleDown(e, pairId, which)}
+        data-del="true"
+        className="w-8 h-8 flex items-center justify-center flex-shrink-0"
       >
         {/* Triangle handle pointing right */}
         <div style={{

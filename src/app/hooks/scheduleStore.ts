@@ -72,3 +72,8 @@ export function updateScheduleBlock(day: string, id: string, block: ScheduleBloc
   };
   emit();
 }
+
+export function replaceScheduleDay(day: string, blocks: ScheduleBlock[]) {
+  scheduleState = { ...scheduleState, [day]: blocks };
+  emit();
+}
