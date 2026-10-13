@@ -16,29 +16,33 @@ function figmaAssetResolver() {
   }
 }
 
-export default defineConfig(({ command }) => ({
-  // GitHub Pages project site is served from /DayTrackV3/. Keep dev at root.
-  base: command === 'build' ? '/DayTrackV3/' : '/',
-  plugins: [
-    figmaAssetResolver(),
-    // The React and Tailwind plugins are both required for Make, even if
-    // Tailwind is not being actively used – do not remove them
-    react(),
-    tailwindcss(),
-  ],
-  resolve: {
-    alias: {
-      // Alias @ to the src directory
-      '@': path.resolve(__dirname, './src'),
+export default defineConfig(({ command }) => {
+  // Vercel builds at the domain root into dist/; GitHub Pages serves from
+  // /DayTrackV3/ and commits the build into docs/.
+  const isVercel = Boolean(process.env.VERCEL);
+  return {
+    // GitHub Pages project site is served from /DayTrackV3/. Keep dev at root.
+    base: command === 'build' ? (isVercel ? '/' : '/DayTrackV3/') : '/',
+    plugins: [
+      figmaAssetResolver(),
+      // The React and Tailwind plugins are both required for Make, even if
+      // Tailwind is not being actively used – do not remove them
+      react(),
+      tailwindcss(),
+    ],
+    resolve: {
+      alias: {
+        // Alias @ to the src directory
+        '@': path.resolve(__dirname, './src'),
+      },
     },
-  },
 
-  // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
-  assetsInclude: ['**/*.svg', '**/*.csv'],
+    // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
+    assetsInclude: ['**/*.svg', '**/*.csv'],
 
-  // GitHub Pages "main /docs" deployment: emit the production build into docs/.
-  build: {
-    outDir: 'docs',
-    emptyOutDir: true,
-  },
-}))
+    build: {
+      outDir: isVercel ? 'dist' : 'docs',
+      emptyOutDir: true,
+    },
+  };
+})
