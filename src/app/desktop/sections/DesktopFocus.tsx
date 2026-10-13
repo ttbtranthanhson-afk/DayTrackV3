@@ -190,7 +190,7 @@ export function DesktopFocus() {
 
       <div className="grid grid-cols-5 gap-6">
         {/* Timer hero */}
-        <div className="col-span-2 self-start h-[440px] rounded-3xl bg-gradient-to-b from-emerald-400 to-green-500 p-8 relative overflow-hidden flex flex-col items-center justify-center">
+        <div data-tour="focus-timer" className="col-span-2 self-start h-[440px] rounded-3xl bg-gradient-to-b from-emerald-400 to-green-500 p-8 relative overflow-hidden flex flex-col items-center justify-center">
           <div className="absolute -top-10 -right-10 w-44 h-44 bg-white/10 rounded-full" />
           <div className="absolute -bottom-12 -left-8 w-36 h-36 bg-white/10 rounded-full" />
 
@@ -242,7 +242,7 @@ export function DesktopFocus() {
 
           <div className="flex items-center justify-center gap-5 mt-8 relative z-10">
             {!isRunning && (
-              <div className="flex gap-2">
+              <div data-tour="focus-presets" className="flex gap-2">
                 {presetTimes.map(p => (
                   <button key={p.label} onClick={() => setPresetTime(p.seconds)}
                     className="text-xs font-semibold bg-white/20 text-white px-3.5 py-2 rounded-full hover:bg-white/30 transition-colors">
@@ -258,6 +258,7 @@ export function DesktopFocus() {
               </button>
             )}
             <button onClick={toggleTimer}
+              data-tour="focus-play"
               className="w-16 h-16 rounded-full bg-white text-green-600 shadow-lg flex items-center justify-center hover:scale-105 transition-transform">
               {isRunning ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7 ml-0.5" />}
             </button>
@@ -266,11 +267,12 @@ export function DesktopFocus() {
 
         {/* Content panel */}
         <div className="col-span-3">
-          <div className="flex gap-1 mb-4 bg-gray-100 rounded-2xl p-1">
+          <div data-tour="focus-tabs" className="flex gap-1 mb-4 bg-gray-100 rounded-2xl p-1">
             {tabs.map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
+                data-tour={tab === 'Nhạc nền' ? 'focus-tab-music' : undefined}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   activeTab === tab ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
                 }`}
@@ -330,7 +332,7 @@ export function DesktopFocus() {
                 </div>
               )}
 
-              <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+              <div data-tour="focus-music" className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
                 {musicCategories.map(cat => renderCategory(cat))}
                 {renderCategory(CUSTOM_CATEGORY)}
                 {renderCategory(NONE_CATEGORY)}

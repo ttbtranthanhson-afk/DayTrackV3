@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import type { BlockType } from '../../../shared/ai';
 import { replaceScheduleDay } from './scheduleStore';
+import { replaceCalendarDay } from './calendarStore';
+import { setBusyRanges, useBusyData } from './busyStore';
 import { addAiAchievements } from './achievementStore';
 import { generateAchievements } from '../services/gemini';
 import type { ScheduleBlock, ScheduleTask } from './scheduleData';
@@ -12,12 +14,22 @@ interface UseAiPlannerOptions {
   onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
   onApplied?: () => void;
   successMessage?: string;
+  dateKey?: string;
+  busyKey?: string;
 }
 
 export function useAiPlanner(day: string, schedule: ScheduleBlock[], options: UseAiPlannerOptions = {}) {
   const [busyOpen, setBusyOpen] = useState(false);
   const [plannerOpen, setPlannerOpen] = useState(false);
-  const [busy, setBusy] = useState<string[]>([]);
+  const [localBusy, setLocalBusy] = useState<string[]>([]);
+
+  const busyData = useBusyData();
+  const busy = options.busyKey ? busyData[options.busyKey] ?? [] : localBusy;
+
+  const setBusy = (nextBusy: string[]) => {
+    if (options.busyKey) setBusyRanges(options.busyKey, nextBusy);
+    else setLocalBusy(nextBusy);
+  };
 
   const openSurvey = () => setBusyOpen(true);
   const closeSurvey = () => setBusyOpen(false);
@@ -29,12 +41,13 @@ export function useAiPlanner(day: string, schedule: ScheduleBlock[], options: Us
   };
 
   const apply = (blocks: ScheduleBlock[], optionName: string, meta: PlanBlockMeta[]) => {
-    replaceScheduleDay(day, blocks);
+    if (options.dateKey) replaceCalendarDay(options.dateKey, blocks);
+    else replaceScheduleDay(day, blocks);
 
     if (options.onAddTasks) {
       blocks.forEach(block => {
         if (block.tasks && block.tasks.length > 0) {
-          options.onAddTasks!(block.tasks, optionName, day);
+          options.onAddTasks!(block.tasks, optionName, day, options.dateKey);
         }
       });
     }
@@ -61,6 +74,7 @@ export function useAiPlanner(day: string, schedule: ScheduleBlock[], options: Us
     schedule,
     openSurvey,
     closeSurvey,
+    setBusy,
     generate,
     apply,
     closePlanner: () => setPlannerOpen(false),

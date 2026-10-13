@@ -58,7 +58,11 @@ export function useTasks({ tasks: propTasks, onUpdateTasks }: UseTasksProps) {
   useEffect(() => {
     const handler = () => setShowAddModal(true);
     window.addEventListener('nav:quick-action', handler);
-    return () => window.removeEventListener('nav:quick-action', handler);
+    window.addEventListener('tutorial:open-create', handler);
+    return () => {
+      window.removeEventListener('nav:quick-action', handler);
+      window.removeEventListener('tutorial:open-create', handler);
+    };
   }, []);
 
   useEffect(() => {

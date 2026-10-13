@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Lock, User, Briefcase, Calendar, Target, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Briefcase, Calendar, Target, ArrowRight, Eye, EyeOff, HeartPulse } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Logo } from '../components/Logo';
 
@@ -10,6 +10,7 @@ interface UserData {
   job?: string;
   habits?: string;
   goals?: string;
+  health?: string;
 }
 
 interface DesktopLoginProps {
@@ -70,6 +71,7 @@ export function DesktopLogin({ onLogin }: DesktopLoginProps) {
   const [job, setJob] = useState('');
   const [habits, setHabits] = useState('');
   const [goals, setGoals] = useState('');
+  const [health, setHealth] = useState('');
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +81,7 @@ export function DesktopLogin({ onLogin }: DesktopLoginProps) {
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (signupName.trim()) {
-      onLogin({ name: signupName.trim(), email: signupEmail, age, job, habits, goals });
+      onLogin({ name: signupName.trim(), email: signupEmail, age, job, habits, goals, health });
     }
   };
 
@@ -192,6 +194,12 @@ export function DesktopLogin({ onLogin }: DesktopLoginProps) {
                   <textarea value={goals} onChange={e => setGoals(e.target.value)} rows={2}
                     placeholder="VD: Quản lý thời gian tốt hơn, giảm stress..."
                     className="w-full px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-orange-200 transition-all resize-none" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tình trạng sức khỏe</label>
+                  <textarea value={health} onChange={e => setHealth(e.target.value)} rows={2}
+                    placeholder="VD: Sức khỏe tốt, thường xuyên thức khuya, hay mệt mỏi..."
+                    className="w-full px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-red-200 transition-all resize-none" />
                 </div>
                 <button type="submit"
                   className="w-full py-3.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl font-bold text-sm shadow-lg shadow-purple-200 hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2">

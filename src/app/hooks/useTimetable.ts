@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { days, blockColors, type ScheduleBlock, type ScheduleFormData, type ScheduleTask } from './scheduleData';
 import { useScheduleData, addScheduleBlock, deleteScheduleBlock, updateScheduleBlock } from './scheduleStore';
-import { useCalendarData, dateKey } from './calendarStore';
+import { useCalendarData, isAiPlannedDay, dateKey } from './calendarStore';
+import { useTutorial } from '../tutorial/tutorialStore';
+import { tutorialSteps } from '../tutorial/tutorialSteps';
 
 export * from './scheduleData';
 
@@ -13,15 +15,39 @@ export function useTimetable({ onAddTasks }: UseTimetableProps = {}) {
   const today = new Date();
   const todayDayIndex = today.getDay() === 0 ? 6 : today.getDay() - 1;
 
+  const { status: tutorialStatus, stepIndex: tutorialStepIndex } = useTutorial();
+  const tutorialView =
+    tutorialStatus === 'running' ? tutorialSteps[tutorialStepIndex]?.view : undefined;
+
   const [currentDayIndex, setCurrentDayIndex] = useState(todayDayIndex);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<ScheduleBlock | null>(null);
-  const [isTodayMode, setIsTodayMode] = useState(false);
   const [expandedScheduleId, setExpandedScheduleId] = useState<string | null>(null);
   const [recentlyChanged, setRecentlyChanged] = useState<string[]>([]);
 
   const scheduleData = useScheduleData();
   const calendarData = useCalendarData();
+
+  const todayKey = dateKey(today.getFullYear(), today.getMonth(), today.getDate());
+  const hasTodaySchedule =
+    (scheduleData[days[todayDayIndex]]?.length ?? 0) > 0 ||
+    (calendarData[todayKey]?.length ?? 0) > 0;
+  const [isTodayMode, setIsTodayMode] = useState(() => {
+    if (tutorialView === 'week') return false;
+    if (tutorialView === 'today') return true;
+    return hasTodaySchedule;
+  });
+
+  // While the tour is on the timetable intro/create/survey steps, keep the
+  // weekly view so the + and "Khảo sát" targets are visible.
+  useEffect(() => {
+    if (tutorialView === 'week') setIsTodayMode(false);
+    else if (tutorialView === 'today') {
+      setIsTodayMode(true);
+      setCurrentDayIndex(todayDayIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tutorialView]);
 
   // Real dates of the current week (Monday..Sunday)
   const mondayOffset = (today.getDay() + 6) % 7;
@@ -33,11 +59,14 @@ export function useTimetable({ onAddTasks }: UseTimetableProps = {}) {
   const currentDay = days[currentDayIndex];
   const currentDate = weekDates[currentDayIndex];
   const weekdaySchedule = scheduleData[currentDay] || [];
-  const dateSchedule =
-    calendarData[dateKey(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())] || [];
+  const todayDateKey = dateKey(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+  const dateSchedule = calendarData[todayDateKey] || [];
 
-  // Today view = weekly template for the weekday + date-specific blocks from Calendar
-  const schedule = isTodayMode ? [...weekdaySchedule, ...dateSchedule] : weekdaySchedule;
+  // Today view: an AI-generated plan for the date overrides the weekly template,
+  // otherwise the date-specific blocks are shown on top of the template.
+  const schedule = isTodayMode
+    ? (isAiPlannedDay(todayDateKey) ? dateSchedule : [...weekdaySchedule, ...dateSchedule])
+    : weekdaySchedule;
 
   useEffect(() => {
     setRecentlyChanged([]);
@@ -87,7 +116,11 @@ export function useTimetable({ onAddTasks }: UseTimetableProps = {}) {
   useEffect(() => {
     const handler = () => openCreateSchedule();
     window.addEventListener('nav:quick-action', handler);
-    return () => window.removeEventListener('nav:quick-action', handler);
+    window.addEventListener('tutorial:open-create', handler);
+    return () => {
+      window.removeEventListener('nav:quick-action', handler);
+      window.removeEventListener('tutorial:open-create', handler);
+    };
   }, []);
 
   return {

@@ -3,6 +3,7 @@ import { X, Clock, Plus, Tag, Trash2, Check, CalendarPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { colorOptions, normalizeTasks, taskPriorities, type ScheduleTask, type TaskPriority } from '../hooks/scheduleData';
 import { priorityConfig } from '../hooks/useTasks';
+import { useTutorialPrefill } from '../tutorial/useTutorialPrefill';
 import type { ScheduleBlock, ScheduleFormData } from '../hooks/useTimetable';
 
 interface CreateScheduleModalProps {
@@ -38,6 +39,8 @@ export function CreateScheduleModal({ isOpen, onClose, onSave, day, initialData 
   const [timeStart, setTimeStart] = useState(DEFAULT_START);
   const [timeEnd, setTimeEnd] = useState(DEFAULT_END);
   const [color, setColor] = useState(colorOptions[0].value);
+
+  useTutorialPrefill('schedule-name', setName);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -128,17 +131,18 @@ export function CreateScheduleModal({ isOpen, onClose, onSave, day, initialData 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
             onClick={onClose}
           />
 
           {/* Centered card */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              data-tour="schedule-modal"
               className="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto pointer-events-auto shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
@@ -176,6 +180,7 @@ export function CreateScheduleModal({ isOpen, onClose, onSave, day, initialData 
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="VD: Môn Toán"
+                      data-tour="schedule-name"
                       className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-2xl border border-gray-200 text-sm font-semibold text-gray-800 placeholder:text-gray-300 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
                       required
                     />
@@ -202,11 +207,13 @@ export function CreateScheduleModal({ isOpen, onClose, onSave, day, initialData 
                           }
                         }}
                         placeholder="Nhập nhiệm vụ..."
+                        data-tour="schedule-task-input"
                         className="w-full pl-4 pr-12 py-2.5 bg-gray-50 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder:text-gray-300 outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all"
                       />
                       <button
                         type="button"
                         onClick={handleAddTask}
+                        data-tour="schedule-task-add"
                         className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 bg-purple-500 text-white rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors"
                       >
                         <Plus className="w-4 h-4" />
@@ -300,7 +307,7 @@ export function CreateScheduleModal({ isOpen, onClose, onSave, day, initialData 
                 </div>
 
                 {/* Time Range */}
-                <div>
+                <div data-tour="schedule-time">
                   <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                     Thời gian
                   </label>
@@ -373,6 +380,7 @@ export function CreateScheduleModal({ isOpen, onClose, onSave, day, initialData 
                   </button>
                   <button
                     type="submit"
+                    data-tour="schedule-submit"
                     className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all"
                   >
                     {isEditing ? 'Lưu' : 'Tạo'}

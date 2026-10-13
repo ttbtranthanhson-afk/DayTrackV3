@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { initialSchedule, normalizeTasks, type ScheduleBlock, type ScheduleTask } from './scheduleData';
+import { getAccountItem, setAccountItem, onAccountChange } from './accountStorage';
 
 export type ScheduleMap = Record<string, ScheduleBlock[]>;
 
@@ -7,7 +8,7 @@ const STORAGE_KEY = 'daytrack_weekday_schedules';
 
 function load(): ScheduleMap {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = getAccountItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as ScheduleMap;
       const normalized: ScheduleMap = {};
@@ -40,13 +41,14 @@ function getSnapshot(): ScheduleMap {
 }
 
 function emit() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(scheduleState));
-  } catch {
-    // ignore storage write failures
-  }
+  setAccountItem(STORAGE_KEY, JSON.stringify(scheduleState));
   listeners.forEach(listener => listener());
 }
+
+onAccountChange(() => {
+  scheduleState = load();
+  listeners.forEach(listener => listener());
+});
 
 export function useScheduleData(): ScheduleMap {
   return useSyncExternalStore(subscribe, getSnapshot);

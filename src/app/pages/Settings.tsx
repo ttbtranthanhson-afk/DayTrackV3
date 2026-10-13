@@ -1,6 +1,7 @@
-import { ChevronRight, User, Bell, Palette, Info, LogOut, Calendar, Briefcase, Target, Mail } from 'lucide-react';
+import { ChevronRight, User, Bell, Palette, Info, LogOut, Calendar, Briefcase, Target, Mail, GraduationCap } from 'lucide-react';
 import { LogoMini } from '../components/Logo';
 import { useNavigate } from 'react-router';
+import { startTutorial } from '../tutorial/tutorialStore';
 
 interface UserData {
   name: string;
@@ -9,6 +10,7 @@ interface UserData {
   job?: string;
   habits?: string;
   goals?: string;
+  health?: string;
 }
 
 interface SettingsProps {
@@ -62,7 +64,7 @@ export function Settings({ userData, onLogout }: SettingsProps) {
         </div>
 
         {/* Profile Card */}
-        <div className="mx-5 mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl p-5 text-white relative overflow-hidden">
+        <div data-tour="settings-profile" className="mx-5 mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl p-5 text-white relative overflow-hidden">
           <div className="absolute -top-6 -right-6 w-28 h-28 bg-white/10 rounded-full" />
           <div className="absolute bottom-0 right-8 w-16 h-16 bg-white/10 rounded-full" />
 
@@ -104,7 +106,7 @@ export function Settings({ userData, onLogout }: SettingsProps) {
         </div>
 
         {/* Settings groups */}
-        <div className="px-5 space-y-5">
+        <div data-tour="settings-groups" className="px-5 space-y-5">
           {settingsGroups.map(group => (
             <div key={group.title}>
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-1">
@@ -133,6 +135,27 @@ export function Settings({ userData, onLogout }: SettingsProps) {
               </div>
             </div>
           ))}
+
+          {/* Replay tutorial */}
+          <div>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-1">Trợ giúp</p>
+            <div className="bg-white rounded-2xl overflow-hidden">
+              <button
+                onClick={startTutorial}
+                data-tour="settings-replay"
+                className="w-full flex items-center gap-4 px-4 py-4 hover:bg-blue-50 transition-colors"
+              >
+                <div className="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+                  <GraduationCap className="w-[18px] h-[18px] text-white" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-sm font-bold text-gray-800">Hướng dẫn lại</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Xem lại hướng dẫn sử dụng</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-300" />
+              </button>
+            </div>
+          </div>
 
           {/* Logout */}
           <div>

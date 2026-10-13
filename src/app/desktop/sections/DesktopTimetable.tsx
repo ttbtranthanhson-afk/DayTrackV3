@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Trash2, Sun, Calendar, Search, Sparkles, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { CreateScheduleModal } from '../../components/CreateScheduleModal';
@@ -19,9 +19,11 @@ import {
   updateScheduleBlock,
   deleteScheduleBlock,
 } from '../../hooks/scheduleStore';
-import { useCalendarData, dateKey } from '../../hooks/calendarStore';
+import { useCalendarData, isAiPlannedDay, dateKey } from '../../hooks/calendarStore';
 import { useAiPlanner } from '../../hooks/useAiPlanner';
 import { useDailyInsight } from '../../hooks/useDailyInsight';
+import { useTutorial } from '../../tutorial/tutorialStore';
+import { tutorialSteps } from '../../tutorial/tutorialSteps';
 import { DesktopPageHeader, DesktopCard, DesktopEmpty } from '../DesktopUI';
 
 interface DesktopTimetableProps {
@@ -46,27 +48,62 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
     (scheduleData[days[todayDayIndex]]?.length ?? 0) > 0 ||
     (calendarData[todayKey]?.length ?? 0) > 0;
 
+  const { status: tutorialStatus, stepIndex: tutorialStepIndex } = useTutorial();
+  const tutorialView =
+    tutorialStatus === 'running' ? tutorialSteps[tutorialStepIndex]?.view : undefined;
+
   const [selectedIndex, setSelectedIndex] = useState(todayDayIndex);
-  const [isTodayMode, setIsTodayMode] = useState(hasTodaySchedule);
+  const [isTodayMode, setIsTodayMode] = useState(() => {
+    if (tutorialView === 'week') return false;
+    if (tutorialView === 'today') return true;
+    return hasTodaySchedule;
+  });
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<ScheduleBlock | null>(null);
   const [editDay, setEditDay] = useState(days[todayDayIndex]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
+  // While the tour is on the timetable intro/create/survey steps, keep the
+  // weekly view so the + and "Khảo sát" targets are visible.
+  useEffect(() => {
+    if (tutorialView === 'week') setIsTodayMode(false);
+    else if (tutorialView === 'today') {
+      setIsTodayMode(true);
+      setSelectedIndex(todayDayIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tutorialView]);
+
   const selectedDay = days[selectedIndex];
   const selectedDate = weekDates[selectedIndex];
   const weekdaySchedule = scheduleData[selectedDay] || [];
-  const dateSchedule = isTodayMode
-    ? calendarData[dateKey(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate())] || []
-    : [];
-  const selectedSchedule = isTodayMode ? [...weekdaySchedule, ...dateSchedule] : weekdaySchedule;
+  const selectedDateKey = dateKey(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+  const dateSchedule = isTodayMode ? calendarData[selectedDateKey] || [] : [];
+  const selectedSchedule = isTodayMode
+    ? (isAiPlannedDay(selectedDateKey) ? dateSchedule : [...weekdaySchedule, ...dateSchedule])
+    : weekdaySchedule;
 
   const planner = useAiPlanner(selectedDay, selectedSchedule, {
     onAddTasks,
     successMessage: 'Đã áp dụng lịch AI cho hôm nay',
+    busyKey: selectedDay,
     onApplied: () => setIsTodayMode(true),
   });
   const dailyInsight = useDailyInsight(selectedDay, selectedSchedule, isTodayMode);
+
+  useEffect(() => {
+    const openCreate = () => openAdd(selectedDay);
+    const openBusy = () => planner.openSurvey();
+    const openPlanner = () => planner.generate(['08:00–11:30']);
+    window.addEventListener('tutorial:open-create', openCreate);
+    window.addEventListener('tutorial:open-busy', openBusy);
+    window.addEventListener('tutorial:open-planner', openPlanner);
+    return () => {
+      window.removeEventListener('tutorial:open-create', openCreate);
+      window.removeEventListener('tutorial:open-busy', openBusy);
+      window.removeEventListener('tutorial:open-planner', openPlanner);
+    };
+  }, [selectedDay]);
 
   const openAdd = (day: string) => {
     setEditDay(day);
@@ -153,6 +190,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
         actions={
           <>
             <button
+              data-tour="tt-today"
               onClick={() => {
                 setIsTodayMode(v => {
                   if (!v) setSelectedIndex(todayDayIndex);
@@ -168,6 +206,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
             </button>
             {!isTodayMode && (
               <button
+                data-tour="tt-survey"
                 onClick={planner.openSurvey}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold border border-dashed border-green-300 text-green-600 hover:bg-green-50 transition-colors"
               >
@@ -190,7 +229,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
               exit={{ opacity: 0, scale: 0.985 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
-        <div className="grid grid-cols-7 gap-3">
+        <div data-tour="tt-blocks" className="grid grid-cols-7 gap-3">
           {days.map((day, i) => {
             const blocks = scheduleData[day] || [];
             const isToday = i === todayDayIndex;
@@ -273,7 +312,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
               })}
             </div>
 
-            <div className="space-y-3">
+            <div data-tour="tt-blocks" className="space-y-3">
               {selectedSchedule.length > 0 ? (
                 selectedSchedule.map(block => (
                   <div key={block.id}>
@@ -293,6 +332,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
                               scheduleTime={block.time}
                               day={selectedDay}
                               tasks={block.tasks?.map(t => t.title)}
+                              analysis={block.analysis}
                             />
                           </div>
                         </motion.div>
@@ -307,7 +347,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
           </div>
 
           {/* AI insight */}
-          <div className="col-span-1">
+          <div data-tour="tt-insight" className="col-span-1">
             <DesktopCard
               title="Gợi ý AI"
               icon={dailyInsight.loading ? Loader2 : Sparkles}
@@ -343,6 +383,8 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
         onClose={planner.closeSurvey}
         schedule={selectedSchedule}
         day={selectedDay}
+        initialBusy={planner.busy}
+        onBusyChange={planner.setBusy}
         onGeneratePlan={planner.generate}
       />
 

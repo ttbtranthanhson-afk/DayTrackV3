@@ -1,4 +1,4 @@
-import { ChevronLeft, Mail, Calendar, Briefcase, Heart, Target, Award } from 'lucide-react';
+import { ChevronLeft, Mail, Calendar, Briefcase, Heart, Target, Award, HeartPulse } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 interface UserData {
@@ -8,6 +8,7 @@ interface UserData {
   job?: string;
   habits?: string;
   goals?: string;
+  health?: string;
 }
 
 interface ProfileProps {
@@ -136,6 +137,17 @@ export function Profile({ userData, achievements }: ProfileProps) {
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-gray-400 mb-0.5">Mục tiêu với DayTrack</p>
                     <p className="text-sm font-bold text-gray-800">{userData.goals}</p>
+                  </div>
+                </div>
+              )}
+              {userData.health && (
+                <div className="flex items-center gap-4 px-4 py-4">
+                  <div className="w-9 h-9 rounded-xl bg-red-500 flex items-center justify-center flex-shrink-0">
+                    <HeartPulse className="w-[18px] h-[18px] text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-400 mb-0.5">Tình trạng sức khỏe</p>
+                    <p className="text-sm font-bold text-gray-800">{userData.health}</p>
                   </div>
                 </div>
               )}

@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import type { AchievementIdea } from '../../../shared/ai';
+import { getAccountItem, setAccountItem, onAccountChange } from './accountStorage';
 
 export interface AiAchievement {
   id: string;
@@ -38,7 +39,7 @@ const PALETTE = [
 
 function load(): AiAchievement[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = getAccountItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as AiAchievement[];
       if (Array.isArray(parsed)) {
@@ -66,13 +67,14 @@ function getSnapshot(): AiAchievement[] {
 }
 
 function emit() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(achievementState));
-  } catch {
-    // ignore storage write failures
-  }
+  setAccountItem(STORAGE_KEY, JSON.stringify(achievementState));
   listeners.forEach(listener => listener());
 }
+
+onAccountChange(() => {
+  achievementState = load();
+  listeners.forEach(listener => listener());
+});
 
 export function useAchievements(): AiAchievement[] {
   return useSyncExternalStore(subscribe, getSnapshot);

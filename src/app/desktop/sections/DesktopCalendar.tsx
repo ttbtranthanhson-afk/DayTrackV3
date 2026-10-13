@@ -1,9 +1,10 @@
+import { useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Lock, Unlock, Trash2, Pencil, Search, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
 import { CreateScheduleModal } from '../../components/CreateScheduleModal';
 import { BusyHoursModal } from '../../components/BusyHoursModal';
 import { AiPlannerModal } from '../../components/AiPlannerModal';
-import { useCalendar, weekDays, holidays, monthNames } from '../../hooks/useCalendar';
+import { useCalendar, weekDays, getHoliday, monthNames } from '../../hooks/useCalendar';
 import { useAiPlanner } from '../../hooks/useAiPlanner';
 import type { ScheduleTask } from '../../hooks/scheduleData';
 import { DesktopPageHeader } from '../DesktopUI';
@@ -28,8 +29,8 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
     daysInMonth,
     isLocked,
     currentSchedules,
-    weekdayForSelected,
-    weekdaySchedule,
+    selectedDateKey,
+    selectedDateLabel,
     getDaySchedules,
     todayDate,
     toggleLock,
@@ -37,10 +38,25 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
     handleDeleteSchedule,
   } = useCalendar({ onAddTasks });
 
-  const planner = useAiPlanner(weekdayForSelected, weekdaySchedule, {
+  const planner = useAiPlanner(selectedDateLabel, currentSchedules, {
     onAddTasks,
-    successMessage: `Đã áp dụng lịch AI cho ${weekdayForSelected}`,
+    successMessage: `Đã áp dụng lịch AI cho ${selectedDay} tháng ${currentMonth + 1}`,
+    dateKey: selectedDateKey,
+    busyKey: selectedDateKey,
   });
+
+  useEffect(() => {
+    const openBusy = () => planner.openSurvey();
+    const openPlanner = () => planner.generate(['08:00–11:30']);
+    window.addEventListener('tutorial:open-busy', openBusy);
+    window.addEventListener('tutorial:open-planner', openPlanner);
+    return () => {
+      window.removeEventListener('tutorial:open-busy', openBusy);
+      window.removeEventListener('tutorial:open-planner', openPlanner);
+    };
+  }, [selectedDateKey]);
+
+  const selectedHoliday = getHoliday(currentYear, currentMonth + 1, selectedDay);
 
   return (
     <div className="flex h-[calc(100vh-3rem)] flex-col">
@@ -67,7 +83,7 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
 
       <div className="flex-1 min-h-0 grid grid-cols-3 gap-6">
         {/* Month grid */}
-        <div className="col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm p-4 flex flex-col min-h-0">
+        <div data-tour="cal-grid" className="col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm p-4 flex flex-col min-h-0">
           <div className="grid grid-cols-7 mb-1.5">
             {weekDays.map(d => (
               <div key={d} className="text-center text-xs font-bold text-gray-400 py-1.5">{d}</div>
@@ -86,7 +102,7 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
             {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
               const isToday = day === todayDate;
               const isSelected = day === selectedDay;
-              const holiday = holidays[day];
+              const holiday = getHoliday(currentYear, currentMonth + 1, day);
               const dayScheduleList = getDaySchedules(day);
 
               return (
@@ -126,9 +142,14 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
         <div className="col-span-1 min-h-0">
           <div className="h-full bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col min-h-0">
             <div className="flex items-center gap-1 px-5 pt-4 pb-3 border-b border-gray-50">
-              <span className="text-sm font-bold text-gray-800 flex-1">
-                {selectedDay} tháng {currentMonth + 1}
-              </span>
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-bold text-gray-800">
+                  {selectedDay} tháng {currentMonth + 1}
+                </span>
+                {selectedHoliday && (
+                  <p className="text-xs text-rose-500 font-semibold truncate">{selectedHoliday}</p>
+                )}
+              </div>
               <button
                 onClick={openCreateSchedule}
                 className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center hover:bg-purple-100 transition-colors"
@@ -136,6 +157,7 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
                 <Plus className="w-4 h-4" />
               </button>
               <button
+                data-tour="cal-lock"
                 onClick={() => toggleLock(selectedDay)}
                 className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
                   isLocked ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-500'
@@ -150,6 +172,7 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, ease: 'easeInOut' }}
+              data-tour="cal-list"
               className="flex-1 min-h-0 overflow-y-auto p-4 space-y-1"
             >
               {currentSchedules.length > 0 ? (
@@ -209,16 +232,18 @@ export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {
       <BusyHoursModal
         isOpen={planner.busyOpen}
         onClose={planner.closeSurvey}
-        schedule={weekdaySchedule}
-        day={weekdayForSelected}
+        schedule={currentSchedules}
+        day={selectedDateLabel}
+        initialBusy={planner.busy}
+        onBusyChange={planner.setBusy}
         onGeneratePlan={planner.generate}
       />
 
       <AiPlannerModal
         isOpen={planner.plannerOpen}
         onClose={planner.closePlanner}
-        schedule={weekdaySchedule}
-        day={weekdayForSelected}
+        schedule={currentSchedules}
+        day={selectedDateLabel}
         busy={planner.busy}
         onApply={planner.apply}
       />

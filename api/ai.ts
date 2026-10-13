@@ -1,11 +1,10 @@
 import { buildPrompt, isAiAction, type BuiltPrompt } from '../shared/ai';
+import { generateWithFallback, resolveKeys, resolveModels } from '../shared/gemini';
 
 declare const process: { env: Record<string, string | undefined> };
 
 export const config = { runtime: 'edge' };
 
-const MODEL = (process.env.GEMINI_MODEL ?? '').trim() || 'gemini-2.5-flash';
-const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 const MAX_BODY_BYTES = 20_000;
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 20;
@@ -48,10 +47,11 @@ export default async function handler(req: Request): Promise<Response> {
     return json(403, { error: 'Yêu cầu không xuất phát từ domain được phép.' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+  const keys = resolveKeys(process.env.GEMINI_API_KEY, process.env.GEMINI_API_KEYS);
+  if (keys.length === 0) {
     return json(500, { error: 'Máy chủ chưa cấu hình GEMINI_API_KEY.' });
   }
+  const models = resolveModels(process.env.GEMINI_MODEL);
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
   if (isRateLimited(ip)) {
@@ -81,40 +81,24 @@ export default async function handler(req: Request): Promise<Response> {
     return json(400, { error: err instanceof Error ? err.message : 'Dữ liệu không hợp lệ.' });
   }
 
-  let res: Response;
+  let outcome: { text: string; model: string };
   try {
-    res = await fetch(`${ENDPOINT}/${MODEL}:generateContent`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
+    outcome = await generateWithFallback({
+      keys,
+      models,
+      buildBody: model => ({
         contents: [{ role: 'user', parts: [{ text: built.prompt }] }],
         systemInstruction: { parts: [{ text: built.system }] },
         generationConfig: {
           temperature: built.temperature,
           ...(built.json ? { responseMimeType: 'application/json' } : {}),
+          ...(model.includes('2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
         },
       }),
     });
-  } catch {
-    return json(502, { error: 'Không kết nối được tới Gemini.' });
+  } catch (err) {
+    return json(502, { error: err instanceof Error ? err.message : 'Không thể gọi Gemini.' });
   }
 
-  const data: {
-    candidates?: { content?: { parts?: { text?: string }[] } }[];
-    error?: { message?: string };
-  } = await res.json().catch(() => ({}));
-
-  if (!res.ok) {
-    return json(502, { error: data.error?.message || `Gemini trả về lỗi (mã ${res.status}).` });
-  }
-
-  const text = data.candidates?.[0]?.content?.parts?.map(p => p.text ?? '').join('').trim();
-  if (!text) {
-    return json(502, { error: 'Gemini không trả về nội dung.' });
-  }
-
-  return json(200, { text });
+  return json(200, { text: outcome.text, model: outcome.model });
 }

@@ -33,12 +33,30 @@ interface Props {
   onClose: () => void;
   schedule: ScheduleBlock[];
   day: string;
+  initialBusy?: string[];
+  onBusyChange?: (busy: string[]) => void;
   onGeneratePlan?: (busy: string[]) => void;
 }
 
 type Mode = 'idle' | 'pending' | 'scrolling' | 'creating';
 
-export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan }: Props) {
+function parseBusy(list?: string[]): Pair[] {
+  if (!list) return [];
+  const pairs: Pair[] = [];
+  list.forEach((item, index) => {
+    const m = item.match(/(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})/);
+    if (!m) return;
+    const a = +m[1] * 60 + +m[2];
+    const b = +m[3] * 60 + +m[4];
+    pairs.push({ id: `busy-${index}-${a}-${b}`, a, b });
+  });
+  return pairs;
+}
+
+const formatBusy = (pairs: Pair[]) =>
+  pairs.map(p => `${fmt(Math.min(p.a, p.b))}–${fmt(Math.max(p.a, p.b))}`);
+
+export function BusyHoursModal({ isOpen, onClose, schedule, day, initialBusy, onBusyChange, onGeneratePlan }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [creating, setCreating] = useState<{ a: number; b: number } | null>(null);
@@ -69,6 +87,19 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan 
     if (isOpen && scrollRef.current) {
       scrollRef.current.scrollTop = 7 * HOUR_H;
     }
+  }, [isOpen]);
+
+  // Load saved busy hours when opening, persist them when closing
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (isOpen) {
+      if (initialBusy !== undefined) setPairs(parseBusy(initialBusy));
+      wasOpen.current = true;
+    } else if (wasOpen.current) {
+      wasOpen.current = false;
+      onBusyChange?.(formatBusy(pairs));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Needle drag effect
@@ -180,8 +211,7 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan 
   };
 
   const handleAI = () => {
-    const busy = pairs.map(p => `${fmt(Math.min(p.a, p.b))}–${fmt(Math.max(p.a, p.b))}`);
-    onGeneratePlan?.(busy);
+    onGeneratePlan?.(formatBusy(pairs));
   };
 
   const blocks = schedule.map(b => ({ ...b, range: parseRange(b.time) })).filter(b => b.range);
@@ -193,15 +223,16 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan 
         <>
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]" onClick={onClose}
           />
 
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 pointer-events-none">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 pointer-events-none">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              data-tour="busy-modal"
               className="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto pointer-events-auto shadow-xl flex flex-col"
               onClick={e => e.stopPropagation()}
             >
@@ -225,7 +256,7 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan 
             {/* Body */}
             <div className="p-6 space-y-4">
               {/* Timeline card */}
-              <div className="rounded-2xl border border-gray-200 overflow-hidden">
+              <div data-tour="busy-timeline" className="rounded-2xl border border-gray-200 overflow-hidden">
                 <div
                   ref={scrollRef}
                   className="overflow-hidden bg-white"
@@ -343,6 +374,7 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan 
               {/* AI button */}
               <button
                 onClick={handleAI}
+                data-tour="busy-ai"
                 className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl bg-violet-50 border border-violet-100 text-violet-600 text-sm font-bold hover:bg-violet-100 transition-all active:scale-[0.98]"
               >
                 <Sparkles className="w-4 h-4" />
@@ -375,7 +407,7 @@ export function BusyHoursModal({ isOpen, onClose, schedule, day, onGeneratePlan 
             {deleteTarget && (
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[60] flex items-center justify-center px-8 bg-black/20"
+                className="fixed inset-0 z-[110] flex items-center justify-center px-8 bg-black/20"
                 onClick={() => setDeleteTarget(null)}
               >
                 <motion.div

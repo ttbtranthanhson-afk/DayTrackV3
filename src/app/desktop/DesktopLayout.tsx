@@ -58,6 +58,7 @@ export function DesktopLayout({ userData, onLogout, children }: DesktopLayoutPro
               <Link
                 key={item.path}
                 to={item.path}
+                data-tour={`nav-${item.path.slice(1)}`}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all ${
                   isActive ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'
                 }`}

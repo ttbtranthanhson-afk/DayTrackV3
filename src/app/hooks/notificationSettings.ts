@@ -1,3 +1,5 @@
+import { getAccountItem, setAccountItem } from './accountStorage';
+
 export interface NotificationSettings {
   reminders: {
     schedule: boolean;
@@ -25,7 +27,7 @@ export const defaultSettings: NotificationSettings = {
 
 export function loadSettings(): NotificationSettings {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = getAccountItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       return {
@@ -41,9 +43,5 @@ export function loadSettings(): NotificationSettings {
 }
 
 export function saveSettings(settings: NotificationSettings) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-  } catch {
-    // ignore storage write failures
-  }
+  setAccountItem(STORAGE_KEY, JSON.stringify(settings));
 }

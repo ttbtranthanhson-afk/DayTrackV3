@@ -89,9 +89,16 @@ function buildCustomOption(schedule: ScheduleBlock[]): PlanOption {
   };
 }
 
-function toScheduleBlocks(option: PlanOption): ScheduleBlock[] {
+function toScheduleBlocks(option: PlanOption, original: ScheduleBlock[]): ScheduleBlock[] {
+  const originalTasksByTitle = new Map<string, Set<string>>();
+  original.forEach(block => {
+    originalTasksByTitle.set(block.title, new Set((block.tasks || []).map(t => t.title)));
+  });
+
   return option.blocks.map((block, index) => {
-    const tasks: ScheduleTask[] = block.tasks.map((title, ti) => ({
+    const allowed = originalTasksByTitle.get(block.title);
+    const safeTitles = allowed ? block.tasks.filter(title => allowed.has(title)) : [];
+    const tasks: ScheduleTask[] = safeTitles.map((title, ti) => ({
       id: `ai-${slug(block.title)}-${ti}`,
       title,
       priority: 'medium',
@@ -102,6 +109,7 @@ function toScheduleBlocks(option: PlanOption): ScheduleBlock[] {
       time: `${block.start} - ${block.end}`,
       color: blockColors[index % blockColors.length],
       tasks,
+      analysis: hasAdvice(block.analysis) ? block.analysis : undefined,
     };
   });
 }
@@ -238,8 +246,13 @@ export function AiPlannerModal({ isOpen, onClose, schedule, day, busy, focusTitl
   const handleSave = () => {
     if (!selected) return;
     setSaving(true);
-    const meta = selected.blocks.map(b => ({ title: b.title, type: b.type, tasks: b.tasks }));
-    onApply(toScheduleBlocks(selected), selected.name, meta);
+    const blocks = toScheduleBlocks(selected, schedule);
+    const meta = blocks.map((b, index) => ({
+      title: b.title,
+      type: selected.blocks[index]?.type ?? 'other',
+      tasks: (b.tasks || []).map(t => t.title),
+    }));
+    onApply(blocks, selected.name, meta);
     setSaving(false);
     onClose();
   };
@@ -250,14 +263,15 @@ export function AiPlannerModal({ isOpen, onClose, schedule, day, busy, focusTitl
         <>
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]" onClick={onClose}
           />
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 pointer-events-none">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 pointer-events-none">
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 20 }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              data-tour="planner-modal"
               className="relative bg-white rounded-3xl w-full max-w-3xl max-h-[92vh] overflow-hidden pointer-events-auto shadow-xl flex flex-col"
               onClick={e => e.stopPropagation()}
             >
@@ -309,9 +323,9 @@ export function AiPlannerModal({ isOpen, onClose, schedule, day, busy, focusTitl
               )}
 
               {status === 'ready' && selected && (
-                <div className="flex-1 flex flex-col sm:flex-row min-h-0">
+                <div data-tour="planner-options" className="flex-1 flex flex-col sm:flex-row min-h-0">
                   {/* Options column */}
-                  <div className="sm:w-52 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 p-3 sm:overflow-y-auto">
+                  <div data-tour="planner-option-list" className="sm:w-52 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 p-3 sm:overflow-y-auto">
                     <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-1 mb-2">Phương án</p>
                     <div className="flex sm:flex-col gap-2">
                       {options.map(option => {
@@ -340,7 +354,7 @@ export function AiPlannerModal({ isOpen, onClose, schedule, day, busy, focusTitl
                   </div>
 
                   {/* Schedule column */}
-                  <div className="flex-1 min-h-0 overflow-y-auto p-4">
+                  <div data-tour="planner-block-list" className="flex-1 min-h-0 overflow-y-auto p-4">
                     {selected.description && (
                       <div className="flex items-start gap-2 bg-violet-50/60 border border-violet-100 rounded-2xl px-3 py-2.5 mb-3">
                         <Sparkles className="w-4 h-4 text-violet-500 flex-shrink-0 mt-0.5" />
@@ -411,6 +425,7 @@ export function AiPlannerModal({ isOpen, onClose, schedule, day, busy, focusTitl
                     type="button"
                     onClick={handleSave}
                     disabled={saving}
+                    data-tour="planner-save"
                     className="flex-[2] flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all disabled:opacity-70 active:scale-[0.98]"
                   >
                     <Check className="w-4 h-4" />

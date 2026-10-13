@@ -1,4 +1,5 @@
 import { Sparkles, Sun, Calendar, Trash2, ChevronDown, ChevronUp, Search, Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { CreateScheduleModal } from '../components/CreateScheduleModal';
 import { AIScheduleSuggestion } from '../components/AIScheduleSuggestion';
 import { BusyHoursModal } from '../components/BusyHoursModal';
@@ -40,11 +41,24 @@ export function Timetable({ onAddTasks }: TimetableProps) {
   const planner = useAiPlanner(currentDay, schedule, {
     onAddTasks,
     successMessage: 'Đã áp dụng lịch AI cho hôm nay',
+    busyKey: currentDay,
     onApplied: () => {
       setIsTodayMode(true);
       clearRecentlyChanged();
     },
   });
+
+  useEffect(() => {
+    const openBusy = () => planner.openSurvey();
+    const openPlanner = () => planner.generate(['08:00–11:30']);
+    window.addEventListener('tutorial:open-busy', openBusy);
+    window.addEventListener('tutorial:open-planner', openPlanner);
+    return () => {
+      window.removeEventListener('tutorial:open-busy', openBusy);
+      window.removeEventListener('tutorial:open-planner', openPlanner);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen bg-white pb-28">
@@ -53,7 +67,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
         <div className="px-5 pt-12 pb-4 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              {isTodayMode ? 'Hôm nay' : 'Lịch học'}
+              {isTodayMode ? 'Hôm nay' : 'Lịch trình'}
             </h1>
             <p className="text-sm text-gray-400 mt-0.5">
               {isTodayMode ? 'Gợi ý AI hàng ngày' : 'Lịch trình tuần của bạn'}
@@ -64,6 +78,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
               if (!v) setCurrentDayIndex(todayDayIndex);
               return !v;
             })}
+            data-tour="tt-today"
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
               isTodayMode ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
             }`}
@@ -112,7 +127,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
         </div>
 
         {/* Schedule blocks */}
-        <div className="px-5 space-y-3 mb-6">
+        <div data-tour="tt-blocks" className="px-5 space-y-3 mb-6">
           {schedule.length > 0 ? schedule.map(block => {
             const c = colorMap[block.color] || colorMap['bg-blue-400'];
             return (
@@ -182,6 +197,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
                           scheduleTime={block.time}
                           day={currentDay}
                           tasks={block.tasks?.map(task => task.title)}
+                          analysis={block.analysis}
                         />
                       </div>
                     </motion.div>
@@ -201,6 +217,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
           <div className="px-5">
             <button
               onClick={planner.openSurvey}
+              data-tour="tt-survey"
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-dashed border-green-200 text-green-500 hover:bg-green-50 transition-colors"
             >
               <Search className="w-4 h-4" />
@@ -209,7 +226,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
           </div>
         ) : (
           <div className="px-5">
-            <div className="bg-blue-50 rounded-2xl p-4">
+            <div data-tour="tt-insight" className="bg-blue-50 rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 {dailyInsight.loading
                   ? <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
@@ -242,6 +259,8 @@ export function Timetable({ onAddTasks }: TimetableProps) {
         onClose={planner.closeSurvey}
         schedule={schedule}
         day={currentDay}
+        initialBusy={planner.busy}
+        onBusyChange={planner.setBusy}
         onGeneratePlan={planner.generate}
       />
 

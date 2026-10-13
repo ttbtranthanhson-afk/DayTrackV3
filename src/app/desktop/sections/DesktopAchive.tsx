@@ -14,7 +14,7 @@ export function DesktopAchive() {
       <DesktopPageHeader title="Thành tựu" subtitle="Tiến trình của bạn" />
 
       {/* Stats banner */}
-      <div className="rounded-3xl bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-100 p-5 flex items-center gap-5 mb-6">
+      <div data-tour="achive-stats" className="rounded-3xl bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-100 p-5 flex items-center gap-5 mb-6">
         <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center flex-shrink-0">
           <Award className="w-7 h-7 text-pink-500" />
         </div>
@@ -29,7 +29,7 @@ export function DesktopAchive() {
 
       <div className="grid grid-cols-3 gap-6">
         {/* AI achievements */}
-        <div className="col-span-1">
+        <div data-tour="achive-ai" className="col-span-1">
           <DesktopCard
             title="Mục tiêu từ AI"
             icon={Sparkles}
@@ -78,7 +78,7 @@ export function DesktopAchive() {
         </div>
 
         {/* Achievement groups */}
-        <div className="col-span-2">
+        <div data-tour="achive-groups" className="col-span-2">
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
             {achievementGroups.map((group, gi) => {
               const Icon = group.icon;

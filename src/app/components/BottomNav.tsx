@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router';
 import { motion } from 'motion/react';
 
 const navItems = [
-  { path: '/timetable', icon: CalendarDays, label: 'Lịch học' },
+  { path: '/timetable', icon: CalendarDays, label: 'Lịch trình' },
   { path: '/calendar',  icon: Calendar,    label: 'Lịch'     },
   { path: '/tasks',     icon: CheckSquare, label: 'Nhiệm vụ' },
   { path: '/focus',     icon: Clock,       label: 'Tập trung'},
@@ -66,6 +66,7 @@ export function BottomNav() {
                 <Link
                   key={item.path}
                   to={item.path}
+                  data-tour={`nav-${item.path.slice(1)}`}
                   className="flex-shrink-0 flex justify-center"
                   style={{ width: '25%', scrollSnapAlign: 'start' }}
                 >
@@ -102,6 +103,7 @@ export function BottomNav() {
         >
           <button
             onClick={fireAction}
+            data-tour="nav-action"
             className={`w-[62px] h-[62px] ${action ? action.bg : 'bg-gray-300'} rounded-[22px] shadow-xl shadow-black/15 flex items-center justify-center active:scale-95 transition-all duration-300`}
           >
             <ActionIcon className="w-7 h-7 text-white" strokeWidth={2.5} />

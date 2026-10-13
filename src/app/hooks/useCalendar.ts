@@ -6,6 +6,7 @@ import {
   addCalendarBlock,
   updateCalendarBlock,
   deleteCalendarBlock,
+  isAiPlannedDay,
   dateKey,
 } from './calendarStore';
 
@@ -13,10 +14,7 @@ export const weekDays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 
 export type CalendarSchedule = ScheduleBlock & { source: 'weekday' | 'date' };
 
-export const holidays: Record<number, string> = {
-  1: 'Ngày Quốc tế',
-  19: 'Tết Đoan Ngọ',
-};
+export { getHoliday } from './vietnamHolidays';
 
 export const scheduleColors = [
   'bg-blue-400', 'bg-purple-400', 'bg-green-400', 'bg-orange-400', 'bg-pink-400',
@@ -57,21 +55,28 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
   };
 
   const getDaySchedules = (day: number): CalendarSchedule[] => {
-    const weekdayBlocks = (scheduleData[dayNameForDate(day)] || []).map(block => ({
-      ...block,
-      source: 'weekday' as const,
-    }));
-    const dateBlocks = (calendarData[dateKey(currentYear, currentMonth, day)] || []).map(block => ({
+    const key = dateKey(currentYear, currentMonth, day);
+    const dateBlocks = (calendarData[key] || []).map(block => ({
       ...block,
       source: 'date' as const,
     }));
-    return [...weekdayBlocks, ...dateBlocks];
+    // An AI-generated plan for the date overrides the weekday template.
+    if (isAiPlannedDay(key)) return dateBlocks;
+    return [
+      ...(scheduleData[dayNameForDate(day)] || []).map(block => ({
+        ...block,
+        source: 'weekday' as const,
+      })),
+      ...dateBlocks,
+    ];
   };
 
   const isLocked = lockedDays.has(selectedDay);
   const currentSchedules = getDaySchedules(selectedDay);
   const weekdayForSelected = dayNameForDate(selectedDay);
   const weekdaySchedule = scheduleData[weekdayForSelected] || [];
+  const selectedDateKey = dateKey(currentYear, currentMonth, selectedDay);
+  const selectedDateLabel = `${weekdayForSelected}, ${selectedDay} tháng ${currentMonth + 1}`;
 
   const toggleLock = (day: number) => {
     setLockedDays(prev => {
@@ -124,7 +129,11 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
   useEffect(() => {
     const handler = () => openCreateSchedule();
     window.addEventListener('nav:quick-action', handler);
-    return () => window.removeEventListener('nav:quick-action', handler);
+    window.addEventListener('tutorial:open-create', handler);
+    return () => {
+      window.removeEventListener('nav:quick-action', handler);
+      window.removeEventListener('tutorial:open-create', handler);
+    };
   }, []);
 
   return {
@@ -146,6 +155,8 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
     currentSchedules,
     weekdayForSelected,
     weekdaySchedule,
+    selectedDateKey,
+    selectedDateLabel,
     getDaySchedules,
     todayDate,
     isCurrentMonth,

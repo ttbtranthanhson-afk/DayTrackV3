@@ -1,3 +1,5 @@
+import type { BlockAnalysis } from '../../../shared/ai';
+
 export const days = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
 export const dayShorts = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 
@@ -25,6 +27,7 @@ export interface ScheduleBlock {
   time: string;
   color: string;
   tasks?: ScheduleTask[];
+  analysis?: BlockAnalysis;
 }
 
 export interface ScheduleFormData {

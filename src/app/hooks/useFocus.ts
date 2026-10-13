@@ -9,6 +9,7 @@ import {
 } from './musicData';
 import { musicEngine } from './musicEngine';
 import { consumePendingFocus } from './focusLauncher';
+import { getAccountItem, setAccountItem, onAccountChange } from './accountStorage';
 
 export { musicCategories, allSongs, CUSTOM_CATEGORY, NONE_CATEGORY };
 export type { Song, MusicCategory };
@@ -26,7 +27,7 @@ const CUSTOM_STORAGE_KEY = 'daytrack_custom_music';
 
 function loadCustomPlaylist(): string[] {
   try {
-    const raw = localStorage.getItem(CUSTOM_STORAGE_KEY);
+    const raw = getAccountItem(CUSTOM_STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
@@ -77,6 +78,12 @@ export function useFocus() {
 
   useEffect(() => () => musicEngine.stop(), []);
 
+  useEffect(() => onAccountChange(() => {
+    setCustomPlaylist(loadCustomPlaylist());
+    setCustomSelection([]);
+    setCustomEditing(false);
+  }), []);
+
   const getSongs = (categoryId: string): Song[] => {
     if (categoryId === 'custom') {
       return allSongs.filter(song => customPlaylist.includes(song.id));
@@ -111,7 +118,7 @@ export function useFocus() {
   const saveCustomPlaylist = () => {
     const next = [...customSelection];
     setCustomPlaylist(next);
-    localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(next));
+    setAccountItem(CUSTOM_STORAGE_KEY, JSON.stringify(next));
     setCustomEditing(false);
   };
 

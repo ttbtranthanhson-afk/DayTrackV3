@@ -4,8 +4,9 @@ import { loadSettings, type NotificationSettings } from './notificationSettings'
 import { notify, parseClock, requestPermission } from './notificationService';
 import { dayNameFromDate } from './scheduleData';
 import { launchFocus } from './focusLauncher';
+import { getAccountItem, setAccountItem } from './accountStorage';
 
-const LOG_KEY = 'daytrack_notif_log';
+const LOG_KEY = 'daytrack_notification_log';
 const TICK_MS = 20000;
 const FIVE_MIN_MS = 5 * 60 * 1000;
 const WINDOW_MS = 20 * 60 * 1000;
@@ -36,7 +37,7 @@ function tsAt(minutesOfDay: number, now: Date): number {
 
 function readBlocks(): ParsedBlock[] {
   try {
-    const raw = localStorage.getItem('daytrack_weekday_schedules');
+    const raw = getAccountItem('daytrack_weekday_schedules');
     if (!raw) return [];
     const map = JSON.parse(raw) as Record<string, Array<{ id?: string; title?: string; time?: string }>>;
     const day = dayNameFromDate(new Date());
@@ -70,7 +71,7 @@ interface StoredTask {
 
 function readTasks(): StoredTask[] {
   try {
-    const raw = localStorage.getItem('daytrack_tasks');
+    const raw = getAccountItem('daytrack_tasks');
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
@@ -93,7 +94,7 @@ function isCompletedToday(task: StoredTask, key: string): boolean {
 
 function readLog(): string[] {
   try {
-    const raw = localStorage.getItem(LOG_KEY);
+    const raw = getAccountItem(LOG_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
@@ -102,11 +103,7 @@ function readLog(): string[] {
 }
 
 function writeLog(log: string[]) {
-  try {
-    localStorage.setItem(LOG_KEY, JSON.stringify(log));
-  } catch {
-    // ignore storage write failures
-  }
+  setAccountItem(LOG_KEY, JSON.stringify(log));
 }
 
 export function useNotificationScheduler() {

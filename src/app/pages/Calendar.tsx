@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, Lock, Unlock, Trash2, Pencil, Search } from 
 import { CreateScheduleModal } from '../components/CreateScheduleModal';
 import { BusyHoursModal } from '../components/BusyHoursModal';
 import { AiPlannerModal } from '../components/AiPlannerModal';
-import { useCalendar, weekDays, holidays, monthNames } from '../hooks/useCalendar';
+import { useCalendar, weekDays, getHoliday, monthNames } from '../hooks/useCalendar';
 import { useAiPlanner } from '../hooks/useAiPlanner';
 import type { ScheduleTask } from '../hooks/scheduleData';
 
@@ -25,8 +25,8 @@ export function Calendar({ onAddTasks }: CalendarProps) {
     daysInMonth,
     isLocked,
     currentSchedules,
-    weekdayForSelected,
-    weekdaySchedule,
+    selectedDateKey,
+    selectedDateLabel,
     getDaySchedules,
     todayDate,
     toggleLock,
@@ -34,10 +34,14 @@ export function Calendar({ onAddTasks }: CalendarProps) {
     handleDeleteSchedule,
   } = useCalendar({ onAddTasks });
 
-  const planner = useAiPlanner(weekdayForSelected, weekdaySchedule, {
+  const planner = useAiPlanner(selectedDateLabel, currentSchedules, {
     onAddTasks,
-    successMessage: `Đã áp dụng lịch AI cho ${weekdayForSelected}`,
+    successMessage: `Đã áp dụng lịch AI cho ${selectedDay} tháng ${currentMonth + 1}`,
+    dateKey: selectedDateKey,
+    busyKey: selectedDateKey,
   });
+
+  const selectedHoliday = getHoliday(currentYear, currentMonth + 1, selectedDay);
 
   return (
     <div className="min-h-screen bg-white pb-28">
@@ -67,14 +71,14 @@ export function Calendar({ onAddTasks }: CalendarProps) {
         </div>
 
         {/* Calendar grid */}
-        <div className="grid grid-cols-7 px-5">
+        <div data-tour="cal-grid" className="grid grid-cols-7 px-5">
           {Array.from({ length: offset }).map((_, i) => (
             <div key={`e${i}`} className="aspect-square" />
           ))}
           {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
             const isToday = day === todayDate;
             const isSelected = day === selectedDay;
-            const holiday = holidays[day];
+            const holiday = getHoliday(currentYear, currentMonth + 1, day);
             const dayScheduleList = getDaySchedules(day);
             const hasSchedule = dayScheduleList.length > 0;
 
@@ -123,9 +127,13 @@ export function Calendar({ onAddTasks }: CalendarProps) {
               {isLocked && (
                 <span className="ml-2 text-xs text-purple-500 font-semibold">· Đã khóa</span>
               )}
+              {selectedHoliday && (
+                <p className="text-xs text-rose-500 font-semibold mt-0.5">{selectedHoliday}</p>
+              )}
             </div>
             <button
               onClick={() => toggleLock(selectedDay)}
+              data-tour="cal-lock"
               className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
                 isLocked ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-500'
               }`}
@@ -135,7 +143,7 @@ export function Calendar({ onAddTasks }: CalendarProps) {
           </div>
 
           {/* Schedule list */}
-          <div className="space-y-px mb-4">
+          <div data-tour="cal-list" className="space-y-px mb-4">
             {currentSchedules.length > 0 ? currentSchedules.map(s => {
               const editable = s.source === 'date';
               return (
@@ -207,16 +215,18 @@ export function Calendar({ onAddTasks }: CalendarProps) {
       <BusyHoursModal
         isOpen={planner.busyOpen}
         onClose={planner.closeSurvey}
-        schedule={weekdaySchedule}
-        day={weekdayForSelected}
+        schedule={currentSchedules}
+        day={selectedDateLabel}
+        initialBusy={planner.busy}
+        onBusyChange={planner.setBusy}
         onGeneratePlan={planner.generate}
       />
 
       <AiPlannerModal
         isOpen={planner.plannerOpen}
         onClose={planner.closePlanner}
-        schedule={weekdaySchedule}
-        day={weekdayForSelected}
+        schedule={currentSchedules}
+        day={selectedDateLabel}
         busy={planner.busy}
         onApply={planner.apply}
       />

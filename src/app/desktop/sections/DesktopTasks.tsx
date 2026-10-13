@@ -1,6 +1,7 @@
 import { Circle, CheckCircle2, Trash2, Plus } from 'lucide-react';
 import { useTasks, priorityConfig } from '../../hooks/useTasks';
 import type { Task } from '../../hooks/useTasks';
+import { useTutorialPrefill } from '../../tutorial/useTutorialPrefill';
 import { DesktopPageHeader, DesktopAnimatedSwitch } from '../DesktopUI';
 
 interface DesktopTasksProps {
@@ -31,6 +32,8 @@ export function DesktopTasks({ tasks: propTasks, onUpdateTasks }: DesktopTasksPr
     commitEdit,
     handleDeleteTask,
   } = useTasks({ tasks: propTasks, onUpdateTasks });
+
+  useTutorialPrefill('task-title', setNewTitle);
 
   const groupFor = (p: 'high' | 'medium' | 'low') =>
     groupedByPriority.find(g => g.priority === p)?.tasks ?? [];
@@ -63,9 +66,10 @@ export function DesktopTasks({ tasks: propTasks, onUpdateTasks }: DesktopTasksPr
           value={newTitle}
           onChange={e => setNewTitle(e.target.value)}
           placeholder="Thêm nhiệm vụ mới..."
+          data-tour="task-title"
           className="flex-1 min-w-[220px] px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-semibold text-gray-800 placeholder:text-gray-300 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
         />
-        <div className="flex gap-1.5">
+        <div data-tour="task-priority" className="flex gap-1.5">
           {(['high', 'medium', 'low'] as const).map(p => (
             <button
               key={p}
@@ -82,6 +86,7 @@ export function DesktopTasks({ tasks: propTasks, onUpdateTasks }: DesktopTasksPr
         <button
           type="button"
           onClick={() => setNewDaily(v => !v)}
+          data-tour="task-daily"
           className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${
             newDaily ? 'bg-blue-500 text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
           }`}
@@ -91,6 +96,7 @@ export function DesktopTasks({ tasks: propTasks, onUpdateTasks }: DesktopTasksPr
         <button
           type="submit"
           disabled={!newTitle.trim()}
+          data-tour="task-submit"
           className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl font-bold text-sm shadow-sm hover:shadow disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
         >
           <Plus className="w-4 h-4" /> Thêm
@@ -98,7 +104,7 @@ export function DesktopTasks({ tasks: propTasks, onUpdateTasks }: DesktopTasksPr
       </form>
 
       {/* Filter tabs */}
-      <div className="flex border-b border-gray-200 mb-5">
+      <div data-tour="tasks-tabs" className="flex border-b border-gray-200 mb-5">
         {([['all', 'Tất cả'], ['active', 'Đang làm'], ['complete', 'Hoàn thành']] as const).map(([key, label]) => (
           <button
             key={key}
@@ -115,7 +121,7 @@ export function DesktopTasks({ tasks: propTasks, onUpdateTasks }: DesktopTasksPr
 
       {/* Priority columns */}
       <DesktopAnimatedSwitch id={activeTab}>
-        <div className="grid grid-cols-3 gap-5">
+        <div data-tour="tasks-list" className="grid grid-cols-3 gap-5">
         {(['high', 'medium', 'low'] as const).map(p => {
           const list = groupFor(p);
           return (

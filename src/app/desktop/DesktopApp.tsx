@@ -22,6 +22,7 @@ interface DesktopUser {
   job?: string;
   habits?: string;
   goals?: string;
+  health?: string;
 }
 
 interface DesktopAppProps {

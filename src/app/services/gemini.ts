@@ -17,10 +17,20 @@ import {
   type PlanResult,
   type SuggestBlockInput,
 } from '../../../shared/ai';
+import {
+  generateWithFallback,
+  GeminiRequestError,
+  resolveKeys,
+  resolveModels,
+} from '../../../shared/gemini';
+import { isTutorialActive } from '../tutorial/tutorialMode';
+import {
+  tutorialPlanSchedule,
+  tutorialBlockAnalysis,
+  tutorialDailyInsight,
+  tutorialAchievements,
+} from '../tutorial/tutorialAi';
 
-const CLIENT_KEY = (import.meta.env.VITE_GEMINI_API_KEY ?? '').trim();
-const MODEL = (import.meta.env.VITE_GEMINI_MODEL ?? '').trim() || 'gemini-2.5-flash';
-const GOOGLE_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 const PROXY_PATH = '/api/ai';
 
 export class GeminiError extends Error {
@@ -30,45 +40,35 @@ export class GeminiError extends Error {
   }
 }
 
+function clientKeys(): string[] {
+  return resolveKeys(import.meta.env.VITE_GEMINI_API_KEY, import.meta.env.VITE_GEMINI_API_KEYS);
+}
+
 export function getAiModel(): string {
-  return MODEL;
+  return resolveModels(import.meta.env.VITE_GEMINI_MODEL)[0];
 }
 
-interface RawResponse {
-  candidates?: { content?: { parts?: { text?: string }[] } }[];
-  error?: { message?: string };
-}
-
-async function callGoogle(built: BuiltPrompt): Promise<string> {
-  let res: Response;
+async function callGoogle(built: BuiltPrompt, keys: string[]): Promise<string> {
+  const models = resolveModels(import.meta.env.VITE_GEMINI_MODEL);
   try {
-    res = await fetch(`${GOOGLE_ENDPOINT}/${MODEL}:generateContent`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': CLIENT_KEY,
-      },
-      body: JSON.stringify({
+    const { text } = await generateWithFallback({
+      keys,
+      models,
+      buildBody: model => ({
         contents: [{ role: 'user', parts: [{ text: built.prompt }] }],
         systemInstruction: { parts: [{ text: built.system }] },
         generationConfig: {
           temperature: built.temperature,
           ...(built.json ? { responseMimeType: 'application/json' } : {}),
+          ...(model.includes('2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
         },
       }),
     });
-  } catch {
+    return text;
+  } catch (err) {
+    if (err instanceof GeminiRequestError) throw new GeminiError(err.message);
     throw new GeminiError('Không kết nối được tới máy chủ Gemini. Kiểm tra kết nối mạng của bạn.');
   }
-
-  const data: RawResponse = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new GeminiError(data.error?.message || `Yêu cầu Gemini thất bại (mã ${res.status}).`);
-  }
-
-  const text = data.candidates?.[0]?.content?.parts?.map(p => p.text ?? '').join('').trim();
-  if (!text) throw new GeminiError('Gemini không trả về nội dung.');
-  return text;
 }
 
 async function callProxy(action: AiAction, input: unknown): Promise<string> {
@@ -94,7 +94,8 @@ async function callProxy(action: AiAction, input: unknown): Promise<string> {
 }
 
 async function run(action: AiAction, input: unknown): Promise<string> {
-  if (CLIENT_KEY) return callGoogle(buildPrompt(action, input));
+  const keys = clientKeys();
+  if (keys.length) return callGoogle(buildPrompt(action, input), keys);
   return callProxy(action, input);
 }
 
@@ -137,10 +138,12 @@ export function suggestForBlock(input: SuggestBlockInput): Promise<AiSuggestion>
 }
 
 export function dailyInsight(input: DailyInsightInput): Promise<string> {
+  if (isTutorialActive()) return tutorialDailyInsight();
   return cached(`daily:${JSON.stringify(input)}`, () => run('daily', input));
 }
 
 export function planSchedule(input: PlanInput): Promise<PlanResult> {
+  if (isTutorialActive()) return tutorialPlanSchedule();
   return cached(`plan:${JSON.stringify(input)}`, async () => {
     const raw = await run('plan', input);
     return normalizePlan(parseJson<unknown>(raw));
@@ -148,6 +151,7 @@ export function planSchedule(input: PlanInput): Promise<PlanResult> {
 }
 
 export function analyzeBlock(input: BlockAnalysisInput): Promise<BlockAnalysis> {
+  if (isTutorialActive()) return tutorialBlockAnalysis();
   return cached(`block:${JSON.stringify(input)}`, async () => {
     const raw = await run('block', input);
     return normalizeBlockAnalysis(parseJson<unknown>(raw));
@@ -155,6 +159,7 @@ export function analyzeBlock(input: BlockAnalysisInput): Promise<BlockAnalysis> 
 }
 
 export function generateAchievements(input: AchievementsInput): Promise<AchievementIdea[]> {
+  if (isTutorialActive()) return tutorialAchievements();
   return cached(`achievements:${JSON.stringify(input)}`, async () => {
     const raw = await run('achievements', input);
     return normalizeAchievements(parseJson<unknown>(raw));

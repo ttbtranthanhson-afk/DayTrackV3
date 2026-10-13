@@ -18,7 +18,7 @@ export function Achive() {
         </div>
 
         {/* Stats banner */}
-        <div className="mx-5 mb-5 rounded-2xl bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-100 p-4 flex items-center gap-4">
+        <div data-tour="achive-stats" className="mx-5 mb-5 rounded-2xl bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-100 p-4 flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center flex-shrink-0">
             <Award className="w-6 h-6 text-pink-500" />
           </div>
@@ -33,7 +33,7 @@ export function Achive() {
 
         {/* AI achievements */}
         {aiAchievements.length > 0 && (
-          <div className="px-5 mb-5">
+          <div data-tour="achive-ai" className="px-5 mb-5">
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="w-4 h-4 text-violet-500" />
               <span className="text-sm font-bold text-gray-800">Mục tiêu từ AI</span>
@@ -89,7 +89,7 @@ export function Achive() {
         )}
 
         {/* Achievement groups */}
-        <div className="px-5 space-y-px">
+        <div data-tour="achive-groups" className="px-5 space-y-px">
           {achievementGroups.map(group => {
             const Icon = group.icon;
             const isExpanded = expandedId === group.id;

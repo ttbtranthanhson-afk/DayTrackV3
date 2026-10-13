@@ -1,13 +1,25 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Clock, Apple, Dumbbell, BookOpen, Info, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { Clock, Apple, Dumbbell, BookOpen, Info, Loader2, RefreshCw, AlertCircle, Check } from 'lucide-react';
 import { suggestForBlock, type AiSuggestion } from '../services/gemini';
+import type { BlockAnalysis } from '../../../shared/ai';
 
 interface AIScheduleSuggestionProps {
   scheduleTitle: string;
   scheduleTime: string;
   day?: string;
   tasks?: string[];
+  analysis?: BlockAnalysis;
+}
+
+function hasAdvice(analysis?: BlockAnalysis): boolean {
+  return Boolean(
+    analysis &&
+      (analysis.suggestions.length > 0 ||
+        Boolean(analysis.method) ||
+        analysis.healthTips.length > 0 ||
+        Boolean(analysis.why)),
+  );
 }
 
 type Category = 'eating' | 'exercise' | 'study';
@@ -29,19 +41,27 @@ const CATEGORY_META: Record<Category, { icon: typeof Apple; color: string; bg: s
   study: { icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-50' },
 };
 
-export function AIScheduleSuggestion({ scheduleTitle, scheduleTime, day = '', tasks }: AIScheduleSuggestionProps) {
+export function AIScheduleSuggestion({ scheduleTitle, scheduleTime, day = '', tasks, analysis }: AIScheduleSuggestionProps) {
   const category = categoryOf(scheduleTitle);
   const meta = CATEGORY_META[category];
   const Icon = meta.icon;
+  const saved = hasAdvice(analysis);
 
   const [data, setData] = useState<AiSuggestion | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!saved);
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
 
   const tasksKey = (tasks ?? []).join('|');
 
   useEffect(() => {
+    if (saved) {
+      setLoading(false);
+      setData(null);
+      setError(null);
+      return;
+    }
+
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -61,7 +81,7 @@ export function AIScheduleSuggestion({ scheduleTitle, scheduleTime, day = '', ta
     return () => {
       cancelled = true;
     };
-  }, [scheduleTitle, scheduleTime, day, tasksKey, reloadKey]);
+  }, [saved, scheduleTitle, scheduleTime, day, tasksKey, reloadKey]);
 
   return (
     <motion.div
@@ -72,7 +92,62 @@ export function AIScheduleSuggestion({ scheduleTitle, scheduleTime, day = '', ta
       className="overflow-hidden"
     >
       <div className="px-4 pt-3 pb-4 border-t border-gray-200">
-        {loading && (
+        {saved && analysis && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Icon className={`w-5 h-5 ${meta.color}`} />
+              <h4 className="font-medium text-gray-800">{scheduleTitle}</h4>
+            </div>
+
+            {analysis.suggestions.length > 0 && (
+              <div className={`rounded-xl p-3 ${meta.bg}`}>
+                <p className="text-sm font-medium text-gray-800 mb-2">
+                  {category === 'eating' ? 'Thực đơn gợi ý' : category === 'exercise' ? 'Bài tập gợi ý' : 'Gợi ý'}
+                </p>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  {analysis.suggestions.map((item, i) => (
+                    <li key={i}>• {item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {analysis.method && (
+              <div className="bg-blue-50 rounded-xl p-3">
+                <p className="text-sm font-medium text-gray-800 mb-1">Phương pháp</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{analysis.method}</p>
+              </div>
+            )}
+
+            {analysis.healthTips.length > 0 && (
+              <div className="bg-emerald-50 rounded-xl p-3">
+                <p className="text-sm font-medium text-gray-800 mb-2">Tư thế & nghỉ ngơi</p>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  {analysis.healthTips.map((tip, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {analysis.why && (
+              <div className="bg-blue-50 rounded-xl p-3 flex gap-2">
+                <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-gray-700">{analysis.why}</p>
+              </div>
+            )}
+
+            <div className="flex items-center gap-1.5 text-[11px] text-gray-300 font-medium">
+              <Clock className="w-3 h-3" />
+              Phân tích đã lưu cho khung {scheduleTime}
+            </div>
+          </div>
+        )}
+
+        {!saved && loading && (
           <div className="flex flex-col items-center justify-center gap-2 py-6 text-gray-400">
             <Loader2 className="w-5 h-5 animate-spin text-purple-500" />
             <p className="text-xs font-medium">AI đang phân tích khối lịch...</p>

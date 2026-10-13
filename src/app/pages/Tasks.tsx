@@ -2,6 +2,7 @@ import { Circle, CheckCircle2, X, Tag, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTasks, priorityConfig } from '../hooks/useTasks';
 import type { Task } from '../hooks/useTasks';
+import { useTutorialPrefill } from '../tutorial/useTutorialPrefill';
 
 interface TasksProps {
   tasks: Task[];
@@ -34,6 +35,8 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
     commitEdit,
     handleDeleteTask,
   } = useTasks({ tasks: propTasks, onUpdateTasks });
+
+  useTutorialPrefill('task-title', setNewTitle);
 
   return (
     <div className="min-h-screen bg-white pb-28">
@@ -79,7 +82,7 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
         </div>
 
         {/* Tasks grouped by priority */}
-        <div className="px-5 space-y-6">
+        <div data-tour="tasks-list" className="px-5 space-y-6">
           {groupedByPriority.length > 0 ? groupedByPriority.map(group => (
             <div key={group.priority}>
               <div className="flex items-center gap-2 mb-3">
@@ -163,11 +166,11 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
               onClick={() => setShowAddModal(false)}
             />
             {/* Centered card */}
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -206,6 +209,7 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
                         value={newTitle}
                         onChange={e => setNewTitle(e.target.value)}
                         placeholder="VD: Ôn tập Toán"
+                        data-tour="task-title"
                         className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-2xl border border-gray-200 text-sm font-semibold text-gray-800 placeholder:text-gray-300 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
                         required
                       />
@@ -218,7 +222,7 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
                     <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                       Mức ưu tiên
                     </label>
-                    <div className="flex gap-2">
+                    <div data-tour="task-priority" className="flex gap-2">
                       {(['high', 'medium', 'low'] as const).map(p => (
                         <button
                           key={p}
@@ -246,6 +250,7 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
                       role="switch"
                       aria-checked={newDaily}
                       aria-label="Diễn ra hằng ngày"
+                      data-tour="task-daily"
                       onClick={() => setNewDaily(v => !v)}
                       className={`relative w-11 h-6 rounded-full transition-colors ${
                         newDaily ? 'bg-blue-500' : 'bg-gray-200'
@@ -270,6 +275,7 @@ export function Tasks({ tasks: propTasks, onUpdateTasks }: TasksProps) {
                     <button
                       type="submit"
                       disabled={!newTitle.trim()}
+                      data-tour="task-submit"
                       className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       Thêm nhiệm vụ

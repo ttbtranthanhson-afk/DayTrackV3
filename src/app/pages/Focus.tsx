@@ -225,7 +225,7 @@ export function Focus() {
           </div>
 
           {/* Timer Circle */}
-          <div className="flex justify-center relative z-10">
+          <div data-tour="focus-timer" className="flex justify-center relative z-10">
             <div className="relative">
               {isRunning && (
                 <svg className="absolute top-0 left-0 w-52 h-52 -rotate-90">
@@ -280,7 +280,7 @@ export function Focus() {
           {/* Controls */}
           <div className="flex items-center justify-center gap-5 mt-6 relative z-10">
             {!isRunning && (
-              <div className="flex gap-2">
+              <div data-tour="focus-presets" className="flex gap-2">
                 {presetTimes.map(p => (
                   <button
                     key={p.label}
@@ -300,6 +300,7 @@ export function Focus() {
             )}
             <button
               onClick={toggleTimer}
+              data-tour="focus-play"
               className="w-14 h-14 rounded-full bg-white text-green-600 shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
             >
               {isRunning ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
@@ -308,11 +309,12 @@ export function Focus() {
         </div>
 
         {/* Tab Bar */}
-        <div className="flex border-b border-gray-100 bg-white sticky top-0 z-10">
+        <div data-tour="focus-tabs" className="flex border-b border-gray-100 bg-white sticky top-0 z-10">
           {tabs.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
+              data-tour={tab === 'Nhạc nền' ? 'focus-tab-music' : undefined}
               className={`flex-1 py-3 text-sm font-semibold transition-colors relative ${
                 activeTab === tab ? 'text-gray-900' : 'text-gray-400'
               }`}
@@ -384,7 +386,7 @@ export function Focus() {
                 <span className="text-sm font-semibold text-gray-700">Chọn nhạc nền</span>
               </div>
 
-              <div className="space-y-2">
+              <div data-tour="focus-music" className="space-y-2">
                 {musicCategories.map(cat => renderCategory(cat))}
                 {renderCategory(CUSTOM_CATEGORY)}
                 {renderCategory(NONE_CATEGORY)}

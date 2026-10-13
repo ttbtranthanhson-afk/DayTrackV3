@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Lock, User, Briefcase, Calendar, Target, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Briefcase, Calendar, Target, ArrowRight, Eye, EyeOff, HeartPulse } from 'lucide-react';
 import { Logo } from '../components/Logo';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -10,6 +10,7 @@ interface UserData {
   job?: string;
   habits?: string;
   goals?: string;
+  health?: string;
 }
 
 interface LoginProps {
@@ -81,6 +82,7 @@ export function Login({ onLogin }: LoginProps) {
   const [job, setJob] = useState('');
   const [habits, setHabits] = useState('');
   const [goals, setGoals] = useState('');
+  const [health, setHealth] = useState('');
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +92,7 @@ export function Login({ onLogin }: LoginProps) {
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (signupName.trim()) {
-      onLogin({ name: signupName.trim(), email: signupEmail, age, job, habits, goals });
+      onLogin({ name: signupName.trim(), email: signupEmail, age, job, habits, goals, health });
     }
   };
 
@@ -227,6 +229,22 @@ export function Login({ onLogin }: LoginProps) {
                     onChange={e => setGoals(e.target.value)}
                     placeholder="VD: Quản lý thời gian tốt hơn, giảm stress..."
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-orange-200 transition-all resize-none"
+                    rows={2}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  Tình trạng sức khỏe
+                </label>
+                <div className="relative">
+                  <HeartPulse className="absolute left-4 top-3.5 w-4 h-4 text-gray-400" />
+                  <textarea
+                    value={health}
+                    onChange={e => setHealth(e.target.value)}
+                    placeholder="VD: Sức khỏe tốt, thường xuyên thức khuya, hay mệt mỏi..."
+                    className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-red-200 transition-all resize-none"
                     rows={2}
                   />
                 </div>

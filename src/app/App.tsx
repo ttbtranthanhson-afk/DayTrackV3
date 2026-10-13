@@ -20,7 +20,20 @@ import { Appearance } from './pages/Appearance';
 import { About } from './pages/About';
 import { achievementGroupsData } from './data/achievements';
 import { syncAchievementsWithTasks } from './hooks/achievementStore';
+import { pruneCalendarData } from './hooks/calendarStore';
+import { pruneBusyData } from './hooks/busyStore';
 import { days, type ScheduleTask } from './hooks/scheduleData';
+import { TutorialLayer } from './tutorial/TutorialLayer';
+import {
+  activateAccount,
+  clearActiveAccount,
+  hasActiveAccount,
+  getAccountItem,
+  setAccountItem,
+} from './hooks/accountStorage';
+
+const USER_DATA_KEY = 'daytrack_user_data';
+const TASKS_KEY = 'daytrack_tasks';
 
 interface UserData {
   name: string;
@@ -29,6 +42,7 @@ interface UserData {
   job?: string;
   habits?: string;
   goals?: string;
+  health?: string;
 }
 
 export interface Task {
@@ -57,28 +71,61 @@ function AppContent() {
   useAppTheme();
 
   useEffect(() => {
-    const savedUserData = localStorage.getItem('daytrack_user_data');
-    if (savedUserData) {
-      setUserData(JSON.parse(savedUserData));
-      setIsLoggedIn(true);
-    }
+    pruneCalendarData();
+    pruneBusyData();
 
-    const savedTasks = localStorage.getItem('daytrack_tasks');
-    if (savedTasks) {
-      setGlobalTasks(JSON.parse(savedTasks));
+    if (hasActiveAccount()) {
+      const savedUserData = getAccountItem(USER_DATA_KEY);
+      if (savedUserData) {
+        setUserData(JSON.parse(savedUserData));
+        setIsLoggedIn(true);
+
+        const savedTasks = getAccountItem(TASKS_KEY);
+        if (savedTasks) {
+          setGlobalTasks(JSON.parse(savedTasks));
+        }
+      }
     }
   }, []);
 
+  useEffect(() => {
+    const handler = () => {
+      const savedTasks = getAccountItem(TASKS_KEY);
+      setGlobalTasks(savedTasks ? JSON.parse(savedTasks) : []);
+      const savedUserData = getAccountItem(USER_DATA_KEY);
+      if (savedUserData) setUserData(JSON.parse(savedUserData));
+    };
+    window.addEventListener('daytrack:data-refresh', handler);
+    return () => window.removeEventListener('daytrack:data-refresh', handler);
+  }, []);
+
   const handleLogin = (data: UserData) => {
-    setUserData(data);
+    activateAccount(data.email);
+
+    const savedUserData = getAccountItem(USER_DATA_KEY);
+    let profile = data;
+    if (savedUserData) {
+      try {
+        profile = JSON.parse(savedUserData) as UserData;
+      } catch {
+        profile = data;
+      }
+    } else {
+      setAccountItem(USER_DATA_KEY, JSON.stringify(data));
+    }
+
+    setUserData(profile);
     setIsLoggedIn(true);
-    localStorage.setItem('daytrack_user_data', JSON.stringify(data));
+
+    const savedTasks = getAccountItem(TASKS_KEY);
+    setGlobalTasks(savedTasks ? JSON.parse(savedTasks) : []);
   };
 
   const handleLogout = () => {
+    clearActiveAccount();
     setIsLoggedIn(false);
     setUserData({ name: '', email: '' });
-    localStorage.removeItem('daytrack_user_data');
+    setGlobalTasks([]);
   };
 
   const handleAddTasksFromSchedule = (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => {
@@ -105,13 +152,13 @@ function AppContent() {
     });
 
     setGlobalTasks(next);
-    localStorage.setItem('daytrack_tasks', JSON.stringify(next));
+    setAccountItem(TASKS_KEY, JSON.stringify(next));
   };
 
   const handleUpdateTasks = (tasks: Task[]) => {
     syncAchievementsWithTasks(globalTasks, tasks);
     setGlobalTasks(tasks);
-    localStorage.setItem('daytrack_tasks', JSON.stringify(tasks));
+    setAccountItem(TASKS_KEY, JSON.stringify(tasks));
   };
 
   const showBottomNav = isLoggedIn;
@@ -132,6 +179,7 @@ function AppContent() {
           onUpdateTasks={handleUpdateTasks}
           onAddTasks={handleAddTasksFromSchedule}
         />
+        <TutorialLayer enabled={isLoggedIn} />
         <Toaster position="top-center" richColors />
       </div>
     );
@@ -153,6 +201,7 @@ function AppContent() {
         <Route path="/about" element={<About />} />
       </Routes>
       {showBottomNav && <BottomNav />}
+      <TutorialLayer enabled={isLoggedIn} />
       <Toaster position="top-center" richColors />
     </div>
   );

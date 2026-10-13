@@ -115,7 +115,8 @@ export interface BuiltPrompt {
 
 export const SYSTEM_PROMPT =
   'Bạn là trợ lý quản lý thời gian cho ứng dụng lịch trình cá nhân. ' +
-  'Luôn trả lời ngắn gọn, thực tế, thân thiện và bằng tiếng Việt.';
+  'Luôn trả lời ngắn gọn, thực tế, thân thiện, bằng tiếng Việt và tuân thủ nghiêm ngặt mọi quy tắc trong yêu cầu. ' +
+  'Không suy luận dài dòng, chỉ trả về đúng kết quả được yêu cầu.';
 
 const DEFAULT_TIME_OPTIONS = ['16:00 - 17:00', '16:30 - 17:30', '17:00 - 18:00'];
 const BLOCK_TYPES: BlockType[] = ['eating', 'study', 'exercise', 'other'];
@@ -141,7 +142,8 @@ function buildAnalyzePrompt(input: AnalyzeScheduleInput): BuiltPrompt {
       scheduleLines(input.schedule),
       `Khung giờ bận: ${busyText}`,
       '',
-      'Hãy phân tích ngắn gọn lịch trình trên và đưa ra gợi ý sắp xếp khoa học.',
+      'Hãy phân tích ngắn gọn lịch trình trên và đưa ra gợi ý sắp xếp khoa học, tập trung vào sức khỏe và thời điểm phù hợp.',
+      'Không đề xuất thêm lịch làm việc mới; chỉ sắp xếp lại các khối sẵn có, có thể nhắc thêm bữa ăn/nghỉ ngơi nếu cần.',
       'Yêu cầu: trả lời bằng tiếng Việt, tối đa 8 dòng, mỗi ý bắt đầu bằng "• ", không dùng markdown heading,',
       'chỉ nêu nhận xét và gợi ý cụ thể dựa trên dữ liệu trên. Nếu thiếu dữ liệu thì gợi ý chung cho một ngày hiệu quả.',
     ].join('\n'),
@@ -159,7 +161,8 @@ function buildSuggestPrompt(input: SuggestBlockInput): BuiltPrompt {
       `Thời gian: ${input.time}`,
       `Nhiệm vụ trong khối: ${input.tasks?.length ? input.tasks.join(', ') : 'Không có'}`,
       '',
-      'Hãy đưa ra gợi ý thiết thực cho khối lịch này dựa trên loại hoạt động (ăn uống, học tập, thể dục, nghỉ ngơi, làm việc...).',
+      'Hãy đưa ra gợi ý cách THỰC HIỆN khối lịch này dựa trên loại hoạt động (ăn uống, học tập, thể dục, nghỉ ngơi...).',
+      'Không đề xuất thêm nhiệm vụ mới, không thay đổi lịch trình; chỉ hướng dẫn cách làm.',
       'Trả về DUY NHẤT một đối tượng JSON theo đúng cấu trúc sau:',
       '{"title": "tiêu đề ngắn", "sections": [{"heading": "tên mục", "items": ["ý 1", "ý 2", "ý 3"]}], "note": "một câu giải thích ngắn"}',
       'Yêu cầu: 2 đến 4 mục, mỗi mục 2 đến 4 ý; nội dung tiếng Việt, cụ thể (thời lượng, số lần, món ăn/bài tập...); không dùng markdown.',
@@ -190,10 +193,17 @@ function buildPlanPrompt(input: PlanInput): BuiltPrompt {
     json: true,
     temperature: 0.85,
     prompt: [
-      'Bạn là chuyên gia sắp xếp thời gian. Hãy làm theo 3 bước:',
-      '1) Phân loại MỖI khối lịch thành type: "eating" (ăn uống), "study" (học tập), "exercise" (thể dục) hoặc "other".',
-      '2) Sắp xếp lại thời gian các khối trong ngày một cách khoa học: tránh khung giờ bận, xen kẽ hợp lý, có nghỉ ngơi, ưu tiên việc khó vào lúc tập trung cao.',
-      '3) Tạo ĐÚNG 2 phương án sắp xếp khác nhau để người dùng chọn.',
+      'Bạn là chuyên gia sắp xếp thời gian cho MỘT ngày của người dùng.',
+      'Mục tiêu: sắp xếp lại GIỜ của các khối lịch SẴN CÓ sao cho hợp sức khỏe và đúng thời điểm phù hợp nhất để thực hiện hoạt động đó.',
+      '',
+      'QUY TẮC BẮT BUỘC (vi phạm là sai):',
+      '- Giữ NGUYÊN mọi khối lịch gốc: giữ đúng "title", không xóa, không đổi tên, không gộp hay tách khối.',
+      '- KHÔNG tự ý thêm nhiệm vụ. Khối gốc không có nhiệm vụ thì "tasks": []; khối gốc có nhiệm vụ thì giữ nguyên đúng danh sách nhiệm vụ đó.',
+      '- KHÔNG thêm khối lịch làm việc/học tập/thể dục mới.',
+      '- CHỈ được phép thêm khối MỚI loại ăn uống ("eating") hoặc nghỉ ngơi (type "other", tiêu đề bắt đầu bằng "Nghỉ") khi thật cần thiết, tối đa 2 khối mới cho mỗi phương án.',
+      '- KHÔNG bịa thêm lịch khác dưới mọi hình thức.',
+      '- Chỉ được đổi "start"/"end" của các khối (định dạng "HH:MM", 24 giờ), trong khoảng 05:00-23:00, không chồng lấn nhau và không nằm trong khung giờ bận.',
+      '- Tạo ĐÚNG 2 phương án sắp xếp KHÁC NHAU để người dùng chọn.',
       '',
       `Ngày: ${input.day}`,
       'Khối lịch hiện có:',
@@ -201,16 +211,15 @@ function buildPlanPrompt(input: PlanInput): BuiltPrompt {
       `Khung giờ bận (không được xếp vào): ${busyText}`,
       '',
       'Trả về DUY NHẤT JSON theo cấu trúc:',
-      '{"options":[{"id":"opt-1","name":"tên phương án ngắn","description":"mô tả ngắn","blocks":[{"title":"...","type":"study","start":"08:00","end":"09:30","tasks":["nhiệm vụ 1"],"analysis":{"need":"muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["Ức gà 150g","Gạo lứt 100g"],"method":"phương pháp học","healthTips":["ngồi thẳng lưng"],"why":"vì sao xếp như vậy"}}]}]}',
-      'Quy tắc:',
-      '- PHÂN BỔ PHÂN TÍCH: chỉ điền đầy đủ "analysis" (need, suggestions, method, healthTips, why) cho các khối MỚI hoặc có thời gian THAY ĐỔI so với lịch gốc nêu trên.',
-      '- Với khối GIỮ NGUYÊN thời gian: để "suggestions": [], "healthTips": [], "method": "", "why": ""; chỉ cần "timeOptions" (và "need" nếu phù hợp).',
-      '- Mỗi option giữ ĐÚNG các khối lịch gốc (cùng title), chỉ đổi thời gian; mỗi phương án phải sắp khác nhau.',
-      '- start/end định dạng "HH:MM" trong 24 giờ, KHÔNG nằm trong khung giờ bận.',
-      '- type "eating"/"exercise": điền "need" ("gain"|"lose"|"muscle") và "suggestions" (món ăn kèm gram hoặc bài tập kèm số lượng) khi khối được phân tích.',
-      '- type "study": điền "method" (phương pháp học theo môn) và "healthTips" (tư thế, thời gian nghỉ) khi khối được phân tích.',
-      '- "timeOptions" luôn gồm 3 khung giờ hợp lý cho khối đó.',
-      '- "why" giải thích ngắn vì sao xếp khối này như vậy (chỉ khi khối được phân tích).',
+      '{"options":[{"id":"opt-1","name":"tên phương án ngắn","description":"mô tả ngắn","blocks":[{"title":"...","type":"study","start":"08:00","end":"09:30","tasks":[],"analysis":{"need":"muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["Ức gà 150g","Gạo lứt 100g"],"method":"phương pháp học","healthTips":["ngồi thẳng lưng"],"why":"vì sao xếp như vậy"}}]}]}',
+      'Phân tích "analysis" phải điền cho MỌI khối (kể cả khối giữ nguyên giờ) để lưu sẵn cho mục Hôm nay:',
+      '- "timeOptions": luôn gồm 3 khung giờ hợp lý cho khối đó.',
+      '- "why": một câu ngắn vì sao nên thực hiện khối này vào giờ đã xếp.',
+      '- type "eating": điền "need" ("gain"|"lose"|"muscle") và "suggestions" là thực đơn kèm khối lượng gram.',
+      '- type "exercise": điền "need" và "suggestions" là bài tập kèm số lượng (km, cái, giây).',
+      '- type "study": điền "method" (phương pháp học theo môn) và "healthTips" (tư thế, thời gian nghỉ).',
+      '- type "other" (nghỉ ngơi): "suggestions" và "healthTips" ngắn gọn, thiết thực, không đề xuất nhiệm vụ.',
+      '- Không đề xuất nhiệm vụ mới trong bất kỳ trường nào.',
       '- Tất cả nội dung bằng tiếng Việt, cụ thể, không dùng markdown.',
     ].join('\n'),
   };
@@ -224,7 +233,7 @@ function buildBlockPrompt(input: BlockAnalysisInput): BuiltPrompt {
     json: true,
     temperature: 0.9,
     prompt: [
-      'Phân tích và đánh giá MỘT khối lịch trình cá nhân.',
+      'Phân tích cách THỰC HIỆN MỘT khối lịch trình đã có. KHÔNG sắp xếp lại thời gian và KHÔNG thêm nhiệm vụ.',
       `Ngày: ${input.day}`,
       `Tiêu đề: "${input.title}"`,
       `Loại: ${input.type}`,
@@ -235,9 +244,12 @@ function buildBlockPrompt(input: BlockAnalysisInput): BuiltPrompt {
       'Trả về DUY NHẤT JSON theo cấu trúc:',
       '{"need":"gain|lose|muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["..."],"method":"...","healthTips":["..."],"why":"..."}',
       'Quy tắc theo loại:',
+      '- Không đổi tiêu đề, thời gian hay nhiệm vụ. Nếu khối không có nhiệm vụ thì tuyệt đối không đề xuất nhiệm vụ mới.',
       '- "eating": "suggestions" là thực đơn gợi ý kèm khối lượng gram, dựa theo nhu cầu (gain/lose/muscle); "why" giải thích dinh dưỡng.',
       '- "exercise": "suggestions" là các bài tập kèm số lượng (km, cái, giây) theo nhu cầu; "why" giải thích vì sao tập như thế.',
       '- "study": "method" là phương pháp học phù hợp môn học; "healthTips" gồm tư thế, thời gian học và thời gian thư giãn; "why" giải thích.',
+      '- "other": "suggestions" và "healthTips" ngắn gọn, thiết thực.',
+      '- "timeOptions" gồm 3 khung giờ hợp lý chỉ để tham khảo.',
       '- Nội dung tiếng Việt, cụ thể, không markdown.',
     ].join('\n'),
   };
