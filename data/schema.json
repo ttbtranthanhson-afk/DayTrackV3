@@ -1,0 +1,45 @@
+{
+  "input": {
+    "profile": {
+      "job_title": "string",
+      "health": [
+        "string"
+      ],
+      "mental": [
+        "string"
+      ]
+    },
+    "date": "YYYY-MM-DD",
+    "tasks": [
+      {
+        "name": "string",
+        "duration_min": 30,
+        "priority": "high|medium|low"
+      }
+    ]
+  },
+  "context": {
+    "profile_id": "P01-P20",
+    "load_work_factor": 0.0,
+    "max_session_min": 0,
+    "focus_hours_max_day": 0.0,
+    "applied_factors": [
+      "string"
+    ]
+  },
+  "output": {
+    "plan": [
+      {
+        "start": "HH:MM",
+        "end": "HH:MM",
+        "task": "string",
+        "work_type": "A|B|C|D|E|F|G|H|I|J",
+        "block": "D1|D2|TR|CT|TOI|NGU|VD|WK|Bua|EVENT",
+        "session": 1
+      }
+    ],
+    "feasible": true,
+    "warnings": [],
+    "violations": []
+  }
+}

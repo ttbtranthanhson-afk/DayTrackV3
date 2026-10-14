@@ -1,0 +1,425 @@
+{
+  "sheet": "QT Kịch bản mẫu",
+  "headers": [
+    "Kịch bản",
+    "Giờ",
+    "Việc",
+    "Cách làm",
+    "Lí do"
+  ],
+  "rows": [
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "06:15",
+      "Việc": "Thức dậy, uống nước, ánh sáng",
+      "Cách làm": "1 cốc nước, mở rèm hoặc ra ban công 5 phút.",
+      "Lí do": "Ánh sáng sáng và nước giúp tỉnh, ổn định đồng hồ sinh học."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "06:30-07:00",
+      "Việc": "Ăn sáng + ôn nhanh 10 phút",
+      "Cách làm": "Trứng + bánh mì nguyên cám + trái cây; tự nhớ lại 3 điều học hôm qua (M05).",
+      "Lí do": "Giữ ổn định đường huyết; ôn ngắn sáng củng cố trí nhớ."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "07:00-11:30",
+      "Việc": "Đi học",
+      "Cách làm": "Đi bộ hoặc đạp xe nếu gần.",
+      "Lí do": "Vận động nhẹ trước giờ học."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "11:45-12:30",
+      "Việc": "Ăn trưa + đi bộ 5-10 phút",
+      "Cách làm": "Đĩa 1/2 rau, 1/4 đạm, 1/4 cơm + canh.",
+      "Lí do": "Đi bộ sau ăn giảm buồn ngủ."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "12:45-13:15",
+      "Việc": "Ngủ trưa 15-20 phút",
+      "Cách làm": "Báo thức 20 phút.",
+      "Lí do": "Phục hồi tỉnh táo cho buổi chiều (R11)."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "15:30-17:15",
+      "Việc": "Học Toán - Lí - Hóa (khối D1)",
+      "Cách làm": "15:45 bữa phụ sữa chua + hạt. 15:30-15:55 Toán dạng xen kẽ (M08), nghỉ 5; 16:00-16:25 Lí hoặc Hóa, nghỉ 5; 16:30-17:15 sửa bài sai vào sổ lỗi (M09). Làm Toán đầu tiên.",
+      "Lí do": "Giờ tỉnh sau nghỉ và ăn nhẹ; môn khó khi còn năng lượng; sổ lỗi sai nâng điểm nhanh."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "17:15-18:15",
+      "Việc": "Vận động",
+      "Cách làm": "Chạy nhẹ hoặc bóng rổ / đạp xe 30-45 phút, giãn cơ.",
+      "Lí do": "Giải tỏa đầu óc, tập vào lúc thể lực cao, xa giờ ngủ."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "18:30-19:15",
+      "Việc": "Ăn tối cùng gia đình + việc nhà nhẹ",
+      "Cách làm": "Nhẹ hơn trưa, nhiều rau, cá / trứng.",
+      "Lí do": "Ăn tối xong cách ngủ hơn 3 giờ."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "19:30-21:00",
+      "Việc": "Môn nhớ - Văn - Anh (khối D2)",
+      "Cách làm": "Anh: 15 từ mới + nghe chép 15 phút; Sử / Địa: sơ đồ + tự nói lại (M12, M05); Văn: dàn ý và nháp (M14).",
+      "Lí do": "Môn nhớ và ngôn ngữ phù hợp buổi tối; sau đó còn thời gian ôn nhẹ."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "21:00-21:30",
+      "Việc": "Ôn nhẹ trước ngủ, không màn hình sáng",
+      "Cách làm": "Tự nhớ lại 3-5 điều học; soạn cặp.",
+      "Lí do": "Ngủ củng cố trí nhớ (M48)."
+    },
+    {
+      "Kịch bản": "K1. Học sinh THPT + sức khỏe bình thường + tinh thần bình thường",
+      "Giờ": "21:30-22:15",
+      "Việc": "Wind-down và ngủ",
+      "Cách làm": "Tắm ấm, đọc giấy, điện thoại ngoài phòng; ngủ 22:15.",
+      "Lí do": "Đủ 8 giờ ngủ cho tuổi thanh thiếu niên."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "06:15-06:45",
+      "Việc": "Dậy, nước, khởi động nhẹ 10 phút",
+      "Cách làm": "Đi bộ nhanh quanh nhà hoặc Jumping jack nhẹ 3 phút + giãn cơ.",
+      "Lí do": "Bắt đầu ngày chủ động, ít tác động khớp."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "06:45-07:15",
+      "Việc": "Ăn sáng",
+      "Cách làm": "Yến mạch nấu nước + trứng luộc + táo (món giảm cân từ sheet Món ăn theo mục tiêu).",
+      "Lí do": "Ăn đủ để không đói sớm, không ăn vặt ngọt."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "12:00-12:45",
+      "Việc": "Ăn trưa + đi bộ 10 phút",
+      "Cách làm": "Đĩa 1/2 rau; bớt tinh bột 1/4; canh trong; không nước ngọt.",
+      "Lí do": "Giảm 300-500 kcal/ngày vừa phải."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "15:30-17:00",
+      "Việc": "Học khối D1, phiên 25/5",
+      "Cách làm": "Nghỉ giữa phiên đứng dậy đi lại 5 phút; M05 cho môn nhớ, M10 làm đề 1 lần/tuần có bấm giờ.",
+      "Lí do": "Chia nhỏ giảm lo âu; nghỉ vận động tránh ngồi lâu."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "17:15-18:00",
+      "Việc": "Vận động mức Cơ bản",
+      "Cách làm": "Đi bộ nhanh 30 phút hoặc đạp xe, Squat tay không 3x15, Plank 3x30 giây (tránh nhảy, chạy).",
+      "Lí do": "Bảo vệ khớp gối, vẫn tiêu hao năng lượng."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "19:30-20:30",
+      "Việc": "Học khối D2",
+      "Cách làm": "Chỉ 2 môn; 15 phút cuối viết ra 3 lo lắng về thi và 1 việc làm được trong tuần (M27).",
+      "Lí do": "Giờ lo lắng có hạn, tránh nghĩ lan sang giờ ngủ."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "21:00-21:30",
+      "Việc": "Thở hộp 6 vòng, soạn cặp",
+      "Cách làm": "Thở hộp 4-4-4-4; không học thêm.",
+      "Lí do": "Hạ căng thẳng trước ngủ."
+    },
+    {
+      "Kịch bản": "K2. Học sinh THPT + béo phì độ I + áp lực thi cử",
+      "Giờ": "Cuối tuần",
+      "Việc": "Làm đề đúng giờ thi thật",
+      "Cách làm": "1 đề (M10), chữa kĩ; tuần có đề thì giảm 20% bài tập khác.",
+      "Lí do": "Tăng quen áp lực thi mà không dồn."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "06:30",
+      "Việc": "Dậy, đo huyết áp lúc nghỉ",
+      "Cách làm": "Ngồi nghỉ 5 phút, đo; ghi; nếu từ 180/110 hoặc theo ngưỡng bác sĩ thì không tập, liên hệ y tế.",
+      "Lí do": "Theo dõi sớm, tránh gắng sức khi huyết áp quá cao."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "07:00-07:30",
+      "Việc": "Uống thuốc đúng giờ + ăn sáng ít muối",
+      "Cách làm": "Thuốc theo chỉ định; trứng luộc, bánh mì nguyên cám, trái cây; không chấm mắm.",
+      "Lí do": "Uống thuốc cùng giờ ổn định huyết áp; giảm muối."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "09:00-11:30",
+      "Việc": "Khối D1: việc cần tư duy",
+      "Cách làm": "Làm 2 chu kì 50/10; việc khó nhất đầu; tắt thông báo (M21).",
+      "Lí do": "Làm việc sâu lúc tỉnh táo; giảm đa nhiệm gây stress."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "12:00-12:45",
+      "Việc": "Ăn trưa nhẹ muối",
+      "Cách làm": "Cơm gạo lứt + cá hấp + rau luộc + canh rau; hạn chế món kho mặn.",
+      "Lí do": "Giảm muối và giữ huyết áp."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "13:15-14:30",
+      "Việc": "Email và việc lặp",
+      "Cách làm": "Gom 1 mẻ email; đứng dậy 2-3 phút mỗi 30 phút.",
+      "Lí do": "Khối trũng dành việc nhẹ."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "14:30-16:00",
+      "Việc": "Họp / gặp khách",
+      "Cách làm": "Họp 25 hoặc 50 phút có agenda (M38); thở hộp 2 phút trước cuộc quan trọng.",
+      "Lí do": "Giảm căng thẳng, giảm mạch tăng."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "17:45-18:30",
+      "Việc": "Đi bộ nhanh 30-40 phút",
+      "Cách làm": "Mức nói chuyện được; không HIIT, không tạ rất nặng, không nín thở.",
+      "Lí do": "Cardio vừa giúp hạ huyết áp; tránh gắng sức đột ngột."
+    },
+    {
+      "Kịch bản": "K3. Nhân viên văn phòng + tăng huyết áp + stress kéo dài",
+      "Giờ": "21:00-22:30",
+      "Việc": "Wind-down, ngủ 22:30",
+      "Cách làm": "Tắt màn hình 21:30; thư giãn cơ tiến triển 10 phút.",
+      "Lí do": "Ngủ đủ giúp huyết áp ổn định và giảm stress."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "07:00-07:30",
+      "Việc": "Dậy, ánh sáng, nước, ăn sáng",
+      "Cách làm": "Giờ dậy cố định cả cuối tuần; ra ban công 10 phút; yến mạch + trứng luộc + táo.",
+      "Lí do": "Giờ dậy cố định là nền cho giấc ngủ; ăn sáng ít béo cho gan."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "09:30-12:00",
+      "Việc": "Khối D1: code khó",
+      "Cách làm": "M21 90/20: 1 sản phẩm đầu ra, tắt thông báo; cà phê không quá 1 ly và trước 12:00.",
+      "Lí do": "Làm việc sâu lúc tỉnh; caffeine không ảnh hưởng ngủ."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "12:30-13:15",
+      "Việc": "Ăn trưa, đi bộ 10 phút",
+      "Cách làm": "Cá diêu hồng hấp + rau luộc + cơm gạo lứt + canh; không đồ chiên, không nước ngọt.",
+      "Lí do": "Giảm mỡ và đường cho gan nhiễm mỡ."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "13:15-14:30",
+      "Việc": "Email, review nhẹ; không ngủ trưa dài",
+      "Cách làm": "Nếu buồn ngủ: nghỉ yên 10 phút, không quá 20 phút.",
+      "Lí do": "Ngủ trưa dài làm khó ngủ tối."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "15:00-17:30",
+      "Việc": "Khối D2: họp, test, review",
+      "Cách làm": "Phiên 50/10; nghỉ mắt 20-20-20.",
+      "Lí do": "Giờ phối hợp, không xếp việc căng thẳng sau 22:00."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "18:15-19:15",
+      "Việc": "Vận động",
+      "Cách làm": "Đi bộ nhanh hoặc đạp xe 40 phút + Squat tay không, Plank 2-3 hiệp; mức Cơ bản - Trung bình, 5 buổi/tuần.",
+      "Lí do": "Giảm mỡ gan cần vận động đều; giảm cân 0,5 kg/tuần."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "19:30-20:15",
+      "Việc": "Ăn tối nhẹ",
+      "Cách làm": "Đậu hũ sốt cà chua / cá lóc nướng + rau + cơm ít; kết thúc trước ngủ 3 giờ.",
+      "Lí do": "Giảm gánh nặng cho gan và tiêu hóa."
+    },
+    {
+      "Kịch bản": "K4. Lập trình viên + gan nhiễm mỡ + mất ngủ",
+      "Giờ": "21:30-23:00",
+      "Việc": "Wind-down 60 phút, ngủ 23:00",
+      "Cách làm": "Tắt màn hình 22:00; ghi 3 dòng việc mai; thư giãn cơ tiến triển; ra khỏi giường nếu 20 phút chưa ngủ (R13).",
+      "Lí do": "Quy trình giúp vào giấc, giảm thức giấc."
+    },
+    {
+      "Kịch bản": "K5. Điều dưỡng ca đêm + khỏe mạnh + kiệt sức nhẹ",
+      "Giờ": "Sau ca (về 07:30)",
+      "Việc": "Ăn nhẹ, ngủ chính 08:30-16:00",
+      "Cách làm": "Phòng tối, kính râm khi về, báo người nhà; không cà phê sau 02:00 trong ca.",
+      "Lí do": "Giữ ca ngủ chính 7-8 giờ (R58)."
+    },
+    {
+      "Kịch bản": "K5. Điều dưỡng ca đêm + khỏe mạnh + kiệt sức nhẹ",
+      "Giờ": "16:00-17:00",
+      "Việc": "Thức dậy, ăn chính, ánh sáng",
+      "Cách làm": "Ăn cơm + cá + rau; ra ánh sáng 15 phút.",
+      "Lí do": "Báo hiệu 'bắt đầu ngày' cho cơ thể."
+    },
+    {
+      "Kịch bản": "K5. Điều dưỡng ca đêm + khỏe mạnh + kiệt sức nhẹ",
+      "Giờ": "17:00-18:00",
+      "Việc": "Vận động nhẹ",
+      "Cách làm": "Yoga, đi bộ 20-30 phút.",
+      "Lí do": "Giảm kiệt sức, không tập nặng trước ca đêm."
+    },
+    {
+      "Kịch bản": "K5. Điều dưỡng ca đêm + khỏe mạnh + kiệt sức nhẹ",
+      "Giờ": "18:00-19:00",
+      "Việc": "Việc nhà nhẹ, học chuyên môn nhẹ",
+      "Cách làm": "Giặt, nấu; đọc 20 phút.",
+      "Lí do": "Dùng thời gian trước ca."
+    },
+    {
+      "Kịch bản": "K5. Điều dưỡng ca đêm + khỏe mạnh + kiệt sức nhẹ",
+      "Giờ": "19:30-20:00",
+      "Việc": "Chợp mắt 20-30 phút",
+      "Cách làm": "Báo thức; ngủ trong phòng tối.",
+      "Lí do": "Cải thiện tỉnh táo trong ca (R59)."
+    },
+    {
+      "Kịch bản": "K5. Điều dưỡng ca đêm + khỏe mạnh + kiệt sức nhẹ",
+      "Giờ": "21:00-07:00",
+      "Việc": "Ca đêm",
+      "Cách làm": "Ánh sáng sáng đầu ca; bữa nhẹ giữa ca (sữa chua, trứng luộc, trái cây); đi lại 5 phút mỗi giờ; nghỉ giữa ca 15-20 phút.",
+      "Lí do": "Giữ tỉnh táo và an toàn (R60-R61)."
+    },
+    {
+      "Kịch bản": "K5. Điều dưỡng ca đêm + khỏe mạnh + kiệt sức nhẹ",
+      "Giờ": "Sau chuỗi ca đêm",
+      "Việc": "1-2 ngày nghỉ nhẹ",
+      "Cách làm": "Không xếp việc nặng; ngủ đủ; đi bộ nhẹ; nói chuyện với người tin cậy.",
+      "Lí do": "Kiệt sức nhẹ cần giảm tải 30-40% (QT Tinh thần)."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "07:00-07:30",
+      "Việc": "Dậy, ra ánh sáng 15 phút, ăn sáng",
+      "Cách làm": "Mục tiêu 1 việc nhỏ: mở rèm và uống nước; yến mạch nấu sữa + trứng + chuối.",
+      "Lí do": "Ánh sáng và nhịp đều giúp tâm trạng (M28); ăn đủ cho gầy độ I."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "09:00-09:15",
+      "Việc": "Phiên 15 phút (M04)",
+      "Cách làm": "1 việc nhỏ cụ thể (3 bài đầu); sau đó nghỉ 3 phút; chấm tâm trạng 0-10.",
+      "Lí do": "Hạ rào cản bắt đầu; ghi nhận tiến bộ."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "09:30-11:00",
+      "Việc": "Học / lên lớp (tối đa 60% tải thường)",
+      "Cách làm": "Chỉ 1 môn quan trọng nhất; phiên 15-25 phút, nghỉ 5; cùng bạn học (M35) nếu được.",
+      "Lí do": "Hệ số tải 60%; có người cùng giúp duy trì."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "12:00-12:45",
+      "Việc": "Ăn trưa đủ",
+      "Cách làm": "Cơm gà luộc + rau + canh; sữa chua; không bỏ bữa.",
+      "Lí do": "Ăn đều giữ năng lượng và tăng cân từ từ."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "16:30-17:15",
+      "Việc": "Đi bộ nhanh 20 phút ngoài trời + Squat tay không, Plank",
+      "Cách làm": "3 hiệp mức Cơ bản.",
+      "Lí do": "Vận động nhẹ nâng tâm trạng; kháng lực hỗ trợ tăng cơ."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "18:00",
+      "Việc": "Gọi hoặc gặp 1 người thân / bạn",
+      "Cách làm": "10-15 phút.",
+      "Lí do": "Kết nối xã hội bảo vệ tinh thần (R52)."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "21:30-22:30",
+      "Việc": "Wind-down, ngủ cố định",
+      "Cách làm": "Giờ ngủ và dậy cố định; uống thuốc theo bác sĩ; viết 3 dòng nhật kí.",
+      "Lí do": "Giấc ngủ đều quan trọng với điều trị."
+    },
+    {
+      "Kịch bản": "K6. Sinh viên + gầy độ I + trầm cảm (đang điều trị)",
+      "Giờ": "Khi tệ hơn",
+      "Việc": "Chuyển 'ngày tối thiểu' (M47)",
+      "Cách làm": "Chỉ ngủ, ăn, uống thuốc, 1 việc 5-10 phút; liên hệ bác sĩ / người thân; nếu có ý nghĩ tự hại: liên hệ ngay người thân, cơ sở y tế hoặc gọi 115.",
+      "Lí do": "An toàn và hồi phục."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "05:30-06:15",
+      "Việc": "Dậy, uống nước, đo đường huyết nếu được bác sĩ dặn",
+      "Cách làm": "Ghi chỉ số vào nhật kí.",
+      "Lí do": "Theo dõi xu hướng đường huyết."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "06:15-06:45",
+      "Việc": "Ăn sáng",
+      "Cách làm": "Cháo yến mạch nước + trứng luộc + 1 quả táo; uống thuốc theo chỉ định.",
+      "Lí do": "Tinh bột chậm; không bỏ bữa."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "08:30-10:30",
+      "Việc": "Việc cần suy nghĩ (khối D1)",
+      "Cách làm": "Đọc báo, học dùng điện thoại, quản lí giấy tờ; nghỉ 5 phút mỗi 30 phút.",
+      "Lí do": "Buổi sáng tập trung tốt nhất."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "11:00-11:45",
+      "Việc": "Ăn trưa, đi bộ 10-15 phút sau ăn",
+      "Cách làm": "Cơm gạo lứt + cá diêu hồng + rau + canh.",
+      "Lí do": "Đi bộ sau ăn giúp giảm đường huyết sau bữa."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "12:00-12:30",
+      "Việc": "Ngủ trưa không quá 30 phút",
+      "Cách làm": "Báo thức.",
+      "Lí do": "Giữ giấc ngủ đêm."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "16:30-17:30",
+      "Việc": "Đi bộ nhanh / dưỡng sinh",
+      "Cách làm": "30-40 phút, đi cùng bạn, giày chống trượt; kiểm tra bàn chân.",
+      "Lí do": "Vận động đều giảm đường huyết, phòng té ngã, an toàn bàn chân."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "17:30-18:15",
+      "Việc": "Ăn tối sớm, nhẹ",
+      "Cách làm": "Canh rau, đậu hũ hấp, cơm ít; xong trước ngủ 3 giờ.",
+      "Lí do": "Giữ đường huyết ổn định buổi đêm."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "19:00-20:30",
+      "Việc": "Gặp bạn / gia đình, sở thích",
+      "Cách làm": "Chơi cờ, nghe nhạc, gọi cháu.",
+      "Lí do": "Giữ kết nối xã hội."
+    },
+    {
+      "Kịch bản": "K7. Người về hưu + tiểu đường tuýp 2 + tinh thần ổn định",
+      "Giờ": "21:15-21:45",
+      "Việc": "Wind-down, ngủ 21:45",
+      "Cách làm": "Uống nước, tắt TV 21:15, giãn cơ nhẹ.",
+      "Lí do": "Ngủ đủ 7-8 giờ."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "seed": 12345,
+  "target": 300,
+  "counts_by_level": {
+    "lv1": 50,
+    "lv2": 50,
+    "lv3": 40,
+    "lv4": 40,
+    "lv5": 120
+  },
+  "total_stage1": 300,
+  "feasible_false_included": 9,
+  "timestamp": "2026-10-14T16:49:04.921388"
+}

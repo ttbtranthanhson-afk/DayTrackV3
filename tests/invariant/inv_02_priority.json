@@ -1,0 +1,25 @@
+{
+  "input": {
+    "profile": {
+      "job_title": "Học sinh THPT",
+      "health": [
+        "Bình thường"
+      ],
+      "mental": [
+        "Tinh thần ổn định"
+      ]
+    },
+    "tasks": [
+      {
+        "name": "Ôn từ vựng tiếng Anh",
+        "duration_min": 20,
+        "priority": "low"
+      },
+      {
+        "name": "Làm bài tập Toán",
+        "duration_min": 30,
+        "priority": "high"
+      }
+    ]
+  }
+}

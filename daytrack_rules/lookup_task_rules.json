@@ -1,0 +1,812 @@
+{
+  "Làm bài tập về nhà môn Toán": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 60
+  },
+  "Làm bài tập về nhà môn Ngữ văn": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D2",
+    "priority": "cao",
+    "duration_min": 60
+  },
+  "Làm bài tập về nhà môn Tiếng Anh": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D2",
+    "priority": "cao",
+    "duration_min": 45
+  },
+  "Làm bài tập về nhà môn Vật lí": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 45
+  },
+  "Làm bài tập về nhà môn Hóa học": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 45
+  },
+  "Làm bài tập về nhà môn Sinh học": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 40
+  },
+  "Làm bài tập về nhà môn Lịch sử": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Làm bài tập về nhà môn Địa lí": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Làm bài tập về nhà môn Tin học": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 40
+  },
+  "Ôn lại bài cũ trong ngày": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "NGU",
+    "priority": "cao",
+    "duration_min": 30
+  },
+  "Chuẩn bị bài mới cho ngày mai": {
+    "work_type_raw": "S. Đọc hiểu",
+    "block": "TOI",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Học từ vựng tiếng Anh": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 20
+  },
+  "Luyện nghe tiếng Anh": {
+    "work_type_raw": "D. Ngôn ngữ nói / nghe",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Luyện nói tiếng Anh": {
+    "work_type_raw": "D. Ngôn ngữ nói / nghe",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 20
+  },
+  "Làm đề thi thử (THPT / vào 10 / đánh giá năng lực)": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 120
+  },
+  "Làm đề IELTS / TOEIC": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 90
+  },
+  "Ôn tập kiểm tra 15 phút / 1 tiết": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D2",
+    "priority": "cao",
+    "duration_min": 60
+  },
+  "Ôn tập thi giữa kì / cuối kì": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 120
+  },
+  "Làm bài thuyết trình / slide": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D1",
+    "priority": "vừa",
+    "duration_min": 90
+  },
+  "Viết báo cáo / tiểu luận": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 120
+  },
+  "Học nhóm với bạn": {
+    "work_type_raw": "V. Học nhóm",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 90
+  },
+  "Làm flashcard / sơ đồ tư duy": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "TR",
+    "priority": "thấp",
+    "duration_min": 30
+  },
+  "Tổng hợp công thức": {
+    "work_type_raw": "B. Ghi nhớ - học thuộc",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 45
+  },
+  "Sửa lại các câu làm sai": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 40
+  },
+  "Đọc sách giáo khoa / tài liệu": {
+    "work_type_raw": "S. Đọc hiểu",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 45
+  },
+  "Học thêm / đi học thêm": {
+    "work_type_raw": "Y. Lớp / ca có giờ cố định",
+    "block": "FIX",
+    "priority": "cao",
+    "duration_min": 120
+  },
+  "Nộp bài trên hệ thống (LMS, Classroom)": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "TR",
+    "priority": "cao",
+    "duration_min": 10
+  },
+  "Làm dự án KHKT / STEM": {
+    "work_type_raw": "R. Dự án dài",
+    "block": "D1",
+    "priority": "vừa",
+    "duration_min": 120
+  },
+  "Học lập trình / luyện thuật toán": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Đọc sách ngoài chương trình": {
+    "work_type_raw": "S. Đọc hiểu",
+    "block": "TOI",
+    "priority": "thấp",
+    "duration_min": 30
+  },
+  "Học online (video, khóa học)": {
+    "work_type_raw": "T. Học online (video, khóa học)",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Soạn dụng cụ, sách vở cho ngày mai": {
+    "work_type_raw": "U. Chuẩn bị, sắp xếp đồ",
+    "block": "NGU",
+    "priority": "thấp",
+    "duration_min": 10
+  },
+  "Quét nhà": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 15
+  },
+  "Lau nhà": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 20
+  },
+  "Giặt quần áo": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "TR",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Phơi / thu quần áo": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 15
+  },
+  "Gấp quần áo": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "TOI",
+    "priority": "thấp",
+    "duration_min": 15
+  },
+  "Là ủi quần áo": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "TOI",
+    "priority": "thấp",
+    "duration_min": 20
+  },
+  "Nấu cơm": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "BA_C",
+    "priority": "vừa",
+    "duration_min": 45
+  },
+  "Rửa bát": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 20
+  },
+  "Dọn bếp": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 15
+  },
+  "Đi chợ / đi siêu thị": {
+    "work_type_raw": "H. Việc nhà nặng / thể lực",
+    "block": "WK",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Dọn dẹp phòng ngủ": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 20
+  },
+  "Đổ rác": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 5
+  },
+  "Tưới cây": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "SANG",
+    "priority": "thấp",
+    "duration_min": 10
+  },
+  "Chăm sóc thú cưng": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "vừa",
+    "duration_min": 20
+  },
+  "Trông em / chăm sóc người thân": {
+    "work_type_raw": "G. Việc nhà nhẹ",
+    "block": "CT",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Sửa chữa đồ đạc trong nhà": {
+    "work_type_raw": "H. Việc nhà nặng / thể lực",
+    "block": "WK",
+    "priority": "thấp",
+    "duration_min": 45
+  },
+  "Tổng vệ sinh cuối tuần": {
+    "work_type_raw": "H. Việc nhà nặng / thể lực",
+    "block": "WK",
+    "priority": "vừa",
+    "duration_min": 90
+  },
+  "Ăn sáng": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "BA_S",
+    "priority": "cao",
+    "duration_min": 20
+  },
+  "Ăn trưa": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "BA_T",
+    "priority": "cao",
+    "duration_min": 30
+  },
+  "Ăn tối": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "BA_C",
+    "priority": "cao",
+    "duration_min": 40
+  },
+  "Ăn nhẹ / bữa phụ": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "BA_P",
+    "priority": "thấp",
+    "duration_min": 10
+  },
+  "Uống đủ nước": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "SANG",
+    "priority": "vừa",
+    "duration_min": 5
+  },
+  "Ngủ trưa": {
+    "work_type_raw": "K. Phục hồi, thư giãn",
+    "block": "TR",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Đi ngủ đúng giờ": {
+    "work_type_raw": "K. Phục hồi, thư giãn",
+    "block": "SLEEP",
+    "priority": "cao",
+    "duration_min": 480
+  },
+  "Thể dục buổi sáng": {
+    "work_type_raw": "J. Vận động",
+    "block": "SANG",
+    "priority": "vừa",
+    "duration_min": 20
+  },
+  "Chạy bộ / đi bộ": {
+    "work_type_raw": "J. Vận động",
+    "block": "VD",
+    "priority": "vừa",
+    "duration_min": 40
+  },
+  "Tập gym / tập thể lực": {
+    "work_type_raw": "J. Vận động",
+    "block": "VD",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Chơi thể thao cùng bạn": {
+    "work_type_raw": "J. Vận động",
+    "block": "VD",
+    "priority": "vừa",
+    "duration_min": 90
+  },
+  "Giãn cơ / yoga": {
+    "work_type_raw": "J. Vận động",
+    "block": "NGU",
+    "priority": "thấp",
+    "duration_min": 20
+  },
+  "Thiền / thở sâu": {
+    "work_type_raw": "K. Phục hồi, thư giãn",
+    "block": "NGU",
+    "priority": "thấp",
+    "duration_min": 10
+  },
+  "Cân nặng / đo chỉ số cơ thể": {
+    "work_type_raw": "Q. Y tế cá nhân",
+    "block": "SANG",
+    "priority": "thấp",
+    "duration_min": 5
+  },
+  "Chuẩn bị bữa ăn theo thực đơn": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "WK",
+    "priority": "vừa",
+    "duration_min": 45
+  },
+  "Uống thuốc / vitamin": {
+    "work_type_raw": "Q. Y tế cá nhân",
+    "block": "BA_S",
+    "priority": "cao",
+    "duration_min": 5
+  },
+  "Khám sức khỏe định kì": {
+    "work_type_raw": "Q. Y tế cá nhân",
+    "block": "FIX",
+    "priority": "cao",
+    "duration_min": 120
+  },
+  "Tắm rửa, vệ sinh cá nhân": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "NGU",
+    "priority": "vừa",
+    "duration_min": 20
+  },
+  "Họp nhóm / họp phòng ban": {
+    "work_type_raw": "F. Giao tiếp, họp, gặp khách",
+    "block": "D2",
+    "priority": "cao",
+    "duration_min": 60
+  },
+  "Trả lời email": {
+    "work_type_raw": "E. Hành chính nhẹ, lặp lại",
+    "block": "TR",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Viết báo cáo tuần / tháng": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 90
+  },
+  "Lập kế hoạch công việc": {
+    "work_type_raw": "L. Lập kế hoạch, tổng kết",
+    "block": "SANG",
+    "priority": "cao",
+    "duration_min": 45
+  },
+  "Làm slide thuyết trình": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D1",
+    "priority": "vừa",
+    "duration_min": 90
+  },
+  "Gọi điện / chăm sóc khách hàng": {
+    "work_type_raw": "F. Giao tiếp, họp, gặp khách",
+    "block": "D2",
+    "priority": "cao",
+    "duration_min": 30
+  },
+  "Gặp khách hàng / đối tác": {
+    "work_type_raw": "F. Giao tiếp, họp, gặp khách",
+    "block": "D2",
+    "priority": "cao",
+    "duration_min": 90
+  },
+  "Soạn hợp đồng / văn bản": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 60
+  },
+  "Nhập liệu / xử lí bảng tính": {
+    "work_type_raw": "E. Hành chính nhẹ, lặp lại",
+    "block": "TR",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Review code": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 45
+  },
+  "Viết code / sửa lỗi (bug)": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 120
+  },
+  "Kiểm thử phần mềm": {
+    "work_type_raw": "E. Hành chính nhẹ, lặp lại",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Triển khai (deploy) sản phẩm": {
+    "work_type_raw": "A. Tư duy phân tích nặng",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 45
+  },
+  "Viết tài liệu hướng dẫn": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "TR",
+    "priority": "thấp",
+    "duration_min": 60
+  },
+  "Thiết kế (UI/UX, đồ họa)": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D1",
+    "priority": "vừa",
+    "duration_min": 120
+  },
+  "Lên nội dung / đăng bài mạng xã hội": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 45
+  },
+  "Đào tạo / hướng dẫn nhân viên mới": {
+    "work_type_raw": "F. Giao tiếp, họp, gặp khách",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Chấm bài / soạn giáo án": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D1",
+    "priority": "cao",
+    "duration_min": 90
+  },
+  "Đi công tác": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "FIX",
+    "priority": "cao",
+    "duration_min": 240
+  },
+  "Làm thêm giờ (OT)": {
+    "work_type_raw": "E. Hành chính nhẹ, lặp lại",
+    "block": "CT",
+    "priority": "vừa",
+    "duration_min": 120
+  },
+  "Làm việc tự do (freelance)": {
+    "work_type_raw": "R. Dự án dài",
+    "block": "D1",
+    "priority": "vừa",
+    "duration_min": 120
+  },
+  "Làm thêm bán thời gian": {
+    "work_type_raw": "Y. Lớp / ca có giờ cố định",
+    "block": "FIX",
+    "priority": "vừa",
+    "duration_min": 240
+  },
+  "Ghi chép chi tiêu": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "NGU",
+    "priority": "thấp",
+    "duration_min": 10
+  },
+  "Thanh toán tiền điện, nước, internet": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "TR",
+    "priority": "cao",
+    "duration_min": 10
+  },
+  "Đóng học phí / lệ phí": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "TR",
+    "priority": "cao",
+    "duration_min": 15
+  },
+  "Gửi tiết kiệm / bỏ ống heo": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "SANG",
+    "priority": "vừa",
+    "duration_min": 5
+  },
+  "Lập ngân sách tháng": {
+    "work_type_raw": "L. Lập kế hoạch, tổng kết",
+    "block": "WEEKLY",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Thanh toán tiền thuê nhà": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "TR",
+    "priority": "cao",
+    "duration_min": 10
+  },
+  "Nộp thuế / bảo hiểm": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "TR",
+    "priority": "cao",
+    "duration_min": 30
+  },
+  "Đọc sách": {
+    "work_type_raw": "S. Đọc hiểu",
+    "block": "TOI",
+    "priority": "thấp",
+    "duration_min": 30
+  },
+  "Viết nhật kí / tổng kết ngày": {
+    "work_type_raw": "L. Lập kế hoạch, tổng kết",
+    "block": "NGU",
+    "priority": "thấp",
+    "duration_min": 15
+  },
+  "Luyện đàn / nhạc cụ": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 30
+  },
+  "Vẽ / sáng tạo": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 45
+  },
+  "Học kĩ năng mới (online)": {
+    "work_type_raw": "T. Học online (video, khóa học)",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Nghe podcast": {
+    "work_type_raw": "P. Giải trí",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 30
+  },
+  "Viết blog / sáng tác": {
+    "work_type_raw": "C. Viết / sáng tạo dài",
+    "block": "D1",
+    "priority": "thấp",
+    "duration_min": 45
+  },
+  "Đặt mục tiêu tuần": {
+    "work_type_raw": "L. Lập kế hoạch, tổng kết",
+    "block": "WEEKLY",
+    "priority": "vừa",
+    "duration_min": 20
+  },
+  "Tham gia câu lạc bộ": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "vừa",
+    "duration_min": 90
+  },
+  "Luyện kĩ năng thuyết trình": {
+    "work_type_raw": "D. Ngôn ngữ nói / nghe",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Gọi điện thăm gia đình": {
+    "work_type_raw": "F. Giao tiếp, họp, gặp khách",
+    "block": "CT",
+    "priority": "vừa",
+    "duration_min": 15
+  },
+  "Ăn cơm cùng gia đình": {
+    "work_type_raw": "I. Bữa ăn",
+    "block": "BA_C",
+    "priority": "vừa",
+    "duration_min": 45
+  },
+  "Thăm ông bà / họ hàng": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "vừa",
+    "duration_min": 120
+  },
+  "Đi sinh nhật / tiệc bạn bè": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "thấp",
+    "duration_min": 180
+  },
+  "Họp lớp / sinh hoạt lớp": {
+    "work_type_raw": "F. Giao tiếp, họp, gặp khách",
+    "block": "D2",
+    "priority": "vừa",
+    "duration_min": 60
+  },
+  "Sinh hoạt Đoàn - Đội": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "vừa",
+    "duration_min": 90
+  },
+  "Hoạt động tình nguyện": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "thấp",
+    "duration_min": 180
+  },
+  "Đi chơi với bạn bè": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "thấp",
+    "duration_min": 180
+  },
+  "Đón / đưa người thân": {
+    "work_type_raw": "O. Di chuyển",
+    "block": "FIX",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Dự đám cưới / sự kiện gia đình": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "vừa",
+    "duration_min": 240
+  },
+  "Đi học": {
+    "work_type_raw": "O. Di chuyển",
+    "block": "FIX",
+    "priority": "cao",
+    "duration_min": 30
+  },
+  "Đi làm": {
+    "work_type_raw": "O. Di chuyển",
+    "block": "FIX",
+    "priority": "cao",
+    "duration_min": 30
+  },
+  "Về nhà": {
+    "work_type_raw": "O. Di chuyển",
+    "block": "FIX",
+    "priority": "vừa",
+    "duration_min": 30
+  },
+  "Đi xe buýt / xe đưa đón": {
+    "work_type_raw": "O. Di chuyển",
+    "block": "FIX",
+    "priority": "vừa",
+    "duration_min": 40
+  },
+  "Xem phim": {
+    "work_type_raw": "P. Giải trí",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 120
+  },
+  "Nghe nhạc thư giãn": {
+    "work_type_raw": "K. Phục hồi, thư giãn",
+    "block": "TOI",
+    "priority": "thấp",
+    "duration_min": 30
+  },
+  "Chơi game": {
+    "work_type_raw": "P. Giải trí",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 60
+  },
+  "Lướt mạng xã hội (có giới hạn)": {
+    "work_type_raw": "P. Giải trí",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 20
+  },
+  "Đi dạo / hóng gió": {
+    "work_type_raw": "K. Phục hồi, thư giãn",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 30
+  },
+  "Đi du lịch / dã ngoại": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "thấp",
+    "duration_min": 480
+  },
+  "Đi cà phê / trà sữa với bạn": {
+    "work_type_raw": "P. Giải trí",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 90
+  },
+  "Nghỉ giải lao giữa giờ": {
+    "work_type_raw": "K. Phục hồi, thư giãn",
+    "block": "TR",
+    "priority": "vừa",
+    "duration_min": 10
+  },
+  "Xem bóng đá / thể thao": {
+    "work_type_raw": "P. Giải trí",
+    "block": "CT",
+    "priority": "thấp",
+    "duration_min": 120
+  },
+  "Dọn bàn học / không gian làm việc": {
+    "work_type_raw": "U. Chuẩn bị, sắp xếp đồ",
+    "block": "NGU",
+    "priority": "thấp",
+    "duration_min": 10
+  },
+  "Sao lưu dữ liệu / dọn máy tính": {
+    "work_type_raw": "E. Hành chính nhẹ, lặp lại",
+    "block": "TR",
+    "priority": "thấp",
+    "duration_min": 20
+  },
+  "Cắt tóc / chăm sóc bản thân": {
+    "work_type_raw": "N. Sự kiện gia đình, xã hội",
+    "block": "EVENT",
+    "priority": "thấp",
+    "duration_min": 60
+  },
+  "Mua sắm đồ dùng cá nhân": {
+    "work_type_raw": "H. Việc nhà nặng / thể lực",
+    "block": "WK",
+    "priority": "thấp",
+    "duration_min": 60
+  },
+  "Làm giấy tờ / thủ tục hành chính": {
+    "work_type_raw": "M. Tài chính, giấy tờ, thủ tục có hạn",
+    "block": "TR",
+    "priority": "cao",
+    "duration_min": 90
+  },
+  "Đi bưu điện / gửi hàng": {
+    "work_type_raw": "E. Hành chính nhẹ, lặp lại",
+    "block": "TR",
+    "priority": "thấp",
+    "duration_min": 30
+  }
+}

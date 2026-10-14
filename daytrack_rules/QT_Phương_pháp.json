@@ -1,0 +1,413 @@
+{
+  "sheet": "QT Phương pháp",
+  "headers": [
+    "Mã",
+    "Tên phương pháp",
+    "Dùng cho loại việc",
+    "Cách thực hiện từng bước",
+    "Giá trị tạo ra",
+    "Tránh / lưu ý"
+  ],
+  "rows": [
+    {
+      "Mã": "M01",
+      "Tên phương pháp": "Pomodoro (25 phút tập trung / 5 phút nghỉ)",
+      "Dùng cho loại việc": "Việc cần tập trung 1-3 giờ: bài tập, ôn bài, viết, nhập liệu",
+      "Cách thực hiện từng bước": "1) Chọn đúng 1 việc và viết ra kết quả cần đạt trong phiên. 2) Đặt hẹn giờ 25 phút, cất điện thoại khỏi tầm tay, ghi nhanh việc xen ngang vào giấy để làm sau. 3) Hết giờ đứng dậy 5 phút: đi lại, uống nước, nhìn xa, không lướt mạng. 4) Sau 4 phiên nghỉ dài 15-30 phút.",
+      "Giá trị tạo ra": "Biến việc lớn thành mốc nhỏ nên dễ bắt đầu, giảm trì hoãn; nghỉ đều giúp giữ độ tập trung và giảm mỏi mắt, mỏi cổ.",
+      "Tránh / lưu ý": "Không ngắt phiên khi đang vào mạch sáng tạo tốt; với người ADHD hoặc đang mệt dùng M04; không dùng để ép làm tiếp khi đã kiệt sức."
+    },
+    {
+      "Mã": "M02",
+      "Tên phương pháp": "Phiên 50/10 (50 phút tập trung / 10 phút nghỉ)",
+      "Dùng cho loại việc": "Việc cần mạch dài: giải đề, viết báo cáo, thiết kế, lập trình",
+      "Cách thực hiện từng bước": "1) Làm việc khó nhất trong 10 phút đầu để vào mạch. 2) Giữ 1 tab / 1 tài liệu chính suốt 50 phút. 3) Nghỉ 10 phút: uống nước, giãn cổ vai, đi bộ. 4) Tối đa 2-3 phiên liên tiếp rồi nghỉ 20-30 phút.",
+      "Giá trị tạo ra": "Đủ dài để giải quyết bài toán nhiều bước mà vẫn có nghỉ để giảm mỏi; hợp với người đã quen tập trung.",
+      "Tránh / lưu ý": "Không dùng khi đang thiếu ngủ, đau đầu hoặc lo âu mạnh (dùng M01 hoặc M04)."
+    },
+    {
+      "Mã": "M03",
+      "Tên phương pháp": "Chu kì 90/20 (làm việc sâu theo nhịp sinh học)",
+      "Dùng cho loại việc": "Công việc trí óc quan trọng nhất trong ngày (khối giờ cao điểm)",
+      "Cách thực hiện từng bước": "1) Bắt đầu ngay đầu khối giờ cao điểm, tắt thông báo. 2) Làm liên tục 80-90 phút một việc quan trọng. 3) Nghỉ 15-20 phút thật sự: đi bộ, giãn cơ, ăn nhẹ; không xem tin tức. 4) Tối đa 2 chu kì mỗi ngày.",
+      "Giá trị tạo ra": "Cơ thể có nhịp chú ý khoảng 90 phút; làm theo nhịp giúp tạo ra phần lớn kết quả trong 2-3 giờ tập trung nhất.",
+      "Tránh / lưu ý": "Người trẻ chưa quen nên bắt đầu từ M01/M02; tránh khi tinh thần ở mức 'tải thấp' (xem sheet QT Tinh thần)."
+    },
+    {
+      "Mã": "M04",
+      "Tên phương pháp": "Phiên ngắn 15/3 (sprint nhỏ)",
+      "Dùng cho loại việc": "Khi mệt, ADHD, trầm cảm, lo âu cao, hoặc việc mình đang né",
+      "Cách thực hiện từng bước": "1) Cam kết chỉ 15 phút cho 1 việc nhỏ cụ thể (ví dụ: làm 3 câu đầu). 2) Hẹn giờ nhìn thấy được. 3) Hết 15 phút nghỉ 3 phút rồi quyết định làm tiếp hoặc dừng. 4) Ghi dấu tích cho mỗi phiên hoàn thành.",
+      "Giá trị tạo ra": "Hạ rào cản bắt đầu; mỗi phiên hoàn thành tạo cảm giác tiến bộ, giúp giữ nhịp khi năng lượng thấp.",
+      "Tránh / lưu ý": "Đừng tăng số phiên quá nhanh; nếu 3 ngày liền không làm nổi phiên 15 phút thì giảm tải và nên trao đổi với người thân hoặc chuyên gia."
+    },
+    {
+      "Mã": "M05",
+      "Tên phương pháp": "Nhớ lại chủ động (active recall)",
+      "Dùng cho loại việc": "Học thuộc, ôn thi, từ vựng, công thức, kiến thức môn Sinh, Sử, Địa",
+      "Cách thực hiện từng bước": "1) Đọc hoặc nghe một phần 5-10 phút. 2) Gấp sách lại, tự viết hoặc nói ra mọi điều nhớ được (không nhìn). 3) Mở sách đối chiếu, gạch đỏ chỗ quên hoặc sai. 4) Chỉ học lại phần đỏ rồi tự kiểm tra lần nữa.",
+      "Giá trị tạo ra": "Việc cố nhớ lại làm trí nhớ dài hạn chắc hơn nhiều so với đọc lại nhiều lần; nghiên cứu về 'hiệu ứng kiểm tra' cho thấy điều này.",
+      "Tránh / lưu ý": "Tránh chỉ đọc đi đọc lại hoặc tô màu hàng loạt vì dễ tạo cảm giác 'đã thuộc' nhưng thực tế chưa."
+    },
+    {
+      "Mã": "M06",
+      "Tên phương pháp": "Lặp lại ngắt quãng (spaced repetition: 1-3-7-14-30 ngày)",
+      "Dùng cho loại việc": "Từ vựng, công thức, định nghĩa, kiến thức thi dài hạn",
+      "Cách thực hiện từng bước": "1) Học nội dung mới lần đầu trong ngày. 2) Ôn lần 2 sau 1 ngày, lần 3 sau 3 ngày, rồi 7, 14, 30 ngày. 3) Mỗi lần ôn chỉ mất 5-10 phút bằng cách tự kiểm tra (M05). 4) Dùng flashcard giấy hoặc app; thẻ nào sai thì quay về mốc 1 ngày.",
+      "Giá trị tạo ra": "Ôn đúng lúc sắp quên giúp nhớ lâu mà tốn ít thời gian hơn học dồn.",
+      "Tránh / lưu ý": "Không bỏ cách quá 2 ngày ở giai đoạn đầu; không dồn toàn bộ vào đêm trước kiểm tra."
+    },
+    {
+      "Mã": "M07",
+      "Tên phương pháp": "Phương pháp Feynman (giảng lại bằng lời đơn giản)",
+      "Dùng cho loại việc": "Khái niệm khó: định lí, phản ứng, quy luật, thuật toán",
+      "Cách thực hiện từng bước": "1) Viết tên khái niệm lên đầu trang. 2) Giải thích bằng lời đơn giản như nói cho học sinh nhỏ hơn 2-3 tuổi, không dùng thuật ngữ khi chưa giải thích. 3) Chỗ nào bí hoặc phải dùng từ mơ hồ là lỗ hổng, quay lại tài liệu học đúng chỗ đó. 4) Giải thích lại, thêm ví dụ đời thường.",
+      "Giá trị tạo ra": "Phát hiện chính xác phần mình chưa hiểu thật, chuyển từ học vẹt sang hiểu sâu.",
+      "Tránh / lưu ý": "Cần 10-15 phút yên tĩnh; không làm khi quá mệt vì khó diễn đạt mạch lạc."
+    },
+    {
+      "Mã": "M08",
+      "Tên phương pháp": "Xen kẽ dạng bài (interleaving)",
+      "Dùng cho loại việc": "Toán, Lí, Hóa, lập trình: nhiều dạng bài cùng chương",
+      "Cách thực hiện từng bước": "1) Liệt kê 3-4 dạng bài của chương. 2) Thay vì làm 10 bài cùng dạng, làm xen A-B-C-A-B-C mỗi dạng 2-3 bài. 3) Trước mỗi bài tự hỏi 'đây là dạng gì, vì sao dùng cách này'. 4) Ghi dạng nào hay nhầm vào sổ lỗi (M09).",
+      "Giá trị tạo ra": "Rèn khả năng nhận ra dạng bài và chọn đúng phương pháp, đúng điều đề thi thật đòi hỏi.",
+      "Tránh / lưu ý": "Khi mới học dạng bài hoàn toàn mới, làm cùng dạng vài bài trước rồi mới xen kẽ."
+    },
+    {
+      "Mã": "M09",
+      "Tên phương pháp": "Sổ lỗi sai (error log)",
+      "Dùng cho loại việc": "Sửa bài, đề thi thử, bài kiểm tra, bug phần mềm",
+      "Cách thực hiện từng bước": "1) Với mỗi câu sai ghi 4 cột: đề, đáp án đúng, nguyên nhân (hổng kiến thức / nhầm tính / đọc sót đề / thiếu thời gian), cách tránh. 2) Làm lại câu đó sau 1 ngày và sau 1 tuần không nhìn đáp án. 3) Cuối tuần đếm nhóm nguyên nhân lỗi nhiều nhất. 4) Đặt 1 mục tiêu sửa cho tuần sau.",
+      "Giá trị tạo ra": "Biến mỗi lỗi thành tài liệu ôn riêng; thường nâng điểm nhanh hơn làm thêm bài mới.",
+      "Tránh / lưu ý": "Không ghi chép quá dài; mỗi lỗi tối đa 3-4 dòng."
+    },
+    {
+      "Mã": "M10",
+      "Tên phương pháp": "Luyện đề đúng điều kiện thật (timed practice)",
+      "Dùng cho loại việc": "Đề thi thử, IELTS / TOEIC, kiểm tra 1 tiết",
+      "Cách thực hiện từng bước": "1) Chọn đề thật hoặc đề chuẩn. 2) Ngồi bàn, tắt điện thoại, bấm giờ đúng thời lượng thi, đúng giờ thi thật (ví dụ buổi sáng nếu thi buổi sáng). 3) Không tra cứu. 4) Chấm xong lập sổ lỗi (M09) và phân tích phân bổ thời gian từng phần.",
+      "Giá trị tạo ra": "Làm quen áp lực thời gian, tập quản lí thời gian và xác định điểm yếu thật.",
+      "Tránh / lưu ý": "Không làm quá 2-3 đề/tuần (mỗi đề cần thời gian chữa gấp 1-2 lần thời gian làm); không làm đề đêm trước thi."
+    },
+    {
+      "Mã": "M11",
+      "Tên phương pháp": "Ghi chép Cornell",
+      "Dùng cho loại việc": "Nghe giảng, học online, đọc tài liệu",
+      "Cách thực hiện từng bước": "1) Chia trang: cột trái hẹp (câu hỏi/từ khóa), cột phải rộng (ghi chép), dưới cùng (tóm tắt). 2) Trong khi nghe ghi ý chính ở cột phải. 3) Sau buổi học trong vòng 24 giờ, viết câu hỏi vào cột trái và tóm tắt 2-3 câu ở dưới. 4) Che cột phải, dùng cột trái để tự kiểm tra.",
+      "Giá trị tạo ra": "Ghi chép sẵn câu hỏi ôn tập, tiết kiệm thời gian về sau và tăng hiểu bài.",
+      "Tránh / lưu ý": "Không chép nguyên văn; cần ghi ý chính bằng lời của mình."
+    },
+    {
+      "Mã": "M12",
+      "Tên phương pháp": "Sơ đồ tư duy và flashcard",
+      "Dùng cho loại việc": "Tổng hợp chương, công thức, kiến thức Sử, Địa, Sinh",
+      "Cách thực hiện từng bước": "1) Viết chủ đề ở giữa, mỗi nhánh một ý chính, thêm ví dụ hoặc công thức ở nhánh con. 2) Chuyển các ý quan trọng thành flashcard: một mặt câu hỏi, một mặt đáp án ngắn. 3) Xếp thẻ vào 3 hộp (chưa thuộc, tạm thuộc, thuộc) và xem lại theo M06. 4) Sau mỗi tuần bỏ thẻ đã thuộc.",
+      "Giá trị tạo ra": "Nhìn được cấu trúc tổng thể và tự kiểm tra nhanh; hữu ích khi ôn gấp.",
+      "Tránh / lưu ý": "Không vẽ quá cầu kì; mục tiêu là hiểu và nhớ, không phải trang trí."
+    },
+    {
+      "Mã": "M13",
+      "Tên phương pháp": "Đọc có hệ thống SQ3R",
+      "Dùng cho loại việc": "Đọc giáo trình, sách giáo khoa, tài liệu chuyên môn",
+      "Cách thực hiện từng bước": "1) Survey: lướt tiêu đề, hình, tóm tắt 2 phút. 2) Question: biến mỗi tiêu đề thành câu hỏi. 3) Read: đọc để trả lời câu hỏi. 4) Recite: gấp sách nói lại. 5) Review: cuối buổi xem lại các câu hỏi.",
+      "Giá trị tạo ra": "Đọc có mục tiêu giúp hiểu và nhớ tốt hơn đọc liền một mạch.",
+      "Tránh / lưu ý": "Không áp dụng cho sách giải trí; với tài liệu rất dài chia theo chương."
+    },
+    {
+      "Mã": "M14",
+      "Tên phương pháp": "Viết hai lượt: nháp tự do rồi chỉnh sửa",
+      "Dùng cho loại việc": "Bài văn, báo cáo, tiểu luận, blog, email dài, hợp đồng",
+      "Cách thực hiện từng bước": "1) Lập dàn ý 5-10 phút (mở - 3 ý chính - kết). 2) Lượt 1: viết nháp liên tục 20-40 phút không sửa, không dừng tra cứu. 3) Nghỉ ít nhất 20 phút (tốt nhất hôm sau). 4) Lượt 2: sửa cấu trúc trước, sau đó câu chữ, cuối cùng chính tả; đọc to một lần.",
+      "Giá trị tạo ra": "Tách việc sáng tạo và việc phê bình giúp viết nhanh hơn, ít bí ý và văn bản sạch hơn.",
+      "Tránh / lưu ý": "Không vừa viết vừa sửa từng câu ở lượt đầu."
+    },
+    {
+      "Mã": "M15",
+      "Tên phương pháp": "Lập kế hoạch ngược từ hạn chót",
+      "Dùng cho loại việc": "Dự án, báo cáo, thi cử, thủ tục có hạn",
+      "Cách thực hiện từng bước": "1) Ghi ngày hạn chót thật. 2) Lùi lại, chia công việc thành 4-6 mốc có sản phẩm cụ thể. 3) Đặt hạn riêng cho từng mốc sớm hơn hạn thật 10-20%. 4) Xếp mỗi mốc vào khối giờ cao điểm cụ thể trong lịch.",
+      "Giá trị tạo ra": "Tránh dồn việc sát hạn, giảm căng thẳng và có dư địa khi ốm hoặc phát sinh việc.",
+      "Tránh / lưu ý": "Đừng đặt mốc quá dày; mỗi ngày không quá 3 việc quan trọng."
+    },
+    {
+      "Mã": "M16",
+      "Tên phương pháp": "Chia khối thời gian (time blocking)",
+      "Dùng cho loại việc": "Toàn bộ lịch ngày/tuần",
+      "Cách thực hiện từng bước": "1) Xếp việc cố định trước (ngủ, ăn, đi học / đi làm). 2) Đặt các khối tập trung sâu vào giờ cao điểm. 3) Đặt việc nhẹ vào giờ trũng. 4) Chừa 15-20% thời gian trống làm đệm. 5) Mỗi khối ghi tên việc cụ thể, không ghi chung chung.",
+      "Giá trị tạo ra": "Quyết định trước giờ làm gì giúp bớt mệt vì phải lựa chọn, đảm bảo việc quan trọng có chỗ.",
+      "Tránh / lưu ý": "Nếu lịch kín 100% sẽ vỡ ngay ngày đầu; luôn chừa đệm."
+    },
+    {
+      "Mã": "M17",
+      "Tên phương pháp": "Ma trận Eisenhower",
+      "Dùng cho loại việc": "Khi nhiều việc dồn lại, cần chọn việc làm trước",
+      "Cách thực hiện từng bước": "1) Chia 4 ô: khẩn và quan trọng (làm ngay), quan trọng không khẩn (xếp lịch vào giờ cao điểm), khẩn không quan trọng (nhờ người khác hoặc làm nhanh), không khẩn không quan trọng (bỏ hoặc để sau). 2) Gán mỗi việc vào 1 ô. 3) Ô 'quan trọng không khẩn' phải có giờ cụ thể trong tuần.",
+      "Giá trị tạo ra": "Giúp không bị việc gấp nhỏ lấn việc quan trọng dài hạn như học, sức khỏe, kĩ năng.",
+      "Tránh / lưu ý": "Không để ô 'khẩn và quan trọng' kéo dài nhiều ngày vì đó là dấu hiệu lập kế hoạch kém."
+    },
+    {
+      "Mã": "M18",
+      "Tên phương pháp": "3 việc quan trọng nhất trong ngày (MIT) - làm việc khó trước",
+      "Dùng cho loại việc": "Lập kế hoạch đầu ngày",
+      "Cách thực hiện từng bước": "1) Tối hôm trước hoặc sáng sớm chọn đúng 3 việc: 1 việc khó nhất, 2 việc vừa. 2) Xếp việc khó nhất vào khối giờ cao điểm đầu tiên. 3) Làm xong mới mở email, mạng xã hội. 4) Cuối ngày tích hoàn thành, việc chưa xong chuyển sang ngày mai chứ không dồn thêm.",
+      "Giá trị tạo ra": "Đảm bảo ngày nào cũng có tiến bộ ở việc quan trọng, giảm cảm giác quá tải.",
+      "Tránh / lưu ý": "Không chọn quá 3 việc; người đang mệt hoặc trầm cảm chọn 1 việc."
+    },
+    {
+      "Mã": "M19",
+      "Tên phương pháp": "Quy tắc 2 phút",
+      "Dùng cho loại việc": "Việc vặt: trả lời tin nhắn ngắn, nộp bài, thanh toán, đổ rác",
+      "Cách thực hiện từng bước": "1) Khi gặp việc có thể xong trong 2 phút làm ngay. 2) Việc lâu hơn ghi vào danh sách có giờ làm. 3) Cuối ngày dành 10 phút dọn nốt việc vặt còn lại.",
+      "Giá trị tạo ra": "Không để việc nhỏ tích tụ gây nặng đầu; giảm số việc lơ lửng trong trí nhớ.",
+      "Tránh / lưu ý": "Không áp dụng giữa lúc đang trong khối tập trung sâu (ghi lại, làm sau)."
+    },
+    {
+      "Mã": "M20",
+      "Tên phương pháp": "Gom việc theo mẻ (batching)",
+      "Dùng cho loại việc": "Email, tin nhắn, gọi điện, ghi chép chi tiêu, việc nhà",
+      "Cách thực hiện từng bước": "1) Chọn 2-3 khung cố định trong ngày (ví dụ 11:30, 15:30, 17:30) để xử lí email/tin nhắn. 2) Ngoài các khung đó tắt thông báo. 3) Mỗi khung đặt thời hạn 20-30 phút. 4) Việc nhà gom theo loại: giặt - phơi - gấp liên tiếp.",
+      "Giá trị tạo ra": "Giảm chuyển đổi ngữ cảnh; mỗi lần bị gián đoạn cần vài phút mới lấy lại tập trung.",
+      "Tránh / lưu ý": "Việc thật sự khẩn (người thân, khách quan trọng) phải có kênh gọi trực tiếp."
+    },
+    {
+      "Mã": "M21",
+      "Tên phương pháp": "Làm việc sâu (deep work)",
+      "Dùng cho loại việc": "Lập trình, viết, thiết kế, phân tích, nghiên cứu",
+      "Cách thực hiện từng bước": "1) Chọn 1 sản phẩm đầu ra cụ thể cho khối (ví dụ: xong module X). 2) Tắt thông báo, đóng email, báo đồng nghiệp 'đang tập trung đến mấy giờ'. 3) Bắt đầu nghi thức cố định (pha nước, mở file). 4) Kết thúc bằng ghi 2 dòng 'mai làm tiếp từ đâu'.",
+      "Giá trị tạo ra": "Tạo kết quả chất lượng cao trong thời gian ngắn; ghi lại điểm dừng giúp vào lại mạch nhanh.",
+      "Tránh / lưu ý": "Mỗi ngày tối đa khoảng 3-4 giờ (người mới 1-2 giờ); không ép làm khi thiếu ngủ."
+    },
+    {
+      "Mã": "M22",
+      "Tên phương pháp": "Kế hoạch 'Nếu - thì' (implementation intention)",
+      "Dùng cho loại việc": "Xây thói quen: uống nước, tập, uống thuốc, ôn bài",
+      "Cách thực hiện từng bước": "1) Viết câu: 'Nếu [tín hiệu cụ thể] thì tôi [hành động cụ thể]'. Ví dụ: Nếu đánh răng xong buổi sáng thì uống 1 cốc nước. 2) Chọn tín hiệu đã có sẵn hàng ngày. 3) Làm đúng 14-21 ngày liên tục rồi mới nâng mục tiêu.",
+      "Giá trị tạo ra": "Gắn hành động với tín hiệu có sẵn nên ít phụ thuộc vào ý chí; tăng khả năng làm đúng.",
+      "Tránh / lưu ý": "Không đặt quá 2 thói quen mới cùng lúc."
+    },
+    {
+      "Mã": "M23",
+      "Tên phương pháp": "Bắt chước nói theo (shadowing)",
+      "Dùng cho loại việc": "Luyện nói, luyện nghe, phát âm tiếng Anh",
+      "Cách thực hiện từng bước": "1) Chọn đoạn audio 30-60 giây, có phụ đề. 2) Nghe 2 lần, đọc phụ đề. 3) Mở lại, nói đuổi theo sau người nói trễ khoảng 1 giây, bắt chước ngữ điệu. 4) Ghi âm so với bản gốc, ghi 3 lỗi cần sửa. 5) Lặp lại 3-5 lần.",
+      "Giá trị tạo ra": "Rèn phát âm, nhịp điệu và phản xạ nói; dễ thấy tiến bộ trong 2 tuần.",
+      "Tránh / lưu ý": "Không luyện ngay sau khi thức dậy (giọng chưa ấm) hoặc khi họng đau."
+    },
+    {
+      "Mã": "M24",
+      "Tên phương pháp": "Nghe chép (dictation)",
+      "Dùng cho loại việc": "Luyện nghe IELTS / TOEIC, nghe tiếng Anh",
+      "Cách thực hiện từng bước": "1) Nghe 1 câu hoặc 1 đoạn ngắn tối đa 3 lần, chép hết những gì nghe được. 2) So với bản gốc, đánh dấu từ nghe sai. 3) Nghe lại các chỗ sai, ghi lí do (nối âm, giọng, từ lạ). 4) Đưa từ lạ vào flashcard (M06).",
+      "Giá trị tạo ra": "Rèn tai nghe chính xác từng từ; chỉ ra đúng chỗ nghe sai.",
+      "Tránh / lưu ý": "Không bật phụ đề trước khi chép; mỗi buổi 20-30 phút là đủ."
+    },
+    {
+      "Mã": "M25",
+      "Tên phương pháp": "Thở hộp 4-4-4-4",
+      "Dùng cho loại việc": "Căng thẳng, lo âu trước thi, trước họp, khi hoảng",
+      "Cách thực hiện từng bước": "1) Ngồi thẳng, thả lỏng vai. 2) Hít mũi 4 giây, nín 4 giây, thở ra miệng 4 giây, nín 4 giây. 3) Lặp 4-6 vòng (khoảng 2 phút). 4) Nếu chóng mặt thì thở bình thường lại.",
+      "Giá trị tạo ra": "Hơi thở chậm làm dịu hệ thần kinh giao cảm, giảm hồi hộp trong vài phút.",
+      "Tránh / lưu ý": "Người hen, tim, phổi mạn nên thở nhẹ và không nín lâu; không thay thế điều trị."
+    },
+    {
+      "Mã": "M26",
+      "Tên phương pháp": "Thư giãn cơ tiến triển",
+      "Dùng cho loại việc": "Căng thẳng, mất ngủ, đau cơ do căng thẳng",
+      "Cách thực hiện từng bước": "1) Nằm hoặc ngồi thoải mái. 2) Lần lượt siết 5 giây rồi thả lỏng 10 giây từng nhóm cơ: bàn chân, bắp chân, đùi, bụng, tay, vai, mặt. 3) Chú ý cảm giác thả lỏng. 4) Tổng 10-15 phút, thực hiện trước ngủ.",
+      "Giá trị tạo ra": "Giảm căng cơ và giúp dễ ngủ hơn.",
+      "Tránh / lưu ý": "Người đang chấn thương hoặc đau cấp không siết vùng đau."
+    },
+    {
+      "Mã": "M27",
+      "Tên phương pháp": "Giờ lo lắng có hạn (worry time) và viết ra",
+      "Dùng cho loại việc": "Lo âu, suy nghĩ quá nhiều, áp lực thi cử",
+      "Cách thực hiện từng bước": "1) Chọn 15 phút cố định trong ngày (không sát giờ ngủ). 2) Khi lo nghĩ xuất hiện lúc khác, ghi 1 dòng vào sổ và nói 'để giờ lo lắng'. 3) Đến giờ, đọc lại danh sách, với mỗi mục ghi: có thể làm gì trong tuần này (làm hay không làm). 4) Hết 15 phút đóng sổ.",
+      "Giá trị tạo ra": "Tách việc lo nghĩ khỏi giờ học, giờ ngủ; biến lo âu mơ hồ thành việc làm cụ thể.",
+      "Tránh / lưu ý": "Nếu lo âu kéo dài trên 2 tuần và ảnh hưởng sinh hoạt thì nên gặp chuyên gia."
+    },
+    {
+      "Mã": "M28",
+      "Tên phương pháp": "Kích hoạt hành vi (behavioral activation)",
+      "Dùng cho loại việc": "Trầm cảm nhẹ, mất động lực, kiệt sức",
+      "Cách thực hiện từng bước": "1) Mỗi ngày chọn 1 việc nhỏ có ích (dọn bàn 10 phút) và 1 việc dễ chịu (đi dạo, nghe nhạc, gặp bạn). 2) Xếp vào giờ cụ thể, gắn với việc có sẵn. 3) Làm dù chưa thấy hứng, chấm điểm tâm trạng 0-10 trước và sau. 4) Tăng dần mỗi tuần.",
+      "Giá trị tạo ra": "Hành động trước, tâm trạng đến sau; chấm điểm giúp thấy việc nào thật sự nâng tâm trạng.",
+      "Tránh / lưu ý": "Không ép làm nhiều việc cùng lúc; nếu có ý nghĩ tự hại cần liên hệ ngay người thân, cơ sở y tế hoặc gọi 115."
+    },
+    {
+      "Mã": "M29",
+      "Tên phương pháp": "Quy tắc 20-20-20 và nghỉ vận động",
+      "Dùng cho loại việc": "Làm việc với màn hình, ngồi lâu",
+      "Cách thực hiện từng bước": "1) Cứ 20 phút nhìn vật cách 6 m trong 20 giây. 2) Cứ 30-60 phút đứng dậy 2-5 phút: vươn vai, xoay cổ, đi lại, uống nước. 3) Đặt màn hình ngang tầm mắt, khuỷu tay 90 độ, chân chạm sàn.",
+      "Giá trị tạo ra": "Giảm mỏi mắt, khô mắt, đau cổ vai gáy và tê chân do ngồi lâu.",
+      "Tránh / lưu ý": "Không bỏ khi đang rất tập trung; hẹn giờ rung nhẹ."
+    },
+    {
+      "Mã": "M30",
+      "Tên phương pháp": "Ngủ trưa ngắn 15-20 phút",
+      "Dùng cho loại việc": "Buồn ngủ sau ăn trưa, thiếu ngủ nhẹ, ca đêm",
+      "Cách thực hiện từng bước": "1) Ngủ trong khoảng 12:30-15:00, sau ăn 15-20 phút. 2) Đặt báo thức 20 phút, nằm hoặc tựa ghế, che mắt, tắt tiếng. 3) Dậy rửa mặt, uống nước, ra chỗ sáng. 4) Không ngủ quá 30 phút.",
+      "Giá trị tạo ra": "Phục hồi tỉnh táo và trí nhớ làm việc mà không bị uể oải (quán tính giấc ngủ) như khi ngủ dài.",
+      "Tránh / lưu ý": "Không ngủ trưa sau 15:30 hoặc quá 30 phút nếu mất ngủ buổi tối."
+    },
+    {
+      "Mã": "M31",
+      "Tên phương pháp": "Chuẩn bị bữa theo mẻ (meal prep)",
+      "Dùng cho loại việc": "Ăn uống theo mục tiêu khi bận",
+      "Cách thực hiện từng bước": "1) Chọn 1 ngày cuối tuần (60-90 phút). 2) Nấu sẵn 1 nguồn đạm (ức gà, cá, đậu hũ), 1 tinh bột (cơm gạo lứt, khoai), 1-2 loại rau luộc / hấp. 3) Chia hộp 2-3 ngày, để ngăn mát, hâm kĩ. 4) Hôm sau thay nước sốt hoặc món canh để đỡ ngán.",
+      "Giá trị tạo ra": "Đảm bảo ăn đúng mục tiêu dù bận; giảm phụ thuộc đồ ăn nhanh.",
+      "Tránh / lưu ý": "Cơm, thịt, cá nấu chín giữ ngăn mát tối đa 2-3 ngày; hâm kĩ trước khi ăn."
+    },
+    {
+      "Mã": "M32",
+      "Tên phương pháp": "Quy tắc đĩa ăn (plate method)",
+      "Dùng cho loại việc": "Mỗi bữa chính",
+      "Cách thực hiện từng bước": "1) Chia đĩa: 1/2 rau, 1/4 đạm (thịt, cá, trứng, đậu), 1/4 tinh bột. 2) Thêm 1 bát canh hoặc trái cây. 3) Ăn chậm 15-20 phút. 4) Chỉnh theo mục tiêu: tăng cân thêm tinh bột và chất béo tốt; giảm cân giữ nguyên đĩa nhưng bớt tinh bột.",
+      "Giá trị tạo ra": "Cách ước lượng khẩu phần không cần cân đo; cân bằng dinh dưỡng và dễ duy trì.",
+      "Tránh / lưu ý": "Người bệnh thận, tiểu đường, gout cần chỉnh theo hướng dẫn riêng của bác sĩ."
+    },
+    {
+      "Mã": "M33",
+      "Tên phương pháp": "Gắn thói quen mới vào thói quen cũ (habit stacking)",
+      "Dùng cho loại việc": "Xây thói quen nhỏ: uống nước, giãn cơ, ôn từ vựng, ghi chi tiêu",
+      "Cách thực hiện từng bước": "1) Liệt kê thói quen hàng ngày chắc chắn (đánh răng, uống cà phê, cắm sạc). 2) Chọn 1 thói quen mới rất nhỏ (dưới 2 phút). 3) Viết: 'Sau khi [thói quen cũ], tôi sẽ [thói quen mới]'. 4) Tích mỗi ngày, sau 3 tuần mới tăng.",
+      "Giá trị tạo ra": "Tận dụng mạch có sẵn nên thói quen mới dễ bám hơn.",
+      "Tránh / lưu ý": "Không gắn vào thói quen thất thường."
+    },
+    {
+      "Mã": "M34",
+      "Tên phương pháp": "Tổng kết tuần (weekly review)",
+      "Dùng cho loại việc": "Cuối tuần, 20-30 phút",
+      "Cách thực hiện từng bước": "1) Mở lịch tuần qua: đánh dấu việc xong và chưa xong. 2) Với việc chưa xong hỏi: bỏ, đổi lịch hay giao. 3) Xem 3 chỉ số: số giờ ngủ trung bình, số buổi vận động, số việc quan trọng xong. 4) Chọn tối đa 3 mục tiêu tuần sau và xếp luôn vào giờ cao điểm.",
+      "Giá trị tạo ra": "Điều chỉnh lịch bằng dữ liệu thật; giữ kế hoạch thực tế.",
+      "Tránh / lưu ý": "Không tự trách; mục tiêu là điều chỉnh lịch cho phù hợp."
+    },
+    {
+      "Mã": "M35",
+      "Tên phương pháp": "Làm cùng người khác (body doubling)",
+      "Dùng cho loại việc": "ADHD, hay trì hoãn, việc nhàm chán",
+      "Cách thực hiện từng bước": "1) Hẹn bạn (trực tiếp hoặc video tắt tiếng) cùng làm 25-50 phút. 2) Mỗi người nói 1 câu mục tiêu của phiên. 3) Làm việc riêng, không trò chuyện. 4) Cuối phiên báo lại đã làm gì.",
+      "Giá trị tạo ra": "Có người cùng làm tạo áp lực nhẹ và nhịp làm việc; dễ bắt đầu và ngồi yên được hơn.",
+      "Tránh / lưu ý": "Chọn người cũng nghiêm túc; không biến thành buổi tán gẫu."
+    },
+    {
+      "Mã": "M36",
+      "Tên phương pháp": "Quy trình thư giãn trước ngủ 60 phút (wind-down)",
+      "Dùng cho loại việc": "Mọi người, đặc biệt mất ngủ, stress, học sinh",
+      "Cách thực hiện từng bước": "1) Trước giờ ngủ 60 phút: tắt màn hình, giảm ánh sáng. 2) Soạn đồ ngày mai, viết 3 dòng nhật kí hoặc việc cần làm. 3) Tắm nước ấm, giãn cơ nhẹ hoặc thở hộp 3-5 phút. 4) Đọc giấy 10-20 phút. 5) Lên giường đúng giờ cố định; nếu 20 phút chưa ngủ thì ra chỗ yên tĩnh, ánh sáng yếu, đọc giấy rồi quay lại.",
+      "Giá trị tạo ra": "Báo hiệu cho cơ thể sắp ngủ, giảm thời gian vào giấc và giảm thức giấc ban đêm.",
+      "Tránh / lưu ý": "Không xem tin tức hoặc làm việc căng thẳng trong 60 phút này; không nhìn đồng hồ liên tục."
+    },
+    {
+      "Mã": "M37",
+      "Tên phương pháp": "Tổng kết ngày 3 dòng",
+      "Dùng cho loại việc": "Cuối ngày 5-10 phút",
+      "Cách thực hiện từng bước": "1) Viết 3 dòng: điều đã làm tốt, điều chưa tốt, việc quan trọng nhất ngày mai. 2) Tích việc xong, chuyển việc chưa xong sang ngày khác. 3) Đóng sổ và không nghĩ về công việc nữa.",
+      "Giá trị tạo ra": "Khép lại ngày làm việc, giúp đầu óc ngừng 'chạy' lúc đi ngủ và chuẩn bị sẵn việc đầu tiên cho sáng mai.",
+      "Tránh / lưu ý": "Không viết dài; không đánh giá bản thân quá khắt khe."
+    },
+    {
+      "Mã": "M38",
+      "Tên phương pháp": "Họp hiệu quả: mục tiêu - kết quả - người phụ trách",
+      "Dùng cho loại việc": "Họp nhóm, họp phòng ban, gặp đối tác",
+      "Cách thực hiện từng bước": "1) Trước họp gửi mục tiêu và 3 câu hỏi cần quyết. 2) Đặt thời lượng 25 hoặc 50 phút (không đặt tròn 30/60 để có nghỉ giữa các cuộc). 3) Trong họp một người ghi quyết định, việc, người phụ trách, hạn. 4) Trong 1 giờ sau họp gửi biên bản tóm tắt.",
+      "Giá trị tạo ra": "Rút ngắn thời gian họp, mọi người rõ ai làm gì và khi nào.",
+      "Tránh / lưu ý": "Nếu không có mục tiêu rõ thì chuyển sang email."
+    },
+    {
+      "Mã": "M39",
+      "Tên phương pháp": "Quy trình gỡ lỗi khoa học (debug)",
+      "Dùng cho loại việc": "Sửa bug, kiểm thử, triển khai",
+      "Cách thực hiện từng bước": "1) Tái hiện lỗi và ghi bước tái hiện. 2) Thu hẹp vùng lỗi (chia đôi code, tắt từng phần). 3) Đặt giả thuyết, kiểm chứng bằng log hoặc test, mỗi lần chỉ đổi 1 thứ. 4) Sửa, viết test chống tái phát, ghi nguyên nhân gốc.",
+      "Giá trị tạo ra": "Tránh đoán mò; tìm ra nguyên nhân gốc và ngăn lỗi tái diễn.",
+      "Tránh / lưu ý": "Nếu bí quá 45 phút thì nghỉ 10 phút hoặc nhờ người xem cùng."
+    },
+    {
+      "Mã": "M40",
+      "Tên phương pháp": "Review code nhỏ gọn theo danh sách kiểm",
+      "Dùng cho loại việc": "Review code, kiểm tra tài liệu",
+      "Cách thực hiện từng bước": "1) Mỗi lần review dưới 400 dòng thay đổi và dưới 60 phút. 2) Đọc mô tả và test trước. 3) Kiểm theo danh sách: đúng yêu cầu, an toàn, hiệu năng, dễ đọc, có test. 4) Viết nhận xét cụ thể kèm gợi ý, phân biệt 'bắt buộc sửa' và 'nên cân nhắc'.",
+      "Giá trị tạo ra": "Phát hiện lỗi sớm với chi phí thấp; giữ chất lượng đồng đều.",
+      "Tránh / lưu ý": "Review quá dài làm giảm khả năng phát hiện lỗi; chia nhỏ."
+    },
+    {
+      "Mã": "M41",
+      "Tên phương pháp": "Cấu trúc thuyết trình 3 phần và luyện đo giờ",
+      "Dùng cho loại việc": "Thuyết trình, slide, bài nói trước lớp",
+      "Cách thực hiện từng bước": "1) Một thông điệp chính duy nhất cho cả bài. 2) Cấu trúc: mở (vấn đề), thân (3 ý, mỗi ý 1 ví dụ), kết (kêu gọi hành động). 3) Mỗi slide 1 ý, ít chữ. 4) Luyện to tiếng ít nhất 3 lần có bấm giờ, lần cuối trước người nghe để nhận góp ý.",
+      "Giá trị tạo ra": "Người nghe nhớ được ý chính; luyện đo giờ giảm lo âu và tránh vượt thời gian.",
+      "Tránh / lưu ý": "Không đọc nguyên văn slide."
+    },
+    {
+      "Mã": "M42",
+      "Tên phương pháp": "Học nhóm có phân vai (dạy nhau)",
+      "Dùng cho loại việc": "Học nhóm, ôn thi cùng bạn",
+      "Cách thực hiện từng bước": "1) Trước buổi, mỗi người tự ôn phần của mình 30-45 phút. 2) Buổi nhóm: mỗi người giảng 10 phút phần mình, người khác đặt 2 câu hỏi. 3) Cả nhóm làm 3-5 bài khó chung, nói to cách nghĩ. 4) Cuối buổi mỗi người ghi 1 điều học được và 1 điều chưa hiểu.",
+      "Giá trị tạo ra": "Dạy người khác là cách nhớ tốt; nhiều người cùng thấy lỗ hổng mà một người khó tự thấy.",
+      "Tránh / lưu ý": "Nhóm tối đa 3-5 người; không dùng buổi nhóm để học lần đầu."
+    },
+    {
+      "Mã": "M43",
+      "Tên phương pháp": "Tập có khởi động - tăng tải từ từ - giãn cơ",
+      "Dùng cho loại việc": "Mọi buổi tập thể lực",
+      "Cách thực hiện từng bước": "1) Khởi động động 5-10 phút (xoay khớp, đi bộ nhanh, squat tay không). 2) Làm bài chính; chỉ tăng mức tạ hoặc thời gian khoảng 5-10% mỗi tuần khi hoàn thành dễ dàng. 3) Cool-down 5-10 phút: đi chậm, giãn cơ nhóm vừa tập. 4) Nghỉ ít nhất 48 giờ giữa 2 buổi tập nặng cùng nhóm cơ.",
+      "Giá trị tạo ra": "Giảm chấn thương, tăng tiến bộ đều; cơ thể phát triển trong lúc nghỉ chứ không phải lúc tập.",
+      "Tránh / lưu ý": "Đau nhói, tê, chóng mặt, khó thở bất thường thì dừng ngay."
+    },
+    {
+      "Mã": "M44",
+      "Tên phương pháp": "Trả cho mình trước và ngân sách 50/30/20",
+      "Dùng cho loại việc": "Ghi chi tiêu, lập ngân sách, tiết kiệm",
+      "Cách thực hiện từng bước": "1) Ngày nhận tiền chuyển ngay phần tiết kiệm (bắt đầu 10-20%) sang tài khoản riêng. 2) Chia phần còn lại: nhu cầu thiết yếu khoảng 50%, mong muốn khoảng 30%, tiết kiệm / trả nợ khoảng 20% (điều chỉnh theo thu nhập thực). 3) Ghi chi tiêu mỗi ngày 2-3 phút. 4) Cuối tháng so sánh và chỉnh.",
+      "Giá trị tạo ra": "Tiết kiệm trước khi tiêu giúp đều đặn; ghi chép cho thấy tiền đi đâu.",
+      "Tránh / lưu ý": "Tỉ lệ chỉ để tham khảo; thu nhập thấp cần ưu tiên thiết yếu."
+    },
+    {
+      "Mã": "M45",
+      "Tên phương pháp": "Kịch bản gọi 3 phần",
+      "Dùng cho loại việc": "Gọi điện chăm sóc khách hàng, gọi thăm gia đình, gọi đối tác",
+      "Cách thực hiện từng bước": "1) Mở đầu 10-15 giây: chào, tên, lí do gọi. 2) Thân: 2-3 câu hỏi mở, lắng nghe, ghi lại. 3) Kết: nhắc lại điều đã thống nhất và bước tiếp theo, hỏi 'còn gì cần thêm không'. 4) Ghi chú ngay sau cuộc gọi.",
+      "Giá trị tạo ra": "Cuộc gọi ngắn gọn, ít bỏ sót ý; khách hàng cảm thấy được tôn trọng.",
+      "Tránh / lưu ý": "Không gọi trong giờ nghỉ trưa hoặc quá muộn trừ khi đã hẹn."
+    },
+    {
+      "Mã": "M46",
+      "Tên phương pháp": "Dọn nhà 10-15 phút theo vùng",
+      "Dùng cho loại việc": "Việc nhà: quét, lau, dọn, gấp",
+      "Cách thực hiện từng bước": "1) Chia nhà thành 4-5 vùng (phòng ngủ, bếp, phòng khách, vệ sinh). 2) Mỗi ngày dọn 1 vùng trong 10-15 phút bằng hẹn giờ. 3) Làm từ trên xuống dưới, từ trong ra ngoài. 4) Cuối tuần chỉ tổng vệ sinh nhẹ.",
+      "Giá trị tạo ra": "Nhà luôn sạch mà không mất cả buổi; vận động nhẹ cũng giúp giảm căng thẳng.",
+      "Tránh / lưu ý": "Người đau lưng, thoát vị: dùng cán dài, hạn chế cúi gập."
+    },
+    {
+      "Mã": "M47",
+      "Tên phương pháp": "Chế độ ngày tối thiểu (minimum viable day)",
+      "Dùng cho loại việc": "Ngày ốm, kiệt sức, trầm cảm nặng, khủng hoảng",
+      "Cách thực hiện từng bước": "1) Chỉ giữ 4 việc: ngủ, ăn đủ 3 bữa đơn giản, uống thuốc / uống nước, 1 việc nhỏ nhất (5-10 phút). 2) Hoãn mọi việc còn lại, ghi ngày dự kiến làm lại. 3) Nhờ người thân hoặc đồng nghiệp chia sẻ nếu cần. 4) Quay lại lịch bình thường từ từ: mỗi ngày thêm 1 việc.",
+      "Giá trị tạo ra": "Bảo vệ sức khỏe và giữ nhịp tối thiểu để dễ quay lại, tránh cảm giác thất bại khi không làm nổi lịch đầy đủ.",
+      "Tránh / lưu ý": "Nếu tình trạng kéo dài trên 1-2 tuần hoặc có ý nghĩ tự hại: gặp bác sĩ, chuyên gia tâm lí hoặc người thân ngay."
+    },
+    {
+      "Mã": "M48",
+      "Tên phương pháp": "Ôn kiểu 'ngủ trước - xem lại sau' (ôn nhẹ trước ngủ + nhắc lại buổi sáng)",
+      "Dùng cho loại việc": "Học thuộc, từ vựng, công thức",
+      "Cách thực hiện từng bước": "1) Trước ngủ 30-45 phút ôn nhanh 10-15 phút nội dung đã học trong ngày (không màn hình sáng). 2) Đi ngủ đúng giờ. 3) Sáng hôm sau tự nhớ lại 5 phút trước khi mở sách. 4) Chỗ quên đánh dấu và học lại.",
+      "Giá trị tạo ra": "Giấc ngủ giúp củng cố trí nhớ; ôn trước ngủ rồi nhớ lại buổi sáng tận dụng điều đó.",
+      "Tránh / lưu ý": "Không thức khuya để ôn; thiếu ngủ làm trí nhớ kém đi."
+    },
+    {
+      "Mã": "M49",
+      "Tên phương pháp": "Pha 'khởi động nhận thức' 5 phút",
+      "Dùng cho loại việc": "Mọi buổi học hoặc làm việc sâu",
+      "Cách thực hiện từng bước": "1) Dọn bàn chỉ còn đồ cần. 2) Viết 1 dòng mục tiêu phiên. 3) Làm 3 câu hoặc 1 đoạn dễ nhất để lấy đà. 4) Chuyển sang phần khó.",
+      "Giá trị tạo ra": "Giảm 'khoảng chết' đầu buổi, dễ vào mạch hơn.",
+      "Tránh / lưu ý": "Không kéo dài quá 5-7 phút."
+    },
+    {
+      "Mã": "M50",
+      "Tên phương pháp": "Thiết bị 'khoảng cách': để điện thoại ở phòng khác",
+      "Dùng cho loại việc": "Học, làm việc sâu, ngủ",
+      "Cách thực hiện từng bước": "1) Trước phiên học đặt điện thoại ở phòng khác hoặc trong cặp, bật chế độ không làm phiền. 2) Chỉ kiểm tra khi nghỉ giữa phiên. 3) Báo người thân giờ cần liên lạc khẩn cấp. 4) Ban đêm sạc điện thoại ngoài phòng ngủ.",
+      "Giá trị tạo ra": "Chỉ riêng việc có điện thoại trong tầm mắt đã làm giảm khả năng tập trung; để xa giúp bớt cám dỗ mà không tốn ý chí.",
+      "Tránh / lưu ý": "Giữ kênh khẩn cấp cho người thân (ví dụ cho phép cuộc gọi lặp lại)."
+    }
+  ]
+}

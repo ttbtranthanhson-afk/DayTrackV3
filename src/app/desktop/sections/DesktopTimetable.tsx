@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Sun, Calendar, Search, Sparkles, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
-import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { CreateScheduleModal } from '../../components/CreateScheduleModal';
 import { BusyHoursModal } from '../../components/BusyHoursModal';
 import { AiPlannerModal } from '../../components/AiPlannerModal';
@@ -137,11 +137,8 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
   const renderBlock = (block: ScheduleBlock, day: string, compact = false) => {
     const c = colorMap[block.color] || colorMap['bg-blue-400'];
     return (
-      <motion.div
+      <div
         key={block.id}
-        layout
-        layoutId={block.id}
-        transition={{ layout: { duration: 0.35, ease: 'easeInOut' } }}
         role="button"
         tabIndex={0}
         onClick={() => (isTodayMode ? setExpandedId(expandedId === block.id ? null : block.id) : openEdit(day, block))}
@@ -179,7 +176,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
             </button>
           )}
         </div>
-      </motion.div>
+      </div>
     );
   };
 
@@ -219,12 +216,10 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
         }
       />
 
-      <LayoutGroup>
-        <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="popLayout" initial={false}>
           {!isTodayMode ? (
             <motion.div
               key="week"
-              layout
               initial={{ opacity: 0, scale: 0.985 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.985 }}
@@ -281,7 +276,6 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
           ) : (
             <motion.div
               key="today"
-              layout
               initial={{ opacity: 0, scale: 0.985 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.985 }}
@@ -314,36 +308,52 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
             </div>
 
             <div data-tour="tt-blocks" className="space-y-3">
-              {selectedSchedule.length > 0 ? (
-                selectedSchedule.map(block => (
-                  <div key={block.id}>
-                    {renderBlock(block, selectedDay)}
-                    <AnimatePresence>
-                      {expandedId === block.id && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="mt-1">
-                            <AIScheduleSuggestion
-                              scheduleTitle={block.title}
-                              scheduleTime={block.time}
-                              day={selectedDay}
-                              tasks={block.tasks?.map(t => t.title)}
-                              analysis={block.analysis}
-                            />
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ))
-              ) : (
-                <DesktopEmpty label="Chưa có lịch cho ngày này" />
-              )}
+              <AnimatePresence mode="wait" initial={false}>
+                {selectedSchedule.length > 0 ? (
+                  selectedSchedule.map((block, i) => (
+                    <motion.div
+                      key={`${selectedDay}-${block.id}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.22, ease: 'easeInOut', delay: i * 0.03 }}
+                    >
+                      {renderBlock(block, selectedDay)}
+                      <AnimatePresence>
+                        {expandedId === block.id && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="mt-1">
+                              <AIScheduleSuggestion
+                                scheduleTitle={block.title}
+                                scheduleTime={block.time}
+                                day={selectedDay}
+                                tasks={block.tasks?.map(t => t.title)}
+                                analysis={block.analysis}
+                              />
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  ))
+                ) : (
+                  <motion.div
+                    key={`${selectedDay}-empty`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.22, ease: 'easeInOut' }}
+                  >
+                    <DesktopEmpty label="Chưa có lịch cho ngày này" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -369,7 +379,6 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
             </motion.div>
           )}
         </AnimatePresence>
-      </LayoutGroup>
 
       <CreateScheduleModal
         isOpen={modalOpen}

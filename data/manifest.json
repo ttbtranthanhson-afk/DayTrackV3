@@ -1,0 +1,52 @@
+{
+  "seed": 12345,
+  "target": 300,
+  "counts_by_level": {
+    "lv1": 50,
+    "lv2": 50,
+    "lv3": 40,
+    "lv4": 40,
+    "lv5": 120
+  },
+  "total_stage1": 300,
+  "feasible_true_total": 291,
+  "feasible_false_total": 9,
+  "feasible_false_ratio_lv5": 0.075,
+  "feasible_false_ratio_total": 0.03,
+  "profiles_distribution": {
+    "P01": 15,
+    "P02": 15,
+    "P03": 15,
+    "P04": 15,
+    "P05": 15,
+    "P06": 15,
+    "P07": 15,
+    "P08": 15,
+    "P09": 15,
+    "P10": 15,
+    "P11": 15,
+    "P12": 15,
+    "P13": 15,
+    "P14": 15,
+    "P15": 15,
+    "P16": 15,
+    "P17": 15,
+    "P18": 15,
+    "P19": 15,
+    "P20": 15
+  },
+  "paraphrase_applied": true,
+  "paraphrase_fields": [
+    "input.profile.job_title",
+    "input.tasks[].name"
+  ],
+  "split": {
+    "train": 0.8,
+    "val": 0.1,
+    "test": 0.1
+  },
+  "train_size": 240,
+  "val_size": 30,
+  "test_size": 30,
+  "timestamp": "2026-10-14T16:49:05.186510"
+}

@@ -1,0 +1,58 @@
+{
+  "input": {
+    "profile": {
+      "job_title": "Học sinh THPT",
+      "health": [
+        "Bình thường"
+      ],
+      "mental": [
+        "Tinh thần ổn định"
+      ]
+    },
+    "tasks": [
+      {
+        "name": "Làm bài tập Toán",
+        "duration_min": 30,
+        "priority": "high"
+      },
+      {
+        "name": "Ôn từ vựng tiếng Anh",
+        "duration_min": 15,
+        "priority": "medium"
+      }
+    ]
+  },
+  "context": {
+    "profile_id": "P03",
+    "load_work_factor": 1.0,
+    "max_session_min": 50,
+    "focus_hours_max_day": 4.0,
+    "applied_factors": [
+      "health:Bình thường(100.0%)",
+      "mental:Tinh thần ổn định(100.0%)"
+    ]
+  },
+  "output": {
+    "plan": [
+      {
+        "start": "15:30",
+        "end": "16:00",
+        "task": "Làm bài tập Toán",
+        "work_type": "A",
+        "block": "D1",
+        "session": 1
+      },
+      {
+        "start": "16:00",
+        "end": "16:15",
+        "task": "Ôn từ vựng tiếng Anh",
+        "work_type": "A",
+        "block": "D1",
+        "session": 1
+      }
+    ],
+    "feasible": true,
+    "warnings": [],
+    "violations": []
+  }
+}

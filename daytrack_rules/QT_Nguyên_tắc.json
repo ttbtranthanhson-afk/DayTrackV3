@@ -1,0 +1,541 @@
+{
+  "sheet": "QT Nguyên tắc",
+  "headers": [
+    "Mã",
+    "Nhóm",
+    "Quy tắc",
+    "Cách thực hiện cụ thể",
+    "Giá trị / lí do",
+    "Cấp ưu tiên"
+  ],
+  "rows": [
+    {
+      "Mã": "R01",
+      "Nhóm": "A. Thứ tự ưu tiên",
+      "Quy tắc": "Xếp theo 5 cấp: P0 An toàn > P1 Sức khỏe thể chất / bệnh > P2 Tinh thần > P3 Nhịp sinh học và nghề > P4 Mục tiêu, sở thích.",
+      "Cách thực hiện cụ thể": "Khi hai quy tắc mâu thuẫn, quy tắc cấp thấp hơn số (P0 trước) thắng. Ví dụ: muốn tập chạy (P4) nhưng đang sốt (P1) thì bỏ tập; muốn học thêm tối (P4) nhưng giờ ngủ (P3) bị lấn thì cắt phần học.",
+      "Giá trị / lí do": "Ngăn lịch hy sinh sức khỏe để đạt mục tiêu; mọi tình huống đều có cách xử lí nhất quán.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R02",
+      "Nhóm": "A. Thứ tự ưu tiên",
+      "Quy tắc": "P0 An toàn: dừng mọi hoạt động nặng khi có dấu hiệu nguy hiểm.",
+      "Cách thực hiện cụ thể": "Dấu hiệu: đau ngực, khó thở bất thường, ngất / choáng, đau đầu dữ dội đột ngột, tê yếu một bên người, sốt cao, đau nhói ở khớp / cột sống, ý nghĩ tự hại. Ứng dụng ẩn lịch tập, hiện hộp nhắc 'nghỉ và liên hệ y tế (115 nếu khẩn cấp)'.",
+      "Giá trị / lí do": "Giảm rủi ro tai nạn và bỏ sót bệnh nặng; thông tin là nhắc nhở chứ không thay bác sĩ.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R03",
+      "Nhóm": "A. Thứ tự ưu tiên",
+      "Quy tắc": "Người có bệnh mức 'Nặng - cần hỏi bác sĩ' chỉ nhận lịch vận động và ăn uống ở dạng 'tham khảo, cần bác sĩ duyệt'.",
+      "Cách thực hiện cụ thể": "Sheet QT Sức khỏe: các dòng có mức hạn chế 'Nặng - cần hỏi bác sĩ' hiển thị cảnh báo trước khi xuất lịch tập; người dùng xác nhận 'đã hỏi bác sĩ' mới hiện bài tập.",
+      "Giá trị / lí do": "Tránh gợi ý bài tập hoặc chế độ ăn không phù hợp với bệnh.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R04",
+      "Nhóm": "A. Thứ tự ưu tiên",
+      "Quy tắc": "Nhiều tình trạng cùng lúc: lấy mức giới hạn thấp nhất, không nhân các hệ số.",
+      "Cách thực hiện cụ thể": "Ví dụ: béo phì độ II (vận động 60%) + hen (70%) + mệt mỏi (70%) thì dùng 60% làm trần; danh sách bài tập loại trừ là phép hợp các bài bị cấm của mọi tình trạng.",
+      "Giá trị / lí do": "Đơn giản, an toàn, dễ giải thích cho người dùng; tránh hệ số quá nhỏ làm lịch trống.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R05",
+      "Nhóm": "A. Thứ tự ưu tiên",
+      "Quy tắc": "Khi sức khỏe hoặc tinh thần xấu đi, giảm tải trước khi hủy lịch.",
+      "Cách thực hiện cụ thể": "Thứ tự giảm: (1) rút ngắn phiên, (2) bỏ việc cấp thấp, (3) giảm cường độ vận động, (4) chuyển sang 'ngày tối thiểu' (M47) khi tình trạng nặng.",
+      "Giá trị / lí do": "Giữ được nhịp sinh hoạt thay vì bỏ hẳn, dễ quay lại.",
+      "Cấp ưu tiên": "P2"
+    },
+    {
+      "Mã": "R06",
+      "Nhóm": "A. Thứ tự ưu tiên",
+      "Quy tắc": "Việc cố định (ngủ, ăn, thuốc, đi học / đi làm) đặt trước việc linh hoạt.",
+      "Cách thực hiện cụ thể": "Thứ tự xếp: ngủ > thuốc và y tế > bữa ăn > di chuyển > giờ học / làm cố định > việc khó (khối cao điểm) > việc nhẹ (khối trũng) > vận động > giải trí.",
+      "Giá trị / lí do": "Việc nền tảng sức khỏe không bị việc khác chen vào.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R07",
+      "Nhóm": "A. Thứ tự ưu tiên",
+      "Quy tắc": "Mỗi ngày tối đa 3 việc quan trọng (MIT) và luôn chừa 15-20% thời gian đệm.",
+      "Cách thực hiện cụ thể": "Xếp 1 việc khó + 2 việc vừa vào khối cao điểm; khoảng đệm đặt xen giữa các khối, không dồn cuối ngày.",
+      "Giá trị / lí do": "Người thật sự làm được lịch mới tin vào lịch; đệm hấp thụ việc phát sinh và việc kéo dài hơn dự tính.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R08",
+      "Nhóm": "B. Giấc ngủ",
+      "Quy tắc": "Giờ ngủ là mốc cố định đầu tiên của lịch.",
+      "Cách thực hiện cụ thể": "Số giờ ngủ cần theo tuổi: 6-12 tuổi 9-12 giờ; 13-18 tuổi 8-10 giờ; người lớn 7-9 giờ; trên 60 tuổi 7-8 giờ. Giờ dậy cố định cả cuối tuần, chênh không quá 1 giờ.",
+      "Giá trị / lí do": "Thiếu ngủ làm giảm chú ý, trí nhớ, tâm trạng và tăng nguy cơ bệnh; giờ cố định giúp ngủ sâu hơn.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R09",
+      "Nhóm": "B. Giấc ngủ",
+      "Quy tắc": "Tắt màn hình sáng và việc căng thẳng trước ngủ 60 phút (tối thiểu 30 phút).",
+      "Cách thực hiện cụ thể": "Đặt báo nhắc 'wind-down' (M36); sạc điện thoại ngoài phòng ngủ; chuyển sang đọc giấy, giãn cơ, tắm nước ấm.",
+      "Giá trị / lí do": "Ánh sáng xanh và nội dung kích thích làm chậm vào giấc.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R10",
+      "Nhóm": "B. Giấc ngủ",
+      "Quy tắc": "Caffeine: không dùng trong khoảng 8 giờ trước giờ ngủ.",
+      "Cách thực hiện cụ thể": "Ví dụ ngủ 22:30 thì cà phê, trà đặc, nước tăng lực dừng trước 14:30. Trẻ em và thanh thiếu niên tránh nước tăng lực.",
+      "Giá trị / lí do": "Caffeine ở lại cơ thể nhiều giờ, giảm giấc ngủ sâu dù vẫn ngủ được.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R11",
+      "Nhóm": "B. Giấc ngủ",
+      "Quy tắc": "Ngủ trưa 15-20 phút trong khoảng 12:30-15:00; không quá 30 phút.",
+      "Cách thực hiện cụ thể": "Ngủ sau ăn 15-20 phút, đặt báo thức, dậy rửa mặt và ra chỗ sáng. Bỏ ngủ trưa nếu đang mất ngủ ban đêm.",
+      "Giá trị / lí do": "Phục hồi tỉnh táo mà không thức dậy uể oải hay làm lệch giấc ngủ đêm.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R12",
+      "Nhóm": "B. Giấc ngủ",
+      "Quy tắc": "Ngủ bù cuối tuần tối đa 1-2 giờ so với giờ thường ngày.",
+      "Cách thực hiện cụ thể": "Nếu thiếu ngủ trong tuần, bù bằng đi ngủ sớm hơn 30-60 phút các ngày kế tiếp thay vì ngủ nướng đến trưa.",
+      "Giá trị / lí do": "Ngủ nướng làm lệch nhịp sinh học, thứ Hai mệt hơn.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R13",
+      "Nhóm": "B. Giấc ngủ",
+      "Quy tắc": "Không ở trên giường quá 20 phút khi chưa ngủ được.",
+      "Cách thực hiện cụ thể": "Ra khỏi giường, ngồi nơi ánh sáng yếu, làm việc nhẹ (đọc giấy, thở hộp), buồn ngủ mới quay lại. Không nhìn đồng hồ.",
+      "Giá trị / lí do": "Giữ liên hệ 'giường = ngủ', giảm lo âu về giấc ngủ.",
+      "Cấp ưu tiên": "P2"
+    },
+    {
+      "Mã": "R14",
+      "Nhóm": "B. Giấc ngủ",
+      "Quy tắc": "Không tập thể lực cường độ cao và không ăn no trong 2 giờ trước giờ ngủ.",
+      "Cách thực hiện cụ thể": "Bữa tối kết thúc ít nhất 2-3 giờ trước ngủ; nếu đói, ăn nhẹ (sữa chua, chuối, 1 cốc sữa). Vận động tối chỉ giãn cơ, yoga nhẹ, đi bộ chậm.",
+      "Giá trị / lí do": "Tiêu hóa và nhịp tim cao làm khó ngủ và dễ trào ngược.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R15",
+      "Nhóm": "C. Nhịp ngày và khối giờ",
+      "Quy tắc": "Chia ngày thành khối giờ: SÁNG (lập kế hoạch), D1 (cao điểm 1), D2 (cao điểm 2), TR (trũng), VD (vận động), CT (chiều tối), TOI (tối nhẹ), NGU (trước ngủ).",
+      "Cách thực hiện cụ thể": "Mỗi hồ sơ nghề có khung giờ cụ thể cho từng khối (sheet QT Hồ sơ nghề). Việc được gán khối theo loại việc (sheet QT Loại việc).",
+      "Giá trị / lí do": "Đặt đúng việc vào đúng trạng thái cơ thể thay vì xếp theo thứ tự nghĩ ra.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R16",
+      "Nhóm": "C. Nhịp ngày và khối giờ",
+      "Quy tắc": "Việc cần tư duy phân tích đặt vào D1 (khoảng 2-4 giờ sau khi thức dậy cho người lớn; chiều sau khi nghỉ và ăn nhẹ cho học sinh).",
+      "Cách thực hiện cụ thể": "Làm môn / việc khó nhất trong 20-30 phút đầu D1; môn học thuộc, ngôn ngữ xếp D2.",
+      "Giá trị / lí do": "Chú ý và trí nhớ làm việc cao nhất giữa buổi sáng; học sinh có nhịp muộn hơn người lớn.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R17",
+      "Nhóm": "C. Nhịp ngày và khối giờ",
+      "Quy tắc": "Khối TR (khoảng 13:00-14:30) chỉ xếp việc nhẹ, lặp, ít sai sót.",
+      "Cách thực hiện cụ thể": "Email, nhập liệu, việc nhà nhẹ, đi lại, ngủ trưa 15-20 phút; không xếp bài kiểm tra, quyết định lớn.",
+      "Giá trị / lí do": "Sau ăn trưa nhiệt độ cơ thể và sự tỉnh táo hạ tạm thời.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R18",
+      "Nhóm": "C. Nhịp ngày và khối giờ",
+      "Quy tắc": "Không bắt đầu việc trí óc nặng trong 30-60 phút ngay sau bữa chính no.",
+      "Cách thực hiện cụ thể": "Sau bữa trưa đi bộ 5-10 phút rồi mới ngồi; học nặng sau ăn tối ít nhất 45-60 phút.",
+      "Giá trị / lí do": "Máu dồn về tiêu hóa, dễ buồn ngủ và khó tập trung.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R19",
+      "Nhóm": "C. Nhịp ngày và khối giờ",
+      "Quy tắc": "Mỗi khối tập trung tối đa 90-120 phút liên tục, chia thành phiên nhỏ có nghỉ.",
+      "Cách thực hiện cụ thể": "Dùng M01 (25/5), M02 (50/10) hoặc M03 (90/20) tùy việc và tình trạng; sau mỗi khối nghỉ 15-30 phút.",
+      "Giá trị / lí do": "Chú ý giảm sau khoảng 90 phút; nghỉ đúng giúp giữ chất lượng cả ngày.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R20",
+      "Nhóm": "C. Nhịp ngày và khối giờ",
+      "Quy tắc": "Giới hạn tổng giờ tập trung sâu mỗi ngày theo hồ sơ.",
+      "Cách thực hiện cụ thể": "Học sinh tiểu học khoảng 1 giờ; THCS 2-3 giờ; THPT, sinh viên, nhân viên văn phòng 3-4 giờ; lao động chân tay 2-3 giờ cho việc trí óc cá nhân. Vượt giới hạn thì dời sang ngày mai.",
+      "Giá trị / lí do": "Hiệu quả giảm mạnh sau vài giờ tập trung sâu; học nhồi làm tăng mệt mà không tăng nhớ.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R21",
+      "Nhóm": "C. Nhịp ngày và khối giờ",
+      "Quy tắc": "Chuyển cảnh giữa các việc phải có 5-10 phút đệm.",
+      "Cách thực hiện cụ thể": "Cuối khối: ghi 1-2 dòng 'dừng ở đâu', đứng dậy, uống nước; đầu khối mới: M49 khởi động 5 phút.",
+      "Giá trị / lí do": "Giảm hao tổn khi đổi ngữ cảnh và tránh quên việc đang làm dở.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R22",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Giữ 3 bữa chính cách nhau 4-5 giờ và 1-2 bữa phụ theo mục tiêu.",
+      "Cách thực hiện cụ thể": "Bữa sáng trong vòng 1-2 giờ sau thức dậy; trưa và tối cách nhau 6-7 giờ; bữa phụ khoảng 15:30 (sau trưa 3-4 giờ). Người tiểu đường, dạ dày, tăng cân: không bỏ bữa.",
+      "Giá trị / lí do": "Đường huyết ổn định giúp tỉnh táo; bỏ bữa dễ ăn bù quá mức.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R23",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Khẩu phần theo quy tắc đĩa (M32): 1/2 rau, 1/4 đạm, 1/4 tinh bột.",
+      "Cách thực hiện cụ thể": "Chọn món từ sheet 'Món ăn theo mục tiêu' đúng mục tiêu của người dùng; mục tiêu mặc định theo thể trạng (xem QT Sức khỏe).",
+      "Giá trị / lí do": "Cân bằng dinh dưỡng dễ áp dụng, không cần cân đo.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R24",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Mục tiêu ăn tự động theo thể trạng: gầy -> Tăng cân; thừa cân / béo phì -> Giảm cân (thiếu 300-500 kcal/ngày); bình thường -> Duy trì; luyện cơ -> Tăng cơ (1,6-2,2 g đạm/kg).",
+      "Cách thực hiện cụ thể": "Dùng cột 'Mục tiêu ăn' trong QT Sức khỏe; người dùng có thể đổi mục tiêu nếu không có bệnh nền ngăn cản.",
+      "Giá trị / lí do": "Mức thay đổi vừa phải (0,25-0,5 kg/tuần) an toàn và bền hơn thay đổi đột ngột.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R25",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Bệnh có chế độ ăn riêng (tim, thận, tiểu đường, gout, gan, dạ dày, dị ứng) thì lọc món bị hạn chế trước khi gợi ý.",
+      "Cách thực hiện cụ thể": "QT Sức khỏe ghi nhóm món ưu tiên và nhóm món hạn chế; thận và gan nặng, thai kì chỉ gợi ý tham khảo và cần chuyên gia.",
+      "Giá trị / lí do": "Tránh gợi ý món làm bệnh nặng thêm.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R26",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Uống nước đều: khoảng 1,5-2 lít/ngày tùy thời tiết và hoạt động; nước lọc là chính.",
+      "Cách thực hiện cụ thể": "Hẹn nhắc 5 lần/ngày (sau thức dậy, trước mỗi bữa, giữa chiều); uống 200 ml mỗi 20-30 phút khi lao động nóng. Bệnh thận, suy tim, tăng huyết áp nặng theo lượng nước bác sĩ chỉ định.",
+      "Giá trị / lí do": "Thiếu nước nhẹ cũng làm giảm tập trung và mệt.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R27",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Hạn chế đồ ngọt, nước ngọt, trà sữa, nước mía, chiên rán, mì tôm; các món gắn nhãn 'hạn chế' trong dữ liệu không được gợi ý tự động.",
+      "Cách thực hiện cụ thể": "Thay bằng trà không đường, nước lọc, sữa chua không đường, trái cây nguyên quả.",
+      "Giá trị / lí do": "Giảm tăng đường huyết đột ngột, cân nặng, mỡ máu.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R28",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Bữa trước khối học / làm nặng: có đạm và tinh bột hấp thu chậm, ít đường.",
+      "Cách thực hiện cụ thể": "Ví dụ sáng: trứng + bánh mì nguyên cám; chiều: sữa chua không đường + trái cây + hạt. Tránh đồ ngọt đơn thuần ngay trước giờ học.",
+      "Giá trị / lí do": "Giữ đường huyết ổn định, tránh 'tăng rồi tụt' gây buồn ngủ.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R29",
+      "Nhóm": "D. Ăn uống",
+      "Quy tắc": "Sau tập nặng: ăn đạm và tinh bột trong 1-2 giờ.",
+      "Cách thực hiện cụ thể": "Ví dụ: cơm + ức gà / cá + rau, hoặc sữa + chuối. Người giảm cân vẫn giữ đạm, giảm tinh bột vừa phải.",
+      "Giá trị / lí do": "Phục hồi cơ, giảm đau mỏi, tránh thèm ăn quá mức.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R30",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Mục tiêu vận động tối thiểu: người lớn 150 phút/tuần cường độ vừa + 2 buổi kháng lực; trẻ 5-17 tuổi ít nhất 60 phút/ngày; người cao tuổi thêm bài thăng bằng 2-3 buổi/tuần.",
+      "Cách thực hiện cụ thể": "Xếp vào khối VD, ưu tiên 30-45 phút x 4-5 buổi/tuần; ngày bận chia 2 lần 15 phút.",
+      "Giá trị / lí do": "Theo khuyến nghị chung của Tổ chức Y tế Thế giới; đủ để cải thiện tim mạch, xương, tâm trạng.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R31",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Mỗi buổi tập có khởi động 5-10 phút và giãn cơ 5-10 phút (M43).",
+      "Cách thực hiện cụ thể": "Khởi động: 'Khởi động động'; kết thúc: 'Giãn cơ sau tập' trong sheet Bài tập.",
+      "Giá trị / lí do": "Giảm chấn thương và đau mỏi.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R32",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Tăng tải chậm: mỗi tuần tăng không quá 5-10% thời gian hoặc mức tạ; mỗi tuần có ít nhất 1 ngày nghỉ hoàn toàn.",
+      "Cách thực hiện cụ thể": "Người mới bắt đầu với mức 'Cơ bản' trong cột Mức độ, 2-3 buổi/tuần; sau 4 tuần mới thêm 'Trung bình'.",
+      "Giá trị / lí do": "Cơ thể thích nghi trong lúc nghỉ; tăng nhanh dễ chấn thương.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R33",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Chọn bài tập theo mục tiêu và mức độ trần của tình trạng sức khỏe (cột 'Mức bài tập tối đa').",
+      "Cách thực hiện cụ thể": "Dùng sheet 'Bài tập theo mục tiêu', lọc cột Mức độ không vượt trần và loại các bài trong danh sách 'tránh' của QT Sức khỏe.",
+      "Giá trị / lí do": "Đúng mục tiêu mà vẫn an toàn.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R34",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Thời điểm vận động tốt: 1-2 giờ sau bữa chính hoặc 30-60 phút sau bữa phụ; chiều muộn thường là lúc thể lực và nhiệt độ cơ thể cao.",
+      "Cách thực hiện cụ thể": "Sáng: khởi động nhẹ sau 15-30 phút thức dậy. Chiều: 16:30-18:30. Tránh tập sau ăn no dưới 60 phút và sát giờ ngủ.",
+      "Giá trị / lí do": "Hiệu suất cao, giảm đau bụng, hỗ trợ ngủ tối.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R35",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Nóng, ô nhiễm, mưa: chuyển tập sang trong nhà; thời tiết trên 35 độ hoặc chỉ số không khí xấu thì giảm cường độ hoặc nghỉ.",
+      "Cách thực hiện cụ thể": "Ứng dụng đổi bài từ 'Ngoài trời' sang 'Tại nhà'; nhắc uống thêm nước.",
+      "Giá trị / lí do": "Tránh say nắng và bệnh hô hấp.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R36",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Đau, tê, chóng mặt, hồi hộp bất thường: dừng, nghỉ, không 'cố cho xong'.",
+      "Cách thực hiện cụ thể": "Ghi lại triệu chứng; nếu lặp lại 2 buổi liền thì giảm một cấp và hỏi bác sĩ.",
+      "Giá trị / lí do": "Cảnh báo sớm của cơ thể.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R37",
+      "Nhóm": "E. Vận động",
+      "Quy tắc": "Ngồi lâu: đứng dậy 2-5 phút mỗi 30-60 phút (M29).",
+      "Cách thực hiện cụ thể": "Hẹn rung nhẹ; làm vươn vai, đi lại, xoay cổ tay, cúi nhẹ.",
+      "Giá trị / lí do": "Giảm đau cổ vai lưng, cải thiện tuần hoàn và đường huyết.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R38",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Việc trước khi bắt đầu phải có kết quả đầu ra đo được.",
+      "Cách thực hiện cụ thể": "Thay 'học Toán' bằng 'giải 6 bài dạng phương trình, sửa hết bài sai'; ghi vào lịch.",
+      "Giá trị / lí do": "Biết khi nào xong; tránh làm mãi không có kết quả.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R39",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Việc khó đi trước việc dễ trong cùng khối cao điểm (M18).",
+      "Cách thực hiện cụ thể": "Ví dụ học sinh: Toán trước, Văn sau; nhân viên: soạn hợp đồng trước, email sau.",
+      "Giá trị / lí do": "Dùng năng lượng nhận thức cao nhất cho việc quan trọng nhất.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R40",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Học nội dung mới bằng nhớ lại chủ động và ôn ngắt quãng (M05, M06), không chỉ đọc lại.",
+      "Cách thực hiện cụ thể": "Mỗi buổi học 10 phút cuối dành cho tự kiểm tra; ôn lại sau 1-3-7-14-30 ngày.",
+      "Giá trị / lí do": "Nhớ lâu hơn, ít thời gian hơn học dồn.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R41",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Xen kẽ môn / dạng bài trong buổi học dài (M08), không học một môn quá 90 phút.",
+      "Cách thực hiện cụ thể": "Ví dụ 25 phút Toán, nghỉ 5, 25 phút Lí, nghỉ 5, 25 phút Hóa; xen thêm 1 môn nhớ.",
+      "Giá trị / lí do": "Giữ hứng thú và nhận diện dạng bài tốt hơn.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R42",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Môn nhớ nhiều (Sử, Địa, Sinh, từ vựng) xếp D2 và ôn nhẹ trước ngủ (M48).",
+      "Cách thực hiện cụ thể": "Ôn 10-15 phút trước giờ ngủ 30-45 phút (không màn hình sáng), sáng hôm sau nhớ lại 5 phút.",
+      "Giá trị / lí do": "Giấc ngủ giúp củng cố trí nhớ.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R43",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Việc sáng tạo / viết dài: nháp ở D1, chỉnh sửa ở D2 hoặc hôm sau (M14).",
+      "Cách thực hiện cụ thể": "Nghỉ ít nhất 20 phút giữa nháp và sửa.",
+      "Giá trị / lí do": "Tách sáng tạo và phê bình cho kết quả tốt hơn.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R44",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Họp, gặp khách, học nhóm xếp D2 hoặc 10:00-11:30; tránh 13:00-14:00 và sau 17:30.",
+      "Cách thực hiện cụ thể": "Mỗi cuộc họp có mục tiêu và 25 hoặc 50 phút (M38); không xếp họp liên tiếp quá 3 giờ.",
+      "Giá trị / lí do": "Giao tiếp tốt khi tỉnh táo, tránh chiếm khối cao điểm.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R45",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Việc hành chính nhẹ gom theo mẻ vào khối TR (M20).",
+      "Cách thực hiện cụ thể": "Email 2-3 mẻ/ngày; ghi chi tiêu 1 lần/ngày; tắt thông báo ngoài mẻ.",
+      "Giá trị / lí do": "Tiết kiệm thời gian chuyển đổi ngữ cảnh.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R46",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Việc có hạn chót lập kế hoạch ngược (M15) và nộp sớm trước hạn ít nhất 1 ngày.",
+      "Cách thực hiện cụ thể": "Việc thanh toán, nộp thuế, đóng học phí đặt nhắc trước 7 ngày, 3 ngày và 1 ngày.",
+      "Giá trị / lí do": "Tránh phạt trễ hạn và căng thẳng phút chót.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R47",
+      "Nhóm": "F. Học và làm việc",
+      "Quy tắc": "Ngày thi hoặc deadline lớn: giảm việc phụ, giữ ngủ và ăn như thường lệ.",
+      "Cách thực hiện cụ thể": "Hôm trước: ôn nhẹ, chuẩn bị đồ, ngủ đúng giờ; sáng thi: ăn sáng quen thuộc có tinh bột và đạm, đến sớm 30 phút.",
+      "Giá trị / lí do": "Phong độ ngày thi phụ thuộc giấc ngủ và ăn uống hơn là học thêm đêm cuối.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R48",
+      "Nhóm": "G. Nghỉ ngơi và tinh thần",
+      "Quy tắc": "Mỗi ngày có ít nhất 30-60 phút 'thời gian cho bản thân' không có mục tiêu năng suất.",
+      "Cách thực hiện cụ thể": "Xếp vào khối CT hoặc TOI: nghe nhạc, đi dạo, vẽ, trò chuyện; không dùng làm đệm cho việc dồn.",
+      "Giá trị / lí do": "Phục hồi tâm trí, giảm nguy cơ kiệt sức.",
+      "Cấp ưu tiên": "P2"
+    },
+    {
+      "Mã": "R49",
+      "Nhóm": "G. Nghỉ ngơi và tinh thần",
+      "Quy tắc": "Giải trí màn hình có giới hạn thời lượng và không sát giờ ngủ.",
+      "Cách thực hiện cụ thể": "Game, mạng xã hội, phim: đặt hẹn giờ 20-60 phút, kết thúc trước giờ wind-down; học sinh dưới 18 tuổi giới hạn thêm theo gia đình.",
+      "Giá trị / lí do": "Tránh mất kiểm soát thời gian và rối loạn giấc ngủ.",
+      "Cấp ưu tiên": "P2"
+    },
+    {
+      "Mã": "R50",
+      "Nhóm": "G. Nghỉ ngơi và tinh thần",
+      "Quy tắc": "Khi tinh thần ở mức 'tải thấp' (xem QT Tinh thần): giảm 20-50% khối lượng, dùng phiên 15/3 (M04), ưu tiên vận động nhẹ và giờ ngủ ổn định.",
+      "Cách thực hiện cụ thể": "Hệ số tải của từng tình trạng có trong QT Tinh thần; ứng dụng đề xuất giảm tải thay vì phê bình.",
+      "Giá trị / lí do": "Giữ nhịp sinh hoạt mà không gây thêm áp lực.",
+      "Cấp ưu tiên": "P2"
+    },
+    {
+      "Mã": "R51",
+      "Nhóm": "G. Nghỉ ngơi và tinh thần",
+      "Quy tắc": "Dấu hiệu khủng hoảng (ý nghĩ tự hại, hoảng loạn không dừng, mất kết nối thực tế) thì dừng lịch và hiển thị hỗ trợ.",
+      "Cách thực hiện cụ thể": "Nhắc liên hệ người thân tin cậy, cơ sở y tế gần nhất, gọi 115 khi khẩn cấp; không đưa lời khuyên chẩn đoán.",
+      "Giá trị / lí do": "An toàn tính mạng quan trọng hơn mọi lịch trình.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R52",
+      "Nhóm": "G. Nghỉ ngơi và tinh thần",
+      "Quy tắc": "Duy trì liên hệ xã hội: ít nhất 2-3 lần/tuần gọi hoặc gặp người thân, bạn bè.",
+      "Cách thực hiện cụ thể": "Xếp 'Gọi điện thăm gia đình', 'Ăn cơm cùng gia đình', 'Đi dạo với bạn' vào CT hoặc cuối tuần.",
+      "Giá trị / lí do": "Kết nối xã hội là yếu tố bảo vệ sức khỏe tinh thần.",
+      "Cấp ưu tiên": "P2"
+    },
+    {
+      "Mã": "R53",
+      "Nhóm": "G. Nghỉ ngơi và tinh thần",
+      "Quy tắc": "Ánh sáng ban ngày: ra ngoài 15-30 phút trong buổi sáng nếu có thể.",
+      "Cách thực hiện cụ thể": "Gắn với đi bộ đến trường / làm, uống cà phê ngoài ban công, hoặc tập sáng.",
+      "Giá trị / lí do": "Giúp đồng hồ sinh học và tâm trạng, đặc biệt mùa ít nắng.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R54",
+      "Nhóm": "H. Tuần, tháng và tình huống đặc biệt",
+      "Quy tắc": "Mỗi tuần có 1 buổi tổng kết 20-30 phút và 1 ngày nhẹ.",
+      "Cách thực hiện cụ thể": "Chủ nhật 19:00-19:30: M34 xem lại tuần; cuối tuần giữ 1 buổi sáng hoặc chiều hoàn toàn trống.",
+      "Giá trị / lí do": "Điều chỉnh lịch bằng dữ liệu thật và phục hồi.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R55",
+      "Nhóm": "H. Tuần, tháng và tình huống đặc biệt",
+      "Quy tắc": "Việc nhà nặng, đi chợ, tổng vệ sinh gom vào sáng cuối tuần 08:00-11:00.",
+      "Cách thực hiện cụ thể": "Chia việc cho các thành viên; dọn theo vùng 10-15 phút/ngày cho việc nhẹ (M46).",
+      "Giá trị / lí do": "Ngày thường dành sức cho học và làm.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R56",
+      "Nhóm": "H. Tuần, tháng và tình huống đặc biệt",
+      "Quy tắc": "Ngày ốm, sốt, tiêu chảy cấp, chấn thương: dùng 'ngày tối thiểu' (M47) và hoãn việc.",
+      "Cách thực hiện cụ thể": "Chỉ giữ ngủ, uống nước, ăn nhẹ, uống thuốc; quay lại tập sau khi hết sốt ít nhất 24 giờ và tăng dần trong vài ngày.",
+      "Giá trị / lí do": "Hồi phục nhanh hơn, tránh biến chứng khi gắng sức.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R57",
+      "Nhóm": "H. Tuần, tháng và tình huống đặc biệt",
+      "Quy tắc": "Đi công tác, du lịch, tiệc dài, sự kiện gia đình: dời việc quan trọng sang trước và sau, thêm ngày đệm.",
+      "Cách thực hiện cụ thể": "Trước sự kiện 1 ngày: ngủ đủ, ăn nhẹ; sau sự kiện 1 buổi nhẹ; trên chuyến đi vẫn giữ giờ dậy, uống nước, đi bộ.",
+      "Giá trị / lí do": "Tránh lịch vỡ liên tiếp nhiều ngày.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R58",
+      "Nhóm": "I. Ca đêm và làm theo ca",
+      "Quy tắc": "Ca đêm: cố định giờ ngủ 'sau ca' và giữ như một ca ngủ chính (7-8 giờ), không đổi cả ngày nghỉ.",
+      "Cách thực hiện cụ thể": "Ngủ ngay sau về nhà trong phòng tối, ồn thấp, rèm dày, bịt tai nếu cần; báo người nhà giờ ngủ.",
+      "Giá trị / lí do": "Nhịp ngủ ổn định giúp giảm mệt và lỗi trong ca.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R59",
+      "Nhóm": "I. Ca đêm và làm theo ca",
+      "Quy tắc": "Chợp mắt 20-30 phút trước ca đêm và nếu có thể 15-20 phút giữa ca.",
+      "Cách thực hiện cụ thể": "Ngủ từ 2-3 giờ trước ca (hoặc 20-30 phút ngay trước ca); giữa ca nghỉ ở nơi yên tĩnh, đặt báo thức.",
+      "Giá trị / lí do": "Cải thiện tỉnh táo và an toàn cho người trực.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R60",
+      "Nhóm": "I. Ca đêm và làm theo ca",
+      "Quy tắc": "Ánh sáng: sáng rực trong ca đêm, tối khi về nhà.",
+      "Cách thực hiện cụ thể": "Ánh sáng mạnh đầu ca; đeo kính râm khi đi về buổi sáng; phòng ngủ tối.",
+      "Giá trị / lí do": "Giúp đồng hồ sinh học hiểu 'đêm = làm việc, sáng = ngủ'.",
+      "Cấp ưu tiên": "P3"
+    },
+    {
+      "Mã": "R61",
+      "Nhóm": "I. Ca đêm và làm theo ca",
+      "Quy tắc": "Ăn uống ca đêm: bữa chính trước ca, ăn nhẹ giữa ca, tránh bữa lớn sau 0-4 giờ sáng.",
+      "Cách thực hiện cụ thể": "Bữa nhẹ: sữa chua, trái cây, hạt, trứng luộc, cháo; hạn chế cà phê sau nửa ca.",
+      "Giá trị / lí do": "Giảm khó tiêu và tăng cân; giữ tỉnh táo ổn định.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R62",
+      "Nhóm": "I. Ca đêm và làm theo ca",
+      "Quy tắc": "Xoay ca nên theo chiều thuận (sáng -> chiều -> đêm) và có ít nhất 24-48 giờ nghỉ sau chuỗi ca đêm.",
+      "Cách thực hiện cụ thể": "Không xếp liên tiếp quá 3-4 ca đêm; sau chuỗi ca đêm đặt 1-2 ngày nhẹ, không xếp việc nặng.",
+      "Giá trị / lí do": "Giảm mất ngủ, rối loạn tiêu hóa và nguy cơ tai nạn.",
+      "Cấp ưu tiên": "P0"
+    },
+    {
+      "Mã": "R63",
+      "Nhóm": "J. Hệ số tải và cách tính",
+      "Quy tắc": "Tải học / làm việc hiệu dụng = tải nền của hồ sơ x hệ số thấp nhất giữa sức khỏe và tinh thần.",
+      "Cách thực hiện cụ thể": "Ví dụ học sinh THPT (nền 4 giờ), hen nhẹ (học 100%) + lo âu thi cử (80%) -> 4 x 0,8 = khoảng 3 giờ tập trung sâu mỗi ngày.",
+      "Giá trị / lí do": "Một công thức duy nhất giúp lịch tự điều chỉnh và dễ giải thích.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R64",
+      "Nhóm": "J. Hệ số tải và cách tính",
+      "Quy tắc": "Độ dài phiên tập trung = giá trị nhỏ nhất giữa phiên mặc định của loại việc, phiên tối đa của tình trạng sức khỏe và phiên tối đa của tình trạng tinh thần.",
+      "Cách thực hiện cụ thể": "Ví dụ làm việc viết dài (50 phút) nhưng ADHD (15-25 phút) -> dùng 20 phút kèm nghỉ 5 phút; hết mỗi 2 phiên nghỉ vận động 5 phút.",
+      "Giá trị / lí do": "Phiên phù hợp khả năng thật giúp hoàn thành được.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R65",
+      "Nhóm": "J. Hệ số tải và cách tính",
+      "Quy tắc": "Cường độ vận động trần = hệ số vận động thấp nhất x mức tập thông thường; chỉ chọn bài có mức độ không vượt trần và không nằm trong danh sách 'tránh'.",
+      "Cách thực hiện cụ thể": "Ví dụ béo phì độ II: 60% và chỉ mức 'Cơ bản', loại bài nhảy / chạy; đi bộ nhanh, đạp xe, bơi, chống đẩy tường là lựa chọn.",
+      "Giá trị / lí do": "An toàn khớp và tim mạch trong khi vẫn đạt mục tiêu.",
+      "Cấp ưu tiên": "P1"
+    },
+    {
+      "Mã": "R66",
+      "Nhóm": "J. Hệ số tải và cách tính",
+      "Quy tắc": "Mọi con số hệ số trong bộ quy tắc là gợi ý khởi đầu; sau 2 tuần dùng dữ liệu thật (đã hoàn thành bao nhiêu, mệt, ngủ) để chỉnh ±10-20%.",
+      "Cách thực hiện cụ thể": "Nếu hoàn thành dưới 60% lịch 3 ngày liền thì giảm tải 20%; nếu hoàn thành trên 90% và tâm trạng tốt thì có thể tăng 10%.",
+      "Giá trị / lí do": "Cá nhân hóa theo thực tế, không áp mức cứng.",
+      "Cấp ưu tiên": "P4"
+    }
+  ]
+}

@@ -1,0 +1,1084 @@
+{
+  "lv1": [
+    {
+      "input": {
+        "profile": {
+          "job_title": "Huấn luyện viên thể hình / PT",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "medium"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "14:30",
+            "end": "15:00",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Huấn luyện viên thể hình / PT",
+          "health": [
+            "Gầy độ I (hơi gầy)"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Là ủi quần áo",
+            "duration_min": 20,
+            "priority": "medium"
+          },
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "low"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "20:00",
+            "end": "20:20",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 1
+          },
+          {
+            "start": "14:30",
+            "end": "15:00",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Kiến trúc sư",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Rửa bát",
+            "duration_min": 20,
+            "priority": "high"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "18:30",
+            "end": "18:50",
+            "task": "Rửa bát",
+            "work_type": "G",
+            "block": "CT",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    }
+  ],
+  "lv2": [
+    {
+      "input": {
+        "profile": {
+          "job_title": "Công an / Bộ đội",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Họp lớp / sinh hoạt lớp",
+            "duration_min": 60,
+            "priority": "low"
+          },
+          {
+            "name": "Cân nặng / đo chỉ số cơ thể",
+            "duration_min": 5,
+            "priority": "high"
+          },
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 10,
+            "priority": "medium"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "05:45",
+            "end": "05:50",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 1
+          },
+          {
+            "start": "21:15",
+            "end": "21:25",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          },
+          {
+            "start": "14:30",
+            "end": "15:20",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "15:25",
+            "end": "15:35",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 2
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Người về hưu",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 35,
+            "priority": "medium"
+          },
+          {
+            "name": "Họp lớp / sinh hoạt lớp",
+            "duration_min": 27,
+            "priority": "medium"
+          },
+          {
+            "name": "Rửa bát",
+            "duration_min": 50,
+            "priority": "low"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "21:15",
+            "end": "21:50",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          },
+          {
+            "start": "15:30",
+            "end": "15:57",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "17:00",
+            "end": "17:50",
+            "task": "Rửa bát",
+            "work_type": "G",
+            "block": "CT",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Bác sĩ",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "high"
+          },
+          {
+            "name": "Là ủi quần áo",
+            "duration_min": 20,
+            "priority": "medium"
+          },
+          {
+            "name": "Họp lớp / sinh hoạt lớp",
+            "duration_min": 60,
+            "priority": "medium"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "13:30",
+            "end": "14:00",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "19:30",
+            "end": "19:50",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 1
+          },
+          {
+            "start": "14:00",
+            "end": "14:50",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "14:55",
+            "end": "15:05",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 2
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    }
+  ],
+  "lv3": [
+    {
+      "input": {
+        "profile": {
+          "job_title": "Hướng dẫn viên du lịch",
+          "health": [
+            "Thừa cân"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Họp lớp / sinh hoạt lớp",
+            "duration_min": 60,
+            "priority": "low"
+          },
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "high"
+          },
+          {
+            "name": "Cân nặng / đo chỉ số cơ thể",
+            "duration_min": 5,
+            "priority": "high"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "14:30",
+            "end": "15:00",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "07:45",
+            "end": "07:50",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 1
+          },
+          {
+            "start": "15:00",
+            "end": "15:50",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "15:55",
+            "end": "16:05",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 2
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Huấn luyện viên thể hình / PT",
+          "health": [
+            "Gầy độ I (hơi gầy)"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Rửa bát",
+            "duration_min": 20,
+            "priority": "high"
+          },
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "low"
+          },
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 10,
+            "priority": "high"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "18:00",
+            "end": "18:20",
+            "task": "Rửa bát",
+            "work_type": "G",
+            "block": "CT",
+            "session": 1
+          },
+          {
+            "start": "21:15",
+            "end": "21:25",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          },
+          {
+            "start": "14:30",
+            "end": "15:00",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Người về hưu",
+          "health": [
+            "Thừa cân"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 43,
+            "priority": "medium"
+          },
+          {
+            "name": "Là ủi quần áo",
+            "duration_min": 79,
+            "priority": "high"
+          },
+          {
+            "name": "Họp lớp / sinh hoạt lớp",
+            "duration_min": 38,
+            "priority": "low"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "19:00",
+            "end": "19:50",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 1
+          },
+          {
+            "start": "19:55",
+            "end": "20:24",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 2
+          },
+          {
+            "start": "21:15",
+            "end": "21:58",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          },
+          {
+            "start": "15:30",
+            "end": "16:08",
+            "task": "Họp lớp / sinh hoạt lớp",
+            "work_type": "F",
+            "block": "D2",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    }
+  ],
+  "lv4": [
+    {
+      "input": {
+        "profile": {
+          "job_title": "Người về hưu",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Rối loạn lo âu lan tỏa"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 10,
+            "priority": "low"
+          },
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "medium"
+          },
+          {
+            "name": "Là ủi quần áo",
+            "duration_min": 20,
+            "priority": "high"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "19:00",
+            "end": "19:20",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 1
+          },
+          {
+            "start": "15:30",
+            "end": "15:55",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "16:00",
+            "end": "16:05",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 2
+          },
+          {
+            "start": "21:15",
+            "end": "21:25",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Kỹ sư mỏ / khai thác than",
+          "health": [
+            "Thừa cân"
+          ],
+          "mental": [
+            "Rối loạn lo âu lan tỏa"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Cân nặng / đo chỉ số cơ thể",
+            "duration_min": 89,
+            "priority": "medium"
+          },
+          {
+            "name": "Là ủi quần áo",
+            "duration_min": 86,
+            "priority": "medium"
+          },
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 90,
+            "priority": "medium"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "05:45",
+            "end": "06:10",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 1
+          },
+          {
+            "start": "06:15",
+            "end": "06:40",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 2
+          },
+          {
+            "start": "06:45",
+            "end": "07:10",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 3
+          },
+          {
+            "start": "07:15",
+            "end": "07:29",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 4
+          },
+          {
+            "start": "19:00",
+            "end": "19:25",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 1
+          },
+          {
+            "start": "19:30",
+            "end": "19:55",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 2
+          },
+          {
+            "start": "20:00",
+            "end": "20:25",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 3
+          },
+          {
+            "start": "20:30",
+            "end": "20:41",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 4
+          },
+          {
+            "start": "21:00",
+            "end": "21:25",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          },
+          {
+            "start": "21:30",
+            "end": "21:55",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 2
+          },
+          {
+            "start": "22:00",
+            "end": "22:25",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 3
+          },
+          {
+            "start": "22:30",
+            "end": "22:45",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 4
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Giáo viên mầm non",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Rối loạn lo âu lan tỏa"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "low"
+          },
+          {
+            "name": "Chơi game",
+            "duration_min": 60,
+            "priority": "low"
+          },
+          {
+            "name": "Cân nặng / đo chỉ số cơ thể",
+            "duration_min": 5,
+            "priority": "low"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "19:45",
+            "end": "20:10",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "20:15",
+            "end": "20:20",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 2
+          },
+          {
+            "start": "17:30",
+            "end": "17:55",
+            "task": "Chơi game",
+            "work_type": "A",
+            "block": "CT",
+            "session": 1
+          },
+          {
+            "start": "18:00",
+            "end": "18:25",
+            "task": "Chơi game",
+            "work_type": "A",
+            "block": "CT",
+            "session": 2
+          },
+          {
+            "start": "18:30",
+            "end": "18:40",
+            "task": "Chơi game",
+            "work_type": "A",
+            "block": "CT",
+            "session": 3
+          },
+          {
+            "start": "05:45",
+            "end": "05:50",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    }
+  ],
+  "lv5": [
+    {
+      "input": {
+        "profile": {
+          "job_title": "Kỹ sư mỏ / khai thác than",
+          "health": [
+            "Béo phì độ I"
+          ],
+          "mental": [
+            "Rối loạn lo âu lan tỏa"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Xem phim",
+            "duration_min": 89,
+            "priority": "high"
+          },
+          {
+            "name": "Đi làm",
+            "duration_min": 58,
+            "priority": "low"
+          },
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 48,
+            "priority": "medium"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "18:00",
+            "end": "18:25",
+            "task": "Xem phim",
+            "work_type": "A",
+            "block": "CT",
+            "session": 1
+          },
+          {
+            "start": "18:30",
+            "end": "18:55",
+            "task": "Xem phim",
+            "work_type": "A",
+            "block": "CT",
+            "session": 2
+          },
+          {
+            "start": "19:00",
+            "end": "19:25",
+            "task": "Xem phim",
+            "work_type": "A",
+            "block": "CT",
+            "session": 3
+          },
+          {
+            "start": "19:30",
+            "end": "19:44",
+            "task": "Xem phim",
+            "work_type": "A",
+            "block": "CT",
+            "session": 4
+          },
+          {
+            "start": "13:30",
+            "end": "13:55",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "14:00",
+            "end": "14:23",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 2
+          }
+        ],
+        "feasible": false,
+        "warnings": [],
+        "violations": [
+          "Không tìm thấy slot hợp lệ cho Đi làm"
+        ]
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Lập trình viên",
+          "health": [
+            "Thừa cân"
+          ],
+          "mental": [
+            "Tinh thần ổn định"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 89,
+            "priority": "medium"
+          },
+          {
+            "name": "Rửa bát",
+            "duration_min": 50,
+            "priority": "low"
+          },
+          {
+            "name": "Cân nặng / đo chỉ số cơ thể",
+            "duration_min": 58,
+            "priority": "high"
+          },
+          {
+            "name": "Chạy bộ / đi bộ",
+            "duration_min": 65,
+            "priority": "medium"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "07:45",
+            "end": "08:35",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 1
+          },
+          {
+            "start": "08:40",
+            "end": "08:48",
+            "task": "Cân nặng / đo chỉ số cơ thể",
+            "work_type": "A",
+            "block": "D1",
+            "session": 2
+          },
+          {
+            "start": "22:15",
+            "end": "23:05",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          },
+          {
+            "start": "23:10",
+            "end": "23:49",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 2
+          },
+          {
+            "start": "18:15",
+            "end": "19:05",
+            "task": "Chạy bộ / đi bộ",
+            "work_type": "J",
+            "block": "VD",
+            "session": 1
+          },
+          {
+            "start": "19:10",
+            "end": "19:25",
+            "task": "Chạy bộ / đi bộ",
+            "work_type": "J",
+            "block": "VD",
+            "session": 2
+          },
+          {
+            "start": "19:25",
+            "end": "20:15",
+            "task": "Rửa bát",
+            "work_type": "G",
+            "block": "CT",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    },
+    {
+      "input": {
+        "profile": {
+          "job_title": "Người về hưu",
+          "health": [
+            "Bình thường"
+          ],
+          "mental": [
+            "Rối loạn lo âu lan tỏa"
+          ]
+        },
+        "date": "2026-10-15",
+        "tasks": [
+          {
+            "name": "Thiền / thở sâu",
+            "duration_min": 10,
+            "priority": "low"
+          },
+          {
+            "name": "Luyện kĩ năng thuyết trình",
+            "duration_min": 30,
+            "priority": "medium"
+          },
+          {
+            "name": "Là ủi quần áo",
+            "duration_min": 20,
+            "priority": "high"
+          }
+        ]
+      },
+      "output": {
+        "plan": [
+          {
+            "start": "19:00",
+            "end": "19:20",
+            "task": "Là ủi quần áo",
+            "work_type": "G",
+            "block": "TOI",
+            "session": 1
+          },
+          {
+            "start": "15:30",
+            "end": "15:55",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 1
+          },
+          {
+            "start": "16:00",
+            "end": "16:05",
+            "task": "Luyện kĩ năng thuyết trình",
+            "work_type": "D",
+            "block": "D2",
+            "session": 2
+          },
+          {
+            "start": "21:15",
+            "end": "21:25",
+            "task": "Thiền / thở sâu",
+            "work_type": "A",
+            "block": "NGU",
+            "session": 1
+          }
+        ],
+        "feasible": true,
+        "warnings": [],
+        "violations": []
+      }
+    }
+  ]
+}
