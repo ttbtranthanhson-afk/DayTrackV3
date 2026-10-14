@@ -7,3 +7,6 @@ dist/
 .env
 .env.*
 !.env.example
+.vite/
+docs/assets/*.js
+docs/assets/*.css
