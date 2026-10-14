@@ -5,12 +5,12 @@ import { AIScheduleSuggestion } from '../components/AIScheduleSuggestion';
 import { BusyHoursModal } from '../components/BusyHoursModal';
 import { AiPlannerModal } from '../components/AiPlannerModal';
 import { motion, AnimatePresence } from 'motion/react';
-import { useTimetable, days, dayShorts, colorMap, type ScheduleTask } from '../hooks/useTimetable';
+import { useTimetable, days, dayShorts, colorMap, type AddTasksFromSchedule } from '../hooks/useTimetable';
 import { useAiPlanner } from '../hooks/useAiPlanner';
 import { useDailyInsight } from '../hooks/useDailyInsight';
 
 interface TimetableProps {
-  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks?: AddTasksFromSchedule;
 }
 
 export function Timetable({ onAddTasks }: TimetableProps) {

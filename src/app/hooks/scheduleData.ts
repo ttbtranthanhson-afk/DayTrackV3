@@ -1,4 +1,4 @@
-import type { BlockAnalysis } from '../../../shared/ai';
+import type { BlockAnalysis, BlockType } from '../../../shared/ai';
 
 export const days = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
 export const dayShorts = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
@@ -26,9 +26,19 @@ export interface ScheduleBlock {
   title: string;
   time: string;
   color: string;
+  type?: BlockType;
   tasks?: ScheduleTask[];
   analysis?: BlockAnalysis;
 }
+
+export type AddTasksFromSchedule = (
+  tasks: ScheduleTask[],
+  scheduleName: string,
+  day: string,
+  dateKey?: string,
+  scheduleBlockId?: string,
+  blockType?: BlockType,
+) => void;
 
 export interface ScheduleFormData {
   id?: string;

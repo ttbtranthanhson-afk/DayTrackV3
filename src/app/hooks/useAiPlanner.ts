@@ -11,7 +11,7 @@ import type { ScheduleBlock, ScheduleTask } from './scheduleData';
 export type PlanBlockMeta = { title: string; type: BlockType; tasks: string[] };
 
 interface UseAiPlannerOptions {
-  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string, scheduleBlockId?: string, blockType?: BlockType) => void;
   onApplied?: () => void;
   successMessage?: string;
   dateKey?: string;
@@ -47,7 +47,7 @@ export function useAiPlanner(day: string, schedule: ScheduleBlock[], options: Us
     if (options.onAddTasks) {
       blocks.forEach(block => {
         if (block.tasks && block.tasks.length > 0) {
-          options.onAddTasks!(block.tasks, optionName, day, options.dateKey);
+          options.onAddTasks!(block.tasks, optionName, day, options.dateKey, block.id, block.type);
         }
       });
     }

@@ -96,6 +96,10 @@ export function useCalendarData(): CalendarScheduleMap {
   return useSyncExternalStore(subscribe, getSnapshot);
 }
 
+export function getCalendarSnapshot(): CalendarScheduleMap {
+  return calendarState;
+}
+
 export function addCalendarBlock(key: string, block: ScheduleBlock) {
   calendarState = { ...calendarState, [key]: [...(calendarState[key] || []), block] };
   emit();

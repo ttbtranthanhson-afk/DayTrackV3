@@ -7,6 +7,7 @@ const AI_DAYS_KEY = 'daytrack_calendar_ai_days';
 const BUSY_KEY = 'daytrack_busy_hours';
 const TASKS_KEY = 'daytrack_tasks';
 const ACHIEVEMENTS_KEY = 'daytrack_achievements';
+const STATS_KEY = 'daytrack_achievement_stats';
 
 const DATA_REFRESH_EVENT = 'daytrack:data-refresh';
 
@@ -17,6 +18,7 @@ const SEED_KEYS = [
   BUSY_KEY,
   TASKS_KEY,
   ACHIEVEMENTS_KEY,
+  STATS_KEY,
 ];
 
 let snapshot: Record<string, string | null> | null = null;

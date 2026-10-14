@@ -1,10 +1,10 @@
 import { Award, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useAchive, achievementGroups } from '../hooks/useAchive';
+import { useAchive } from '../hooks/useAchive';
 import { useAchievements } from '../hooks/achievementStore';
 
 export function Achive() {
-  const { expandedId, totalAchievements, completedTotal, toggleExpand } = useAchive();
+  const { expandedId, totalAchievements, completedTotal, toggleExpand, groups } = useAchive();
   const aiAchievements = useAchievements();
   const aiCompleted = aiAchievements.filter(a => a.current >= a.target).length;
 
@@ -90,7 +90,7 @@ export function Achive() {
 
         {/* Achievement groups */}
         <div data-tour="achive-groups" className="px-5 space-y-px">
-          {achievementGroups.map(group => {
+          {groups.map(group => {
             const Icon = group.icon;
             const isExpanded = expandedId === group.id;
             const completed = group.subAchievements.filter(s => s.completed).length;

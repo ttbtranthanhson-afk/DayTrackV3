@@ -4,10 +4,10 @@ import { BusyHoursModal } from '../components/BusyHoursModal';
 import { AiPlannerModal } from '../components/AiPlannerModal';
 import { useCalendar, weekDays, getHoliday, monthNames } from '../hooks/useCalendar';
 import { useAiPlanner } from '../hooks/useAiPlanner';
-import type { ScheduleTask } from '../hooks/scheduleData';
+import type { AddTasksFromSchedule } from '../hooks/scheduleData';
 
 interface CalendarProps {
-  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks?: AddTasksFromSchedule;
 }
 
 export function Calendar({ onAddTasks }: CalendarProps) {

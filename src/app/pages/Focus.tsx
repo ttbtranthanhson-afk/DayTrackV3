@@ -1,17 +1,21 @@
 import { useRef, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Music, Volume2, MoreHorizontal, Check, ChevronDown, Ban } from 'lucide-react';
+import { Play, Pause, RotateCcw, Music, Volume2, MoreHorizontal, Ban, CalendarClock, Clock } from 'lucide-react';
 import { motion } from 'motion/react';
 import {
   useFocus,
   musicCategories,
-  allSongs,
   CUSTOM_CATEGORY,
   NONE_CATEGORY,
   presetTimes,
   tabs,
+  blockTypeInfo,
+  blockWindow,
   type MusicCategory,
   type Song,
 } from '../hooks/useFocus';
+import { MusicPanel } from '../components/MusicPanel';
+import { formatDuration } from '../hooks/musicData';
+import { UpcomingBlockDialog } from '../components/UpcomingBlockDialog';
 
 type TimeType = 'hours' | 'minutes' | 'seconds';
 
@@ -65,16 +69,22 @@ export function Focus() {
     minutes,
     seconds,
     selectedMusic,
-    expandedCategory,
     selectCategory,
     getSongs,
+    musicPanel,
+    openMusicPanel,
+    closeMusicPanel,
     customPlaylist,
     customSelection,
-    customEditing,
     toggleCustomSong,
     saveCustomPlaylist,
+    quickAddCurrent,
     currentSong,
     previewSong,
+    toggleSong,
+    replaySong,
+    musicTime,
+    musicDuration,
     circleScale,
     isShaking,
     todayLabel,
@@ -90,7 +100,18 @@ export function Focus() {
     displaySeconds,
     circumference,
     strokeDashoffset,
+    hasSession,
+    currentTime,
+    totalTime,
+    upcomingBlocks,
+    pendingBlock,
+    launchBlock,
+    dismissPending,
+    acceptPending,
+    clockNow,
   } = useFocus();
+
+  const minutesNow = new Date(clockNow).getHours() * 60 + new Date(clockNow).getMinutes();
 
   const playingBars = (
     <div className="flex gap-0.5 items-end h-4">
@@ -104,55 +125,27 @@ export function Focus() {
     </div>
   );
 
-  const renderSongRow = (song: Song, selectable: boolean, checked: boolean) => {
-    const isPlaying = currentSong?.id === song.id;
-    return (
-      <button
-        key={song.id}
-        type="button"
-        onClick={() => (selectable ? toggleCustomSong(song.id) : previewSong(song))}
-        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left transition-colors ${
-          isPlaying ? 'bg-green-50' : 'hover:bg-white'
-        }`}
-      >
-        {selectable ? (
-          <span
-            className={`w-4 h-4 rounded-md border flex items-center justify-center flex-shrink-0 ${
-              checked ? 'bg-green-500 border-green-500' : 'border-gray-300 bg-white'
-            }`}
-          >
-            {checked && <Check className="w-3 h-3 text-white" />}
-          </span>
-        ) : (
-          <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isPlaying ? 'bg-green-500' : 'bg-gray-300'}`} />
-        )}
-        <span className="flex-1 min-w-0">
-          <span className={`block text-xs font-semibold truncate ${isPlaying ? 'text-green-700' : 'text-gray-700'}`}>
-            {song.title}
-          </span>
-          <span className="block text-[10px] text-gray-400 truncate">
-            {song.artist}
-            {song.license && <span className="text-gray-300"> · {song.license}</span>}
-          </span>
-        </span>
-        {isPlaying && playingBars}
-      </button>
-    );
-  };
 
   const renderCategory = (cat: MusicCategory | typeof CUSTOM_CATEGORY | typeof NONE_CATEGORY) => {
     const isNone = cat.id === NONE_CATEGORY.id;
     const isCustom = cat.id === CUSTOM_CATEGORY.id;
     const isSelected = selectedMusic === cat.id;
-    const isExpanded = expandedCategory === cat.id;
     const songs = isCustom ? getSongs('custom') : isNone ? [] : (cat as MusicCategory).songs;
 
     return (
       <div key={cat.id} className="rounded-2xl overflow-hidden">
-        <button
-          type="button"
+        <div
+          role="button"
+          tabIndex={0}
+          onPointerDown={() => selectCategory(cat.id)}
           onClick={() => selectCategory(cat.id)}
-          className={`w-full flex items-center gap-4 p-4 transition-all border ${
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectCategory(cat.id);
+            }
+          }}
+          className={`w-full flex items-center gap-4 p-4 cursor-pointer transition-all border ${
             isSelected ? 'border-green-200 bg-green-50 rounded-2xl' : 'border-transparent bg-gray-50 hover:bg-gray-100 rounded-2xl'
           }`}
         >
@@ -162,44 +155,19 @@ export function Focus() {
           </span>
           {isSelected && !isNone && playingBars}
           {!isNone && (
-            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+            <button
+              type="button"
+              onPointerDown={e => e.stopPropagation()}
+              onClick={e => {
+                e.stopPropagation();
+                openMusicPanel(cat.id);
+              }}
+              className="text-xs font-semibold text-gray-500 px-2 py-1 rounded-full bg-white/70 border border-gray-100 hover:bg-white hover:text-green-700 transition-colors"
+            >
+              Xem
+            </button>
           )}
-        </button>
-
-        {isExpanded && !isNone && (
-          <div className="mt-2 ml-3 border-l-2 border-gray-100 pl-3 space-y-0.5">
-            {isCustom && customEditing ? (
-              <>
-                <p className="text-[11px] text-gray-400 px-1 pb-1">Chọn các bài bạn muốn, rồi nhấn Lưu</p>
-                {allSongs.map(song => renderSongRow(song, true, customSelection.includes(song.id)))}
-                <button
-                  type="button"
-                  onClick={saveCustomPlaylist}
-                  className="w-full mt-2 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl text-xs font-semibold"
-                >
-                  Lưu ({customSelection.length})
-                </button>
-              </>
-            ) : songs.length > 0 ? (
-              <>
-                {isCustom && (
-                  <button
-                    type="button"
-                    onClick={() => selectCategory('custom')}
-                    className="text-[11px] font-semibold text-pink-500 px-1 pb-1"
-                  >
-                    Nhấn để chọn lại nhạc
-                  </button>
-                )}
-                {songs.map(song => renderSongRow(song, false, false))}
-              </>
-            ) : (
-              <p className="text-[11px] text-gray-400 px-1 py-1">
-                {isCustom ? 'Chưa có bài nào. Nhấn "Custom" để chọn nhạc.' : 'Không có bài nào.'}
-              </p>
-            )}
-          </div>
-        )}
+        </div>
       </div>
     );
   };
@@ -227,7 +195,7 @@ export function Focus() {
           {/* Timer Circle */}
           <div data-tour="focus-timer" className="flex justify-center relative z-10">
             <div className="relative">
-              {isRunning && (
+              {hasSession && (
                 <svg className="absolute top-0 left-0 w-52 h-52 -rotate-90">
                   <circle cx="104" cy="104" r="95" fill="none" stroke="rgba(255,255,255,0.3)"
                     strokeWidth="6" />
@@ -246,7 +214,7 @@ export function Focus() {
                 className="w-52 h-52 rounded-full bg-white/15 flex items-center justify-center"
               >
                 <div className="text-center">
-                  {!isRunning ? (
+                  {!hasSession ? (
                     <div className="flex gap-0.5 items-center justify-center">
                       {(['hours', 'minutes', 'seconds'] as const).map((type, i) => (
                         <div key={type} className="flex items-center gap-0.5">
@@ -270,7 +238,13 @@ export function Focus() {
                     </span>
                   )}
                   <p className="text-xs text-white/70 mt-1 font-medium">
-                    {!isRunning ? 'Vuốt để điều chỉnh' : 'Đang tập trung'}
+                    {isRunning
+                      ? 'Đang tập trung'
+                      : hasSession
+                        ? totalTime > 0 && currentTime === 0
+                          ? 'Hoàn tất'
+                          : 'Tạm dừng'
+                        : 'Vuốt để điều chỉnh'}
                   </p>
                 </div>
               </motion.div>
@@ -279,7 +253,7 @@ export function Focus() {
 
           {/* Controls */}
           <div className="flex items-center justify-center gap-5 mt-6 relative z-10">
-            {!isRunning && (
+            {!hasSession && (
               <div data-tour="focus-presets" className="flex gap-2">
                 {presetTimes.map(p => (
                   <button
@@ -292,12 +266,12 @@ export function Focus() {
                 ))}
               </div>
             )}
-            {isRunning && (
+            {isRunning || hasSession ? (
               <button onClick={resetTimer}
                 className="w-11 h-11 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors">
                 <RotateCcw className="w-5 h-5" />
               </button>
-            )}
+            ) : null}
             <button
               onClick={toggleTimer}
               data-tour="focus-play"
@@ -329,32 +303,55 @@ export function Focus() {
 
         {/* Content */}
         <div className="px-5 py-5">
-          {activeTab === 'Hướng dẫn' && (
-            <div className="space-y-4">
-              <div className="bg-white border border-gray-100 rounded-2xl p-4 space-y-3">
-                <h3 className="text-sm font-bold text-gray-900">Cách sử dụng</h3>
-                {[
-                  'Chọn nhanh 25/45/60 phút, hoặc vuốt (cuộn) vào từng ô giờ, phút, giây để đặt thời gian.',
-                  'Vào tab Nhạc nền, nhấn vào một chủ đề để xem danh sách bài nhạc.',
-                  'Nhấn nút Play để bắt đầu — nhạc sẽ phát ngẫu nhiên trong chủ đề đã chọn.',
-                  'Chọn Custom để tự chọn bài, hoặc Không nhạc để tập trung yên tĩnh.',
-                  'Nhấn Pause để tạm dừng, nút mũi tên tròn để đặt lại.',
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-3">
-                    <span className="w-5 h-5 rounded-full bg-green-100 text-green-700 text-[11px] font-bold flex items-center justify-center flex-shrink-0">
-                      {i + 1}
-                    </span>
-                    <p className="text-xs text-gray-600 leading-relaxed flex-1">{step}</p>
-                  </div>
-                ))}
+          {activeTab === 'Lịch sắp tới' && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <CalendarClock className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-semibold text-gray-700">Lịch sắp tới hôm nay</span>
               </div>
 
-              <div className="bg-green-50 rounded-2xl p-4">
-                <p className="text-sm font-semibold text-green-800 mb-1">Mẹo tập trung</p>
-                <p className="text-xs text-green-700 leading-relaxed">
-                  Kỹ thuật Pomodoro: học 25 phút, nghỉ 5 phút. Sau 4 vòng, nghỉ dài 15-30 phút.
-                </p>
-              </div>
+              {upcomingBlocks.length === 0 ? (
+                <div className="bg-gray-50 rounded-2xl p-8 text-center">
+                  <Clock className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                  <p className="text-xs text-gray-400">Không có lịch trình sắp tới.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {upcomingBlocks.map(block => {
+                    const window = blockWindow(block);
+                    const started = window !== null && minutesNow >= window.start;
+                    const typeKey = block.type && blockTypeInfo[block.type] ? block.type : 'other';
+                    const type = blockTypeInfo[typeKey];
+                    return (
+                      <button
+                        key={block.id}
+                        onClick={() => launchBlock(block)}
+                        className="w-full bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-3 text-left hover:border-green-200 hover:bg-green-50/40 transition-colors"
+                      >
+                        <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${type.dot}`} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <p className="text-sm font-semibold text-gray-900 truncate">{block.title}</p>
+                            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0 ${type.badge}`}>
+                              {type.label}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500">{block.time}</p>
+                        </div>
+                        {started ? (
+                          <span className="flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full flex-shrink-0">
+                            <Play className="w-3 h-3" /> Bắt đầu
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-xs font-semibold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full flex-shrink-0">
+                            <Clock className="w-3 h-3" /> Sắp tới
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -405,7 +402,122 @@ export function Focus() {
             </div>
           )}
         </div>
-      </div>
+      
+      <MusicPanel
+        open={musicPanel === 'study'}
+        title="Học tập"
+        dotClass="bg-blue-400"
+        accentClass="text-blue-700"
+        songs={musicCategories.find(c => c.id === 'study')?.songs ?? []}
+        selectable={false}
+        selection={[]}
+        currentSong={currentSong}
+        musicTime={musicTime}
+        musicDuration={musicDuration}
+        onSongTap={previewSong}
+        onSongToggle={toggleSong}
+        onReplay={replaySong}
+        onQuickAdd={quickAddCurrent}
+        onClose={closeMusicPanel}
+        placeholder="Không có bài nhạc."
+      />
+      <MusicPanel
+        open={musicPanel === 'work'}
+        title="Làm việc"
+        dotClass="bg-purple-400"
+        accentClass="text-purple-700"
+        songs={musicCategories.find(c => c.id === 'work')?.songs ?? []}
+        selectable={false}
+        selection={[]}
+        currentSong={currentSong}
+        musicTime={musicTime}
+        musicDuration={musicDuration}
+        onSongTap={previewSong}
+        onSongToggle={toggleSong}
+        onReplay={replaySong}
+        onQuickAdd={quickAddCurrent}
+        onClose={closeMusicPanel}
+        placeholder="Không có bài nhạc."
+      />
+      <MusicPanel
+        open={musicPanel === 'exercise'}
+        title="Tập luyện"
+        dotClass="bg-orange-400"
+        accentClass="text-orange-700"
+        songs={musicCategories.find(c => c.id === 'exercise')?.songs ?? []}
+        selectable={false}
+        selection={[]}
+        currentSong={currentSong}
+        musicTime={musicTime}
+        musicDuration={musicDuration}
+        onSongTap={previewSong}
+        onSongToggle={toggleSong}
+        onReplay={replaySong}
+        onQuickAdd={quickAddCurrent}
+        onClose={closeMusicPanel}
+        placeholder="Không có bài nhạc."
+      />
+      <MusicPanel
+        open={musicPanel === 'relax'}
+        title="Thư giãn"
+        dotClass="bg-green-400"
+        accentClass="text-green-700"
+        songs={musicCategories.find(c => c.id === 'relax')?.songs ?? []}
+        selectable={false}
+        selection={[]}
+        currentSong={currentSong}
+        musicTime={musicTime}
+        musicDuration={musicDuration}
+        onSongTap={previewSong}
+        onSongToggle={toggleSong}
+        onReplay={replaySong}
+        onQuickAdd={quickAddCurrent}
+        onClose={closeMusicPanel}
+        placeholder="Không có bài nhạc."
+      />
+      <MusicPanel
+        open={musicPanel === 'focus'}
+        title="Tập trung sâu"
+        dotClass="bg-indigo-400"
+        accentClass="text-indigo-700"
+        songs={musicCategories.find(c => c.id === 'focus')?.songs ?? []}
+        selectable={false}
+        selection={[]}
+        currentSong={currentSong}
+        musicTime={musicTime}
+        musicDuration={musicDuration}
+        onSongTap={previewSong}
+        onSongToggle={toggleSong}
+        onReplay={replaySong}
+        onQuickAdd={quickAddCurrent}
+        onClose={closeMusicPanel}
+        placeholder="Không có bài nhạc."
+      />
+      <MusicPanel
+        open={musicPanel === 'custom'}
+        title="Custom"
+        dotClass="bg-pink-400"
+        accentClass="text-pink-700"
+        songs={getSongs('custom')}
+        selectable={true}
+        selection={customSelection}
+        currentSong={currentSong}
+        musicTime={musicTime}
+        musicDuration={musicDuration}
+        onSongTap={toggleCustomSong}
+        onSongToggle={toggleSong}
+        onReplay={replaySong}
+        onQuickAdd={quickAddCurrent}
+        onSave={saveCustomPlaylist}
+        onClose={closeMusicPanel}
+        placeholder="Chưa có bài nào trong danh sách Custom."
+      /></div>
+
+      <UpcomingBlockDialog
+        block={pendingBlock}
+        onSkip={dismissPending}
+        onStart={acceptPending}
+      />
     </div>
   );
 }

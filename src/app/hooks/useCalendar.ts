@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { days, type ScheduleBlock, type ScheduleFormData, type ScheduleTask } from './scheduleData';
+import { days, type AddTasksFromSchedule, type ScheduleBlock, type ScheduleFormData, type ScheduleTask } from './scheduleData';
 import { useScheduleData } from './scheduleStore';
 import {
   useCalendarData,
@@ -26,7 +26,7 @@ export const monthNames = [
 ];
 
 interface UseCalendarProps {
-  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks?: AddTasksFromSchedule;
 }
 
 export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
@@ -118,7 +118,7 @@ export function useCalendar({ onAddTasks }: UseCalendarProps = {}) {
     }
 
     if (data.tasks.length > 0 && onAddTasks) {
-      onAddTasks(data.tasks, data.name, `${selectedDay} tháng ${currentMonth + 1}`, key);
+      onAddTasks(data.tasks, data.name, `${selectedDay} tháng ${currentMonth + 1}`, key, block.id);
     }
   };
 

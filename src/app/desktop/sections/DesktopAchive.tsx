@@ -1,11 +1,11 @@
 import { Award, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useAchive, achievementGroups } from '../../hooks/useAchive';
+import { useAchive } from '../../hooks/useAchive';
 import { useAchievements } from '../../hooks/achievementStore';
 import { DesktopPageHeader, DesktopCard } from '../DesktopUI';
 
 export function DesktopAchive() {
-  const { expandedId, totalAchievements, completedTotal, toggleExpand } = useAchive();
+  const { expandedId, totalAchievements, completedTotal, toggleExpand, groups } = useAchive();
   const aiAchievements = useAchievements();
   const aiCompleted = aiAchievements.filter(a => a.current >= a.target).length;
 
@@ -80,7 +80,7 @@ export function DesktopAchive() {
         {/* Achievement groups */}
         <div data-tour="achive-groups" className="col-span-2">
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-            {achievementGroups.map((group, gi) => {
+            {groups.map((group, gi) => {
               const Icon = group.icon;
               const isExpanded = expandedId === group.id;
               const completed = group.subAchievements.filter(s => s.completed).length;

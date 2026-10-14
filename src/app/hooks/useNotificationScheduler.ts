@@ -5,6 +5,7 @@ import { notify, parseClock, requestPermission } from './notificationService';
 import { dayNameFromDate } from './scheduleData';
 import { launchFocus } from './focusLauncher';
 import { getAccountItem, setAccountItem } from './accountStorage';
+import { isBlockFocusActive, isBlockFocusCompleted } from './focusBlockTracker';
 
 const LOG_KEY = 'daytrack_notification_log';
 const TICK_MS = 20000;
@@ -38,20 +39,29 @@ function tsAt(minutesOfDay: number, now: Date): number {
 function readBlocks(): ParsedBlock[] {
   try {
     const raw = getAccountItem('daytrack_weekday_schedules');
-    if (!raw) return [];
-    const map = JSON.parse(raw) as Record<string, Array<{ id?: string; title?: string; time?: string }>>;
+    const map = raw ? (JSON.parse(raw) as Record<string, Array<{ id?: string; title?: string; time?: string }>>) : {};
     const day = dayNameFromDate(new Date());
-    const list = map[day] || [];
-    return list
-      .map(block => {
-        if (!block.time) return null;
-        const m = block.time.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
-        if (!m) return null;
-        const start = Number(m[1]) * 60 + Number(m[2]);
-        const end = Number(m[3]) * 60 + Number(m[4]);
-        return { id: block.id || block.title || String(start), title: block.title || '', start, end };
-      })
-      .filter((b): b is ParsedBlock => b !== null);
+
+    const rawCalendar = getAccountItem('daytrack_calendar_schedules');
+    const calendar = rawCalendar
+      ? (JSON.parse(rawCalendar) as Record<string, Array<{ id?: string; title?: string; time?: string }>>)
+      : {};
+    const now = new Date();
+    const calendarDay = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+
+    const toBlocks = (list: Array<{ id?: string; title?: string; time?: string }>): ParsedBlock[] =>
+      (list || [])
+        .map(block => {
+          if (!block.time) return null;
+          const m = block.time.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+          if (!m) return null;
+          const start = Number(m[1]) * 60 + Number(m[2]);
+          const end = Number(m[3]) * 60 + Number(m[4]);
+          return { id: block.id || block.title || String(start), title: block.title || '', start, end };
+        })
+        .filter((b): b is ParsedBlock => b !== null);
+
+    return [...toBlocks(map[day]), ...toBlocks(calendar[calendarDay])];
   } catch {
     return [];
   }
@@ -117,7 +127,7 @@ export function useNotificationScheduler() {
       const now = new Date();
       const key = todayKey(now);
       const weekday = weekdayIndex(now);
-      const log = readLog().filter(k => !k.startsWith(key + ':'));
+      const log = readLog().filter(k => k.startsWith(key + ':'));
       const fired = (k: string) => log.includes(k);
       const mark = (k: string) => {
         log.push(k);
@@ -139,6 +149,7 @@ export function useNotificationScheduler() {
 
       if (settings.reminders.schedule) {
         blocks.forEach(block => {
+          if (isBlockFocusActive(block.id) || isBlockFocusCompleted(block.id)) return;
           const startTs = tsAt(block.start, now);
           const endTs = tsAt(block.end, now);
           const diffStart = (startTs - nowMs) / 1000;

@@ -13,7 +13,7 @@ import { DesktopAppearance } from './sections/DesktopAppearance';
 import { DesktopAbout } from './sections/DesktopAbout';
 import { achievementGroupsData } from '../data/achievements';
 import type { Task } from '../hooks/useTasks';
-import type { ScheduleTask } from '../hooks/scheduleData';
+import type { AddTasksFromSchedule } from '../hooks/scheduleData';
 
 interface DesktopUser {
   name: string;
@@ -30,7 +30,7 @@ interface DesktopAppProps {
   onLogout: () => void;
   tasks: Task[];
   onUpdateTasks: (tasks: Task[]) => void;
-  onAddTasks: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks: AddTasksFromSchedule;
 }
 
 export function DesktopApp({ userData, onLogout, tasks, onUpdateTasks, onAddTasks }: DesktopAppProps) {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import type { BlockType } from '../../../shared/ai';
 
 export interface Task {
   id: string;
@@ -9,6 +10,8 @@ export interface Task {
   source?: string;
   scheduleName?: string;
   scheduleTaskId?: string;
+  scheduleBlockId?: string;
+  blockType?: BlockType;
   weekday?: number;
   dateKey?: string;
   recurrence?: 'daily';

@@ -9,6 +9,7 @@ import {
   days,
   dayShorts,
   colorMap,
+  type AddTasksFromSchedule,
   type ScheduleBlock,
   type ScheduleFormData,
   type ScheduleTask,
@@ -27,7 +28,7 @@ import { tutorialSteps } from '../../tutorial/tutorialSteps';
 import { DesktopPageHeader, DesktopCard, DesktopEmpty } from '../DesktopUI';
 
 interface DesktopTimetableProps {
-  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks?: AddTasksFromSchedule;
 }
 
 export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
@@ -129,7 +130,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
     else addScheduleBlock(editDay, block);
 
     if (data.tasks.length > 0 && onAddTasks) {
-      onAddTasks(data.tasks, data.name, editDay);
+      onAddTasks(data.tasks, data.name, editDay, undefined, block.id);
     }
   };
 

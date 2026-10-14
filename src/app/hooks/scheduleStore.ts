@@ -54,6 +54,10 @@ export function useScheduleData(): ScheduleMap {
   return useSyncExternalStore(subscribe, getSnapshot);
 }
 
+export function getScheduleSnapshot(): ScheduleMap {
+  return scheduleState;
+}
+
 export function addScheduleBlock(day: string, block: ScheduleBlock) {
   scheduleState = { ...scheduleState, [day]: [...(scheduleState[day] || []), block] };
   emit();

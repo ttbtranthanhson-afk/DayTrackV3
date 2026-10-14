@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { days, blockColors, type ScheduleBlock, type ScheduleFormData, type ScheduleTask } from './scheduleData';
+import { days, blockColors, type AddTasksFromSchedule, type ScheduleBlock, type ScheduleFormData, type ScheduleTask } from './scheduleData';
 import { useScheduleData, addScheduleBlock, deleteScheduleBlock, updateScheduleBlock } from './scheduleStore';
 import { useCalendarData, isAiPlannedDay, dateKey } from './calendarStore';
 import { useTutorial } from '../tutorial/tutorialStore';
@@ -8,7 +8,7 @@ import { tutorialSteps } from '../tutorial/tutorialSteps';
 export * from './scheduleData';
 
 interface UseTimetableProps {
-  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks?: AddTasksFromSchedule;
 }
 
 export function useTimetable({ onAddTasks }: UseTimetableProps = {}) {
@@ -105,7 +105,7 @@ export function useTimetable({ onAddTasks }: UseTimetableProps = {}) {
     setRecentlyChanged(prev => (prev.includes(data.name) ? prev : [...prev, data.name]));
 
     if (data.tasks.length > 0 && onAddTasks) {
-      onAddTasks(data.tasks, data.name, currentDay);
+      onAddTasks(data.tasks, data.name, currentDay, undefined, block.id);
     }
   };
 

@@ -14,6 +14,7 @@ import {
 import { setTutorialActive } from './tutorialMode';
 import { seedTutorialData, restoreTutorialData } from './tutorialData';
 import { getAccountItem, setAccountItem } from '../hooks/accountStorage';
+import { useIsDesktop } from '../desktop/useIsDesktop';
 
 const SEEN_KEY = 'daytrack_tutorial_seen';
 
@@ -34,6 +35,7 @@ function applyPrefill(prefill: TutorialPrefill): boolean {
 export function TutorialLayer({ enabled }: { enabled: boolean }) {
   const { status, stepIndex } = useTutorial();
   const navigate = useNavigate();
+  const isDesktop = useIsDesktop();
   const step: TutorialStep | undefined = tutorialSteps[stepIndex];
 
   const [rect, setRect] = useState<DOMRect | null>(null);
@@ -220,7 +222,21 @@ export function TutorialLayer({ enabled }: { enabled: boolean }) {
   let primaryLabel: string | null;
   let onPrimary: () => void;
 
-  if (step.requires) {
+  const isMobile = !isDesktop;
+
+  if (isMobile && step.mobileContinue) {
+    // On phones the action button can be pushed off-screen and the dimmed
+    // backdrop blocks scrolling to it. Let the user tap "Tiếp tục" instead,
+    // which performs the action on their behalf.
+    primaryLabel = isLast ? 'Hoàn tất' : 'Tiếp tục';
+    onPrimary = () => {
+      const el = step.target
+        ? (document.querySelector(`[data-tour="${step.target}"]`) as HTMLElement | null)
+        : null;
+      el?.click();
+      advance();
+    };
+  } else if (step.requires) {
     if (found) {
       primaryLabel = null;
       onPrimary = advance;

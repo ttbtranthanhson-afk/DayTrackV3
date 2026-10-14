@@ -15,6 +15,7 @@ export interface TutorialStep {
   timeout?: number;
   placement?: 'top' | 'bottom' | 'center';
   bare?: boolean;
+  mobileContinue?: boolean;
   openEvent?: string;
   prefill?: TutorialPrefill;
   view?: 'week' | 'today';
@@ -115,6 +116,7 @@ export const tutorialSteps: TutorialStep[] = [
     id: 'tt-submit',
     target: 'schedule-submit',
     requires: 'click',
+    mobileContinue: true,
     title: 'Lưu khối lịch',
     body: 'Bấm "Tạo" để lưu khối lịch trình vừa nhập.',
   },
@@ -282,7 +284,7 @@ export const tutorialSteps: TutorialStep[] = [
     id: 'focus-tabs',
     target: 'focus-tabs',
     title: 'Hai tab của Tập trung',
-    body: 'Chuyển giữa tab "Hướng dẫn" và "Nhạc nền" tại đây.',
+    body: 'Chuyển giữa tab "Lịch sắp tới" và "Nhạc nền" tại đây.',
   },
   {
     id: 'focus-music-tab',

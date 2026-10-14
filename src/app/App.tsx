@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import { useNotificationScheduler } from './hooks/useNotificationScheduler';
 import { useAppTheme } from './hooks/useAppTheme';
 import { BottomNav } from './components/BottomNav';
+import { FocusBubble } from './components/FocusBubble';
 import { useIsDesktop } from './desktop/useIsDesktop';
 import { DesktopApp } from './desktop/DesktopApp';
 import { DesktopLogin } from './desktop/DesktopLogin';
@@ -23,6 +24,8 @@ import { syncAchievementsWithTasks } from './hooks/achievementStore';
 import { pruneCalendarData } from './hooks/calendarStore';
 import { pruneBusyData } from './hooks/busyStore';
 import { days, type ScheduleTask } from './hooks/scheduleData';
+import { recordVisit, syncAchievementStats } from './hooks/achievementStats';
+import type { BlockType } from '../../shared/ai';
 import { TutorialLayer } from './tutorial/TutorialLayer';
 import {
   activateAccount,
@@ -54,6 +57,8 @@ export interface Task {
   source?: string;
   scheduleName?: string;
   scheduleTaskId?: string;
+  scheduleBlockId?: string;
+  blockType?: BlockType;
   weekday?: number;
   dateKey?: string;
   recurrence?: 'daily';
@@ -87,6 +92,10 @@ function AppContent() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) recordVisit();
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const handler = () => {
@@ -128,7 +137,14 @@ function AppContent() {
     setGlobalTasks([]);
   };
 
-  const handleAddTasksFromSchedule = (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => {
+  const handleAddTasksFromSchedule = (
+    tasks: ScheduleTask[],
+    scheduleName: string,
+    day: string,
+    dateKey?: string,
+    scheduleBlockId?: string,
+    blockType?: BlockType,
+  ) => {
     const weekday = days.indexOf(day);
     const next = [...globalTasks];
 
@@ -146,6 +162,8 @@ function AppContent() {
           source: 'schedule',
           scheduleName: scheduleName,
           scheduleTaskId: task.id,
+          scheduleBlockId: scheduleBlockId,
+          blockType: blockType,
           ...(dateKey ? { dateKey } : weekday >= 0 ? { weekday } : {}),
         });
       }
@@ -157,6 +175,7 @@ function AppContent() {
 
   const handleUpdateTasks = (tasks: Task[]) => {
     syncAchievementsWithTasks(globalTasks, tasks);
+    syncAchievementStats(globalTasks, tasks);
     setGlobalTasks(tasks);
     setAccountItem(TASKS_KEY, JSON.stringify(tasks));
   };
@@ -179,6 +198,7 @@ function AppContent() {
           onUpdateTasks={handleUpdateTasks}
           onAddTasks={handleAddTasksFromSchedule}
         />
+        <FocusBubble />
         <TutorialLayer enabled={isLoggedIn} />
         <Toaster position="top-center" richColors />
       </div>
@@ -201,6 +221,7 @@ function AppContent() {
         <Route path="/about" element={<About />} />
       </Routes>
       {showBottomNav && <BottomNav />}
+      <FocusBubble />
       <TutorialLayer enabled={isLoggedIn} />
       <Toaster position="top-center" richColors />
     </div>

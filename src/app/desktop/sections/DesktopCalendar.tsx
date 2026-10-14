@@ -6,11 +6,11 @@ import { BusyHoursModal } from '../../components/BusyHoursModal';
 import { AiPlannerModal } from '../../components/AiPlannerModal';
 import { useCalendar, weekDays, getHoliday, monthNames } from '../../hooks/useCalendar';
 import { useAiPlanner } from '../../hooks/useAiPlanner';
-import type { ScheduleTask } from '../../hooks/scheduleData';
+import type { AddTasksFromSchedule } from '../../hooks/scheduleData';
 import { DesktopPageHeader } from '../DesktopUI';
 
 interface DesktopCalendarProps {
-  onAddTasks?: (tasks: ScheduleTask[], scheduleName: string, day: string, dateKey?: string) => void;
+  onAddTasks?: AddTasksFromSchedule;
 }
 
 export function DesktopCalendar({ onAddTasks }: DesktopCalendarProps) {

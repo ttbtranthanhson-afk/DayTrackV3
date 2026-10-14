@@ -10,8 +10,10 @@ export const ACCOUNT_DATA_KEYS = [
   'daytrack_calendar_ai_days',
   'daytrack_busy_hours',
   'daytrack_achievements',
+  'daytrack_achievement_stats',
   'daytrack_notification_settings',
   'daytrack_notification_log',
+  'daytrack_focus_blocks',
   'daytrack_custom_music',
 ];
 
@@ -124,4 +126,96 @@ export function onAccountChange(fn: () => void): () => void {
 // e.g. seeding/restoring tutorial sample data).
 export function refreshStores(): void {
   notifyReloaders();
+}
+
+// ── account registry (email + password) ──
+
+const ACCOUNTS_KEY = 'daytrack_accounts';
+
+interface AccountRecord {
+  email: string;
+  name: string;
+  password: string;
+  createdAt: number;
+}
+
+function hashPassword(password: string): string {
+  const salted = `daytrack::${password}::v1`;
+  let h1 = 0x811c9dc5;
+  let h2 = 0x1000193;
+  for (let i = 0; i < salted.length; i += 1) {
+    const code = salted.charCodeAt(i);
+    h1 = Math.imul(h1 ^ code, 0x01000193);
+    h2 = Math.imul(h2 + code, 0x85ebca6b) ^ (h2 >>> 13);
+  }
+  return `${(h1 >>> 0).toString(16).padStart(8, '0')}${(h2 >>> 0).toString(16).padStart(8, '0')}`;
+}
+
+function readAccounts(): Record<string, AccountRecord> {
+  try {
+    const raw = localStorage.getItem(ACCOUNTS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? (parsed as Record<string, AccountRecord>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeAccounts(accounts: Record<string, AccountRecord>) {
+  try {
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  } catch {
+    // ignore storage failures
+  }
+}
+
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+}
+
+export interface PasswordChecks {
+  length: boolean;
+  upper: boolean;
+  number: boolean;
+  special: boolean;
+}
+
+export function getPasswordChecks(password: string): PasswordChecks {
+  return {
+    length: password.length >= 8,
+    upper: /[A-Z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[^A-Za-z0-9]/.test(password),
+  };
+}
+
+export function isPasswordStrong(password: string): boolean {
+  const checks = getPasswordChecks(password);
+  return checks.length && checks.upper && checks.number && checks.special;
+}
+
+export function accountExists(email: string): boolean {
+  return normalizeAccount(email) in readAccounts();
+}
+
+export function registerAccount(email: string, name: string, password: string): boolean {
+  const id = normalizeAccount(email);
+  const accounts = readAccounts();
+  if (accounts[id]) return false;
+  accounts[id] = { email: id, name: name.trim(), password: hashPassword(password), createdAt: Date.now() };
+  writeAccounts(accounts);
+  return true;
+}
+
+export type LoginResult = 'ok' | 'not_found' | 'bad_password';
+
+export function verifyAccount(email: string, password: string): LoginResult {
+  const account = readAccounts()[normalizeAccount(email)];
+  if (!account) return 'not_found';
+  return account.password === hashPassword(password) ? 'ok' : 'bad_password';
+}
+
+export function getAccountName(email: string): string | undefined {
+  return readAccounts()[normalizeAccount(email)]?.name;
 }

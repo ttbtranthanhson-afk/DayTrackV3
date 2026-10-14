@@ -108,6 +108,7 @@ function toScheduleBlocks(option: PlanOption, original: ScheduleBlock[]): Schedu
       title: block.title,
       time: `${block.start} - ${block.end}`,
       color: blockColors[index % blockColors.length],
+      type: block.type,
       tasks,
       analysis: hasAdvice(block.analysis) ? block.analysis : undefined,
     };
