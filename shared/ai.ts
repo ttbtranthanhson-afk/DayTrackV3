@@ -241,6 +241,7 @@ function buildDailyPrompt(input: DailyInsightInput): BuiltPrompt {
       '{"summary":"1-2 câu tổng quan về ngày","items":[{"time":"07:00 - 11:30","title":"Đi học","detail":"một câu cần làm gì trong khối","method":"tên phương pháp (chỉ cho khối học/làm việc)","steps":["bước 1","bước 2","bước 3"]}]}',
       'Quy tắc:',
       '- "items" phải có ĐÚNG một mục cho MỖI khối trong lịch trình, giữ nguyên "title" và "time".',
+      '- "time" PHẢI là đúng chuỗi giờ của khối đó trong danh sách "Lịch trình hôm nay" phía trên, giữ nguyên từng ký tự (kể cả dạng qua đêm "22:30 - 06:00"). Cấm tính lại, đoán lại hoặc sắp xếp lại giờ.',
       '- Khối học/làm việc: điền "method" là TÊN phương pháp và "steps" là 3-5 bước thực hiện cụ thể (lấy từ phương pháp Mxx trong bộ quy tắc, điều chỉnh theo môn).',
       '- Khối ăn uống/thể dục/nghỉ: "detail" nêu thực đơn/bài tập/cách nghỉ ngắn gọn; có thể bỏ "method"/"steps".',
       '- Nội dung tiếng Việt, cụ thể, không markdown.',
@@ -467,12 +468,18 @@ function normalizeAnalysis(value: unknown): PlanAnalysis {
   };
 }
 
+function timeToMinutes(time: string): number {
+  const m = /^(\d{1,2}):(\d{2})/.exec(time);
+  return m ? +m[1] * 60 + +m[2] : 24 * 60;
+}
+
+function minutesApart(a: string, b: string): number {
+  const d = Math.abs(timeToMinutes(a) - timeToMinutes(b));
+  return Math.min(d, 24 * 60 - d);
+}
+
 export function normalizeDailyInsight(value: unknown): DailyInsight {
   const raw = (value ?? {}) as { summary?: unknown; items?: unknown };
-  const startOf = (time: string): number => {
-    const m = /^(\d{1,2}):(\d{2})/.exec(time);
-    return m ? +m[1] * 60 + +m[2] : 24 * 60;
-  };
   const items = Array.isArray(raw.items)
     ? raw.items
         .slice(0, 20)
@@ -487,9 +494,37 @@ export function normalizeDailyInsight(value: unknown): DailyInsight {
           };
         })
         .filter(it => it.title || it.detail)
-        .sort((a, b) => startOf(a.time) - startOf(b.time))
+        .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
     : [];
   return { summary: asString(raw.summary).trim(), items };
+}
+
+export function reconcileDailyInsight(insight: DailyInsight, schedule: ScheduleItem[]): DailyInsight {
+  if (!schedule.length || !insight.items.length) return insight;
+  const used = new Set<number>();
+  const picked: (DailyInsightItem | undefined)[] = schedule.map(block => {
+    const idx = insight.items.findIndex((it, i) => !used.has(i) && it.title.trim() === block.title.trim());
+    if (idx < 0) return undefined;
+    used.add(idx);
+    return insight.items[idx];
+  });
+  for (let pos = 0; pos < schedule.length; pos++) {
+    if (picked[pos]) continue;
+    const idx = insight.items.findIndex(
+      (_, i) => !used.has(i) && minutesApart(insight.items[i].time, schedule[pos].time) <= 90
+    );
+    if (idx < 0) continue;
+    used.add(idx);
+    picked[pos] = insight.items[idx];
+  }
+  const items: DailyInsightItem[] = [];
+  for (let pos = 0; pos < schedule.length; pos++) {
+    const it = picked[pos];
+    if (!it) continue;
+    items.push({ ...it, title: schedule[pos].title, time: schedule[pos].time });
+  }
+  items.sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+  return { summary: insight.summary, items };
 }
 
 export function normalizeSuggestion(value: unknown): AiSuggestion {

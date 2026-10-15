@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { dailyInsight } from '../services/gemini';
-import type { DailyInsight } from '../../../shared/ai';
+import { reconcileDailyInsight, type DailyInsight } from '../../../shared/ai';
 import { readUserProfile } from './userProfile';
 import type { ScheduleBlock } from './scheduleData';
 
@@ -26,16 +26,17 @@ export function useDailyInsight(day: string, schedule: ScheduleBlock[], enabled:
     }
 
     let cancelled = false;
+    const slots = schedule.map(s => ({ title: s.title, time: s.time }));
     setLoading(true);
     setError(null);
 
     dailyInsight({
       day,
-      schedule: schedule.map(s => ({ title: s.title, time: s.time })),
+      schedule: slots,
       profile: readUserProfile(),
     })
       .then(result => {
-        if (!cancelled) setInsight(result);
+        if (!cancelled) setInsight(reconcileDailyInsight(result, slots));
       })
       .catch(err => {
         if (!cancelled) setError(err instanceof Error ? err.message : 'Không thể tải gợi ý AI.');
