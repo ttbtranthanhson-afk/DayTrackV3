@@ -12,6 +12,7 @@ import {
   useTutorial,
 } from './tutorialStore';
 import { setTutorialActive } from './tutorialMode';
+import { scrollTourTargetIntoView } from './scrollTourTargetIntoView';
 import { seedTutorialData, restoreTutorialData } from './tutorialData';
 import { getAccountItem, setAccountItem } from '../hooks/accountStorage';
 import { useIsDesktop } from '../desktop/useIsDesktop';
@@ -45,6 +46,8 @@ export function TutorialLayer({ enabled }: { enabled: boolean }) {
   const seededRef = useRef(false);
   const advancedRef = useRef(false);
   const prefilledRef = useRef<string | null>(null);
+  const scrollAttemptsRef = useRef(0);
+  const lastScrollAtRef = useRef(0);
 
   // Ask about the tour on first login.
   useEffect(() => {
@@ -97,8 +100,23 @@ export function TutorialLayer({ enabled }: { enabled: boolean }) {
     if (status !== 'running') return;
     advancedRef.current = false;
     prefilledRef.current = null;
+    scrollAttemptsRef.current = 0;
     const selector = step?.target ? `[data-tour="${step.target}"]` : null;
     const waitSelector = step?.waitFor ? `[data-tour="${step.waitFor}"]` : null;
+
+    // Targets can sit below the fold on short phone screens (the dimmed
+    // backdrop blocks manual scrolling), so pull them into view ourselves —
+    // scrolling the container that actually holds them (e.g. a modal card).
+    // No-op when the target is already visible, so the tour stays calm.
+    const bringIntoView = (target: HTMLElement) => {
+      if (step?.placement === 'center') return;
+      if (scrollAttemptsRef.current >= 2) return;
+      if (Date.now() - lastScrollAtRef.current < 700) return;
+      if (scrollTourTargetIntoView(target)) {
+        scrollAttemptsRef.current += 1;
+        lastScrollAtRef.current = Date.now();
+      }
+    };
 
     const measure = () => {
       if (waitSelector && document.querySelector(waitSelector)) {
@@ -107,6 +125,7 @@ export function TutorialLayer({ enabled }: { enabled: boolean }) {
       }
       const el = selector ? (document.querySelector(selector) as HTMLElement | null) : null;
       if (el) {
+        bringIntoView(el);
         setRect(el.getBoundingClientRect());
         setFound(true);
         if (step?.prefill && prefilledRef.current !== step.id) {

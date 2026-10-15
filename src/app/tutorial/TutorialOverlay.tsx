@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { GraduationCap, ArrowRight, X } from 'lucide-react';
 import type { TutorialStep } from './tutorialSteps';
 
@@ -29,12 +29,23 @@ export function TutorialOverlay({
   hidePanel = false,
 }: TutorialOverlayProps) {
   const [viewport, setViewport] = useState({ w: window.innerWidth, h: window.innerHeight });
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [panelH, setPanelH] = useState(0);
 
   useEffect(() => {
     const onResize = () => setViewport({ w: window.innerWidth, h: window.innerHeight });
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  // Measure the real panel height before paint: bodies vary a lot (e.g. the
+  // Focus tab step) and the placement math must not assume a fixed size.
+  useLayoutEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    const h = el.offsetHeight;
+    setPanelH(prev => (prev === h ? prev : h));
+  });
 
   const { w, h } = viewport;
   const centered = !rect || step.placement === 'center';
@@ -45,10 +56,20 @@ export function TutorialOverlay({
   } else {
     const panelW = Math.min(PANEL_W, w - 24);
     const left = Math.max(12, Math.min(rect!.left + rect!.width / 2 - panelW / 2, w - panelW - 12));
-    const below = rect!.top + rect!.height / 2 < h / 2;
-    panelStyle = below
-      ? { left, top: Math.min(rect!.bottom + PAD + 8, h - 200) }
-      : { left, bottom: Math.max(h - rect!.top + PAD + 8, 200) };
+    const gap = PAD + 8;
+    const est = panelH || 200;
+    const spaceBelow = h - rect!.bottom - gap;
+    const spaceAbove = rect!.top - gap;
+    let top: number;
+    if (spaceBelow >= est) top = rect!.bottom + gap;
+    else if (spaceAbove >= est) top = rect!.top - gap - est;
+    else {
+      // No side fits the full panel on a short screen: pick the roomier side
+      // but keep the panel entirely on-screen.
+      const guess = spaceBelow >= spaceAbove ? rect!.bottom + gap : rect!.top - gap - est;
+      top = Math.max(8, Math.min(guess, h - est - 8));
+    }
+    panelStyle = { left, top };
   }
 
   const holeStyle: React.CSSProperties | null = rect
@@ -89,7 +110,7 @@ export function TutorialOverlay({
 
       {/* Guide panel */}
       {!hidePanel && (
-      <div className="fixed w-[360px] max-w-[calc(100vw-24px)] z-[310] pointer-events-auto" style={panelStyle}>
+      <div data-tour-panel ref={panelRef} className="fixed w-[360px] max-w-[calc(100vw-24px)] z-[310] pointer-events-auto" style={panelStyle}>
         <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
           <div className="flex items-center gap-3 px-5 pt-5 pb-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
