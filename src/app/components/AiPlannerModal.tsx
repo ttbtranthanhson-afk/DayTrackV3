@@ -652,7 +652,7 @@ function BlockAnalysisPanel({
         {/* Method */}
         {block.analysis.method && (
           <div className="bg-blue-50 border border-blue-100 rounded-2xl p-3.5">
-            <p className="text-xs font-bold text-blue-700 mb-1">Phương pháp học</p>
+            <p className="text-xs font-bold text-blue-700 mb-1">Phương pháp thực hiện</p>
             <p className="text-xs text-blue-600 leading-relaxed">{block.analysis.method}</p>
             {(block.analysis.methodSteps ?? []).length > 0 && (
               <ol className="mt-2 space-y-1.5">

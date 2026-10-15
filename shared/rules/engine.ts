@@ -129,6 +129,7 @@ function toRaw(item: { title: string; time: string; tasks?: string[] }): Raw {
   const low = title.toLowerCase();
   const sleep = cls.kind === 'rest' && /ngủ/.test(low);
   const commute = /đi học|đi làm|đến (trường|công ty|chỗ)|di chuyển|commute/.test(low);
+  const rhythm = /thức dậy|dậy sớm|thức giấc|nghỉ trưa|ngủ trưa/.test(low);
 
   let type: BlockType;
   if (cls.kind === 'eating') type = 'eating';
@@ -146,7 +147,7 @@ function toRaw(item: { title: string; time: string; tasks?: string[] }): Raw {
     cls,
     sleep,
     commute,
-    fixed: sleep || commute || type === 'eating' || cls.kind === 'rest',
+    fixed: sleep || commute || type === 'eating' || cls.kind === 'rest' || rhythm,
     mealTime: cls.kind === 'eating' ? mealTimeOf(title) : undefined,
   };
 }
@@ -174,6 +175,21 @@ function analysisFor(raw: Raw, p: ProfileResolution, goalKey: string, advice: st
   if (raw.commute) {
     base.why = 'Giữ nguyên thời gian cố định theo lịch học / đi làm.';
     base.healthTips = advice.slice(0, 1);
+    return base;
+  }
+
+  const lowTitle = raw.title.toLowerCase();
+  if (/thức dậy|dậy sớm|thức giấc/.test(lowTitle)) {
+    base.suggestions = ['Uống 1 cốc nước, mở rèm đón ánh sáng, vươn vai 2-3 phút.'];
+    base.why = 'Đón ánh sáng sớm giúp ổn định nhịp sinh học và tỉnh táo cả ngày.';
+    base.healthTips = advice.slice(0, 2);
+    return base;
+  }
+
+  if (raw.kind === 'rest' && !raw.sleep && /trưa/.test(lowTitle)) {
+    base.suggestions = ['Ngủ trưa 15-20 phút, đặt báo thức để không ngủ quá 30 phút.'];
+    base.why = 'Ngủ trưa ngắn giúp hồi phục năng lượng mà không bị uể oải buổi chiều.';
+    base.healthTips = advice.slice(0, 2);
     return base;
   }
 
@@ -246,9 +262,77 @@ const VARIANTS: Variant[] = [
   },
 ];
 
+function syntheticRaw(
+  title: string,
+  type: BlockType,
+  kind: BlockClassification['kind'],
+  start: number,
+  end: number,
+  opts: { sleep?: boolean; mealTime?: Raw['mealTime'] } = {}
+): Raw {
+  return {
+    title,
+    type,
+    kind,
+    start,
+    end,
+    tasks: [],
+    cls: { title, time: '', kind, methodCodes: [] },
+    sleep: opts.sleep ?? false,
+    commute: false,
+    fixed: true,
+    mealTime: opts.mealTime,
+  };
+}
+
+const RHYTHM_MEALS: { time: 'sang' | 'trua' | 'toi'; title: string; test: RegExp }[] = [
+  { time: 'sang', title: 'Ăn sáng', test: /ăn sáng|bữa sáng/ },
+  { time: 'trua', title: 'Ăn trưa', test: /ăn trưa|bữa trưa/ },
+  { time: 'toi', title: 'Ăn tối', test: /ăn tối|bữa tối/ },
+];
+
+function ensureRhythm(raws: Raw[], p: ProfileResolution): Raw[] {
+  const row = p.row as Record<string, unknown>;
+  const items = raws.slice();
+  const titleHas = (re: RegExp): boolean => items.some(r => re.test(r.title.toLowerCase()));
+  const meals = (row.meals ?? {}) as Record<string, string>;
+  const blocks = (row.blocks ?? {}) as Record<string, string>;
+  const wake = toMin(String(row.wake ?? ''));
+  const sleep = toMin(String(row.sleep ?? ''));
+
+  for (const meal of RHYTHM_MEALS) {
+    const win = rangeOf(meals[meal.time]);
+    const exists = items.some(r => r.type === 'eating' && r.mealTime === meal.time) || titleHas(meal.test);
+    if (win && !exists) {
+      items.push(syntheticRaw(meal.title, 'eating', 'eating', win.start, win.end, { mealTime: meal.time }));
+    }
+  }
+
+  if (wake != null && !titleHas(/thức dậy|dậy sớm|thức giấc/)) {
+    const breakfast = rangeOf(meals.sang);
+    let end = wake + 30;
+    if (breakfast && breakfast.start > wake) end = Math.min(end, breakfast.start);
+    items.push(syntheticRaw('Thức dậy', 'other', 'other', wake, Math.max(wake + 15, end)));
+  }
+
+  const napWin = rangeOf(blocks.TR);
+  const hasNap =
+    titleHas(/nghỉ trưa|ngủ trưa/) ||
+    items.some(r => r.kind === 'rest' && !r.sleep && r.start >= 11 * 60 + 30 && r.start <= 15 * 60);
+  if (napWin && !hasNap) {
+    items.push(syntheticRaw('Nghỉ trưa', 'other', 'rest', napWin.start, napWin.start + 20));
+  }
+
+  if (sleep != null && wake != null && !items.some(r => r.sleep)) {
+    items.push(syntheticRaw('Ngủ', 'other', 'rest', sleep, wake, { sleep: true }));
+  }
+
+  return items;
+}
+
 function layout(raws: Raw[], p: ProfileResolution, variant: Variant, busy: Range[]): Raw[] {
   const row = p.row as Record<string, unknown>;
-  const items: Raw[] = raws.map(r => ({ ...r }));
+  const items: Raw[] = ensureRhythm(raws, p).map(r => ({ ...r }));
 
   if (!items.some(r => r.type === 'exercise')) {
     const win = blockWindowFrom(row, variant.exerciseKey);
