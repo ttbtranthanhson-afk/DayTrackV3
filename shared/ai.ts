@@ -58,6 +58,12 @@ export interface PlanInput {
   day: string;
   schedule: ScheduleItem[];
   busy: string[];
+  profile?: {
+    job?: string;
+    health?: string;
+    mental?: string;
+  };
+  ruleContext?: string;
 }
 
 export interface BlockAnalysisInput {
@@ -209,6 +215,16 @@ function buildPlanPrompt(input: PlanInput): BuiltPrompt {
       'Khối lịch hiện có:',
       scheduleLines(input.schedule),
       `Khung giờ bận (không được xếp vào): ${busyText}`,
+      ...(input.ruleContext
+        ? [
+            '',
+            '===== BỘ QUY TẮC DAYTRACK (BẮT BUỘC TUÂN THỦ) =====',
+            input.ruleContext,
+            '===== HẾT BỘ QUY TẮC =====',
+            'Áp dụng nghiêm các quy tắc trên: giới hạn phiên, khối giờ, giờ nên tránh, mục tiêu ăn/tập, phương pháp.',
+            'Nội dung "suggestions" của bữa ăn/bài tập PHẢI lấy từ danh sách gợi ý trong bộ quy tắc (kèm khối lượng/liều tập).',
+          ]
+        : []),
       '',
       'Trả về DUY NHẤT JSON theo cấu trúc:',
       '{"options":[{"id":"opt-1","name":"tên phương án ngắn","description":"mô tả ngắn","blocks":[{"title":"...","type":"study","start":"08:00","end":"09:30","tasks":[],"analysis":{"need":"muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["Ức gà 150g","Gạo lứt 100g"],"method":"phương pháp học","healthTips":["ngồi thẳng lưng"],"why":"vì sao xếp như vậy"}}]}]}',
@@ -312,12 +328,48 @@ export function buildPrompt(action: AiAction, input: unknown): BuiltPrompt {
 }
 
 function asString(value: unknown, fallback = ''): string {
-  return typeof value === 'string' ? value : fallback;
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) {
+    return value.filter((v): v is string => typeof v === 'string').join('; ');
+  }
+  if (typeof value === 'number' && Number.isFinite(value)) return String(value);
+  return fallback;
 }
 
 function asStringArray(value: unknown, max = 8): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((v): v is string => typeof v === 'string').slice(0, max);
+}
+
+function splitInline(text: string): string[] {
+  return text
+    .split(/[\n\r•·|;]+/)
+    .map(part => part.replace(/^[-*\s]+/, '').trim())
+    .filter(Boolean);
+}
+
+function toList(value: unknown, max = 8): string[] {
+  const rawItems = Array.isArray(value)
+    ? value.filter((v): v is string => typeof v === 'string')
+    : typeof value === 'string'
+      ? [value]
+      : [];
+
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const item of rawItems) {
+    const parts = /[\n\r•·|;]/.test(item) ? splitInline(item) : [item.trim()];
+    for (const part of parts) {
+      const clean = part.replace(/\s+/g, ' ').trim();
+      if (!clean) continue;
+      const key = clean.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(clean);
+      if (out.length >= max) return out;
+    }
+  }
+  return out;
 }
 
 function normalizeType(value: unknown): BlockType {
@@ -330,13 +382,13 @@ function normalizeNeed(value: unknown): Need | undefined {
 
 function normalizeAnalysis(value: unknown): PlanAnalysis {
   const raw = (value ?? {}) as Partial<PlanAnalysis>;
-  const timeOptions = asStringArray(raw.timeOptions, 4);
+  const timeOptions = toList(raw.timeOptions, 4);
   return {
     need: normalizeNeed(raw.need),
     timeOptions: timeOptions.length ? timeOptions : DEFAULT_TIME_OPTIONS,
-    suggestions: asStringArray(raw.suggestions, 10),
+    suggestions: toList(raw.suggestions, 10),
     method: asString(raw.method) || undefined,
-    healthTips: asStringArray(raw.healthTips, 6),
+    healthTips: toList(raw.healthTips, 6),
     why: asString(raw.why),
   };
 }

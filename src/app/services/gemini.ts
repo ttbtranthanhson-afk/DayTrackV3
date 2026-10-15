@@ -95,6 +95,15 @@ async function callProxy(action: AiAction, input: unknown): Promise<string> {
 
 async function run(action: AiAction, input: unknown): Promise<string> {
   const keys = clientKeys();
+  if (action === 'plan') {
+    // The plan must run server-side so the DayTrack ruleset is injected.
+    try {
+      return await callProxy(action, input);
+    } catch (err) {
+      if (keys.length) return callGoogle(buildPrompt(action, input), keys);
+      throw err;
+    }
+  }
   if (keys.length) return callGoogle(buildPrompt(action, input), keys);
   return callProxy(action, input);
 }

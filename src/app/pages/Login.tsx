@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Lock, User, Briefcase, Calendar, Target, ArrowRight, Eye, EyeOff, HeartPulse, CheckCircle2, Circle } from 'lucide-react';
+import { Mail, Lock, User, Briefcase, Calendar, Target, ArrowRight, Eye, EyeOff, HeartPulse, Brain, CheckCircle2, Circle } from 'lucide-react';
 import { Logo } from '../components/Logo';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -20,6 +20,7 @@ interface UserData {
   habits?: string;
   goals?: string;
   health?: string;
+  mental?: string;
 }
 
 interface LoginProps {
@@ -92,6 +93,7 @@ export function Login({ onLogin }: LoginProps) {
   const [habits, setHabits] = useState('');
   const [goals, setGoals] = useState('');
   const [health, setHealth] = useState('');
+  const [mental, setMental] = useState('');
   const [error, setError] = useState('');
 
   const passwordChecks = getPasswordChecks(signupPassword);
@@ -141,7 +143,7 @@ export function Login({ onLogin }: LoginProps) {
       return;
     }
     registerAccount(email, signupName.trim(), signupPassword);
-    onLogin({ name: signupName.trim(), email, age, job, habits, goals, health });
+    onLogin({ name: signupName.trim(), email, age, job, habits, goals, health, mental });
   };
 
   return (
@@ -319,6 +321,22 @@ export function Login({ onLogin }: LoginProps) {
                     placeholder="VD: Sức khỏe tốt, thường xuyên thức khuya, hay mệt mỏi..."
                     required
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-red-200 transition-all resize-none"
+                    rows={2}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  Tình trạng tinh thần (nếu có)
+                </label>
+                <div className="relative">
+                  <Brain className="absolute left-4 top-3.5 w-4 h-4 text-gray-400" />
+                  <textarea
+                    value={mental}
+                    onChange={e => setMental(e.target.value)}
+                    placeholder="VD: Tinh thần ổn định, căng thẳng kéo dài, mất ngủ..."
+                    className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none"
                     rows={2}
                   />
                 </div>

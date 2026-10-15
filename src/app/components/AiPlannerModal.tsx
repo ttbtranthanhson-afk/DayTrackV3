@@ -6,7 +6,20 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import type { BlockType, Need, PlanAnalysis, PlanOption, PlannedBlock } from '../../../shared/ai';
 import { analyzeBlock, planSchedule } from '../services/gemini';
+import { getAccountItem } from '../hooks/accountStorage';
 import { blockColors, type ScheduleBlock, type ScheduleTask } from '../hooks/scheduleData';
+
+function readUserProfile(): { job?: string; health?: string; mental?: string } | undefined {
+  try {
+    const raw = getAccountItem('daytrack_user_data');
+    if (!raw) return undefined;
+    const data = JSON.parse(raw) as { job?: string; health?: string; mental?: string };
+    if (!data.job && !data.health && !data.mental) return undefined;
+    return { job: data.job, health: data.health, mental: data.mental };
+  } catch {
+    return undefined;
+  }
+}
 
 interface AiPlannerModalProps {
   isOpen: boolean;
@@ -143,6 +156,7 @@ export function AiPlannerModal({ isOpen, onClose, schedule, day, busy, focusTitl
     planSchedule({
       day,
       busy,
+      profile: readUserProfile(),
       schedule: schedule.map(s => ({ title: s.title, time: s.time, tasks: s.tasks?.map(t => t.title) })),
     })
       .then(result => {

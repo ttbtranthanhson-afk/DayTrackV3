@@ -46,6 +46,7 @@ interface UserData {
   habits?: string;
   goals?: string;
   health?: string;
+  mental?: string;
 }
 
 export interface Task {

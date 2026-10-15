@@ -1,4 +1,4 @@
-import { Mail, Calendar, Briefcase, Heart, Target, Award, HeartPulse } from 'lucide-react';
+import { Mail, Calendar, Briefcase, Heart, Target, Award, HeartPulse, Brain } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { DesktopPageHeader } from '../DesktopUI';
 
@@ -10,6 +10,7 @@ interface UserData {
   habits?: string;
   goals?: string;
   health?: string;
+  mental?: string;
 }
 
 interface DesktopProfileProps {
@@ -29,6 +30,7 @@ export function DesktopProfile({ userData, achievements }: DesktopProfileProps) 
     userData.habits && { icon: Heart, color: 'bg-pink-500', label: 'Thói quen & Sở thích', value: userData.habits },
     userData.goals && { icon: Target, color: 'bg-orange-500', label: 'Mục tiêu với DayTrack', value: userData.goals },
     userData.health && { icon: HeartPulse, color: 'bg-red-500', label: 'Tình trạng sức khỏe', value: userData.health },
+    userData.mental && { icon: Brain, color: 'bg-purple-500', label: 'Tình trạng tinh thần', value: userData.mental },
   ].filter(Boolean) as Array<{ icon: any; color: string; label: string; value: string }>;
 
   return (

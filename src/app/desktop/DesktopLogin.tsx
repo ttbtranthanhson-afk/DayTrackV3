@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Lock, User, Briefcase, Calendar, ArrowRight, Eye, EyeOff, HeartPulse, CheckCircle2, Circle } from 'lucide-react';
+import { Mail, Lock, User, Briefcase, Calendar, ArrowRight, Eye, EyeOff, HeartPulse, Brain, CheckCircle2, Circle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Logo } from '../components/Logo';
 import {
@@ -20,6 +20,7 @@ interface UserData {
   habits?: string;
   goals?: string;
   health?: string;
+  mental?: string;
 }
 
 interface DesktopLoginProps {
@@ -81,6 +82,7 @@ export function DesktopLogin({ onLogin }: DesktopLoginProps) {
   const [habits, setHabits] = useState('');
   const [goals, setGoals] = useState('');
   const [health, setHealth] = useState('');
+  const [mental, setMental] = useState('');
   const [error, setError] = useState('');
 
   const passwordChecks = getPasswordChecks(signupPassword);
@@ -130,7 +132,7 @@ export function DesktopLogin({ onLogin }: DesktopLoginProps) {
       return;
     }
     registerAccount(email, signupName.trim(), signupPassword);
-    onLogin({ name: signupName.trim(), email, age, job, habits, goals, health });
+    onLogin({ name: signupName.trim(), email, age, job, habits, goals, health, mental });
   };
 
   return (
@@ -269,6 +271,12 @@ export function DesktopLogin({ onLogin }: DesktopLoginProps) {
                   <textarea value={health} onChange={e => setHealth(e.target.value)} rows={2} required
                     placeholder="VD: Sức khỏe tốt, thường xuyên thức khuya, hay mệt mỏi..."
                     className="w-full px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-red-200 transition-all resize-none" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tình trạng tinh thần (nếu có)</label>
+                  <textarea value={mental} onChange={e => setMental(e.target.value)} rows={2}
+                    placeholder="VD: Tinh thần ổn định, căng thẳng kéo dài, mất ngủ..."
+                    className="w-full px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 text-sm font-medium text-gray-800 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none" />
                 </div>
                 {error && (
                   <div className="px-4 py-3 rounded-2xl bg-red-50 border border-red-100 text-xs font-semibold text-red-600 leading-relaxed">

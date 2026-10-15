@@ -1,5 +1,8 @@
-import { buildPrompt, isAiAction, type BuiltPrompt } from '../shared/ai';
+import { buildPrompt, isAiAction, normalizePlan, type BuiltPrompt, type PlanInput, type PlanOption } from '../shared/ai';
 import { generateWithFallback, resolveKeys, resolveModels } from '../shared/gemini';
+import { buildRuleContext, type RetrieveInput } from '../shared/rules/retrieve';
+import { buildEngineOptions } from '../shared/rules/engine';
+import { hardGate } from '../shared/rules/validate';
 
 declare const process: { env: Record<string, string | undefined> };
 
@@ -25,6 +28,27 @@ function isRateLimited(ip: string): boolean {
   hits.set(ip, recent);
   if (hits.size > 5000) hits.clear();
   return recent.length > MAX_REQUESTS_PER_WINDOW;
+}
+
+function safeParse(text: string): unknown {
+  const cleaned = text.replace(/^```(?:json)?/i, '').replace(/```$/i, '').trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    return undefined;
+  }
+}
+
+function dedupeOptions(options: PlanOption[]): PlanOption[] {
+  const seen = new Set<string>();
+  const out: PlanOption[] = [];
+  for (const option of options) {
+    const fp = `${option.id}|${option.blocks.map(b => `${b.title}${b.start}${b.end}`).join('|')}`;
+    if (seen.has(fp)) continue;
+    seen.add(fp);
+    out.push(option);
+  }
+  return out;
 }
 
 export default async function handler(req: Request): Promise<Response> {
@@ -72,6 +96,53 @@ export default async function handler(req: Request): Promise<Response> {
 
   if (!isAiAction(body.action)) {
     return json(400, { error: 'Hành động không hợp lệ.' });
+  }
+
+  if (body.action === 'plan' && body.input && typeof body.input === 'object') {
+    const planInput = body.input as PlanInput & RetrieveInput;
+
+    let engineOptions: PlanOption[] = [];
+    try {
+      engineOptions = buildEngineOptions(planInput);
+    } catch {
+      // deterministic engine is best-effort; the LLM path can still succeed
+    }
+
+    try {
+      planInput.ruleContext = buildRuleContext(planInput);
+    } catch {
+      // retrieval is best-effort; the prompt still works without it
+    }
+
+    let llmOptions: PlanOption[] = [];
+    try {
+      const built = buildPrompt('plan', planInput);
+      const outcome = await generateWithFallback({
+        keys,
+        models,
+        buildBody: model => ({
+          contents: [{ role: 'user', parts: [{ text: built.prompt }] }],
+          systemInstruction: { parts: [{ text: built.system }] },
+          generationConfig: {
+            temperature: built.temperature,
+            responseMimeType: 'application/json',
+            ...(model.includes('2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+          },
+        }),
+      });
+      const parsed = safeParse(outcome.text);
+      if (parsed !== undefined) {
+        llmOptions = hardGate(normalizePlan(parsed), planInput).result.options;
+      }
+    } catch {
+      // fall back to deterministic engine options below
+    }
+
+    const merged = dedupeOptions([...llmOptions, ...engineOptions]).slice(0, 3);
+    if (merged.length) {
+      return json(200, { text: JSON.stringify({ options: merged }) });
+    }
+    return json(502, { error: 'Không thể tạo phương án lịch trình. Vui lòng thử lại.' });
   }
 
   let built: BuiltPrompt;
