@@ -1,12 +1,12 @@
 export const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 export const DEFAULT_FREE_MODELS = [
-  'gemini-2.5-flash',
   'gemini-2.5-flash-lite',
+  'gemini-2.5-flash',
   'gemini-2.0-flash',
   'gemini-2.0-flash-lite',
-  'gemini-flash-latest',
   'gemini-flash-lite-latest',
+  'gemini-flash-latest',
 ];
 
 const QUOTA_COOLDOWN_MS = 60_000;
@@ -66,6 +66,7 @@ export interface GeminiFallbackOptions {
   models: string[];
   buildBody: (model: string) => unknown;
   endpoint?: string;
+  signal?: AbortSignal;
 }
 
 export interface GeminiFallbackResult {
@@ -113,6 +114,10 @@ export async function generateWithFallback(options: GeminiFallbackOptions): Prom
     let keyBroken = false;
 
     for (const model of models) {
+      if (options.signal?.aborted) {
+        throw new GeminiRequestError('Đã hủy yêu cầu AI.', 499);
+      }
+
       let res: Response;
       try {
         res = await fetch(`${endpoint}/${model}:generateContent`, {
@@ -122,8 +127,12 @@ export async function generateWithFallback(options: GeminiFallbackOptions): Prom
             'x-goog-api-key': key,
           },
           body: JSON.stringify(options.buildBody(model)),
+          signal: options.signal,
         });
       } catch {
+        if (options.signal?.aborted) {
+          throw new GeminiRequestError('Đã hủy yêu cầu AI.', 499);
+        }
         lastStatus = 0;
         lastMessage = 'Không kết nối được tới Gemini.';
         continue;

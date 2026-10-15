@@ -1,20 +1,14 @@
 import {
   buildPrompt,
-  normalizeAchievements,
   normalizeBlockAnalysis,
-  normalizeDailyInsight,
   normalizePlan,
   normalizeSuggestion,
-  type AchievementIdea,
-  type AchievementsInput,
   type AiAction,
   type AiSuggestion,
   type AnalyzeScheduleInput,
   type BlockAnalysis,
   type BlockAnalysisInput,
   type BuiltPrompt,
-  type DailyInsight,
-  type DailyInsightInput,
   type PlanInput,
   type PlanResult,
   type SuggestBlockInput,
@@ -26,12 +20,7 @@ import {
   resolveModels,
 } from '../../../shared/gemini';
 import { isTutorialActive } from '../tutorial/tutorialMode';
-import {
-  tutorialPlanSchedule,
-  tutorialBlockAnalysis,
-  tutorialDailyInsight,
-  tutorialAchievements,
-} from '../tutorial/tutorialAi';
+import { tutorialPlanSchedule, tutorialBlockAnalysis } from '../tutorial/tutorialAi';
 
 const PROXY_PATH = '/api/ai';
 
@@ -97,7 +86,7 @@ async function callProxy(action: AiAction, input: unknown): Promise<string> {
 
 async function run(action: AiAction, input: unknown): Promise<string> {
   const keys = clientKeys();
-  if (action === 'plan' || action === 'daily' || action === 'suggest' || action === 'block') {
+  if (action === 'plan' || action === 'suggest' || action === 'block') {
     // These must run server-side so the DayTrack ruleset is injected.
     try {
       return await callProxy(action, input);
@@ -148,16 +137,6 @@ export function suggestForBlock(input: SuggestBlockInput): Promise<AiSuggestion>
   });
 }
 
-export function dailyInsight(input: DailyInsightInput): Promise<DailyInsight> {
-  if (isTutorialActive()) {
-    return tutorialDailyInsight().then(summary => ({ summary, items: [] }));
-  }
-  return cached(`daily:${JSON.stringify(input)}`, async () => {
-    const raw = await run('daily', input);
-    return normalizeDailyInsight(parseJson<unknown>(raw));
-  });
-}
-
 export function planSchedule(input: PlanInput): Promise<PlanResult> {
   if (isTutorialActive()) return tutorialPlanSchedule();
   return cached(`plan:${JSON.stringify(input)}`, async () => {
@@ -171,13 +150,5 @@ export function analyzeBlock(input: BlockAnalysisInput): Promise<BlockAnalysis> 
   return cached(`block:${JSON.stringify(input)}`, async () => {
     const raw = await run('block', input);
     return normalizeBlockAnalysis(parseJson<unknown>(raw));
-  });
-}
-
-export function generateAchievements(input: AchievementsInput): Promise<AchievementIdea[]> {
-  if (isTutorialActive()) return tutorialAchievements();
-  return cached(`achievements:${JSON.stringify(input)}`, async () => {
-    const raw = await run('achievements', input);
-    return normalizeAchievements(parseJson<unknown>(raw));
   });
 }

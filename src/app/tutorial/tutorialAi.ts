@@ -1,5 +1,4 @@
 import type {
-  AchievementIdea,
   BlockAnalysis,
   PlanAnalysis,
   PlanOption,
@@ -8,7 +7,6 @@ import type {
 
 export const AI_PLAN_DELAY = 4500;
 export const AI_BLOCK_DELAY = 2200;
-export const AI_DAILY_DELAY = 1500;
 
 const TIME_OPTIONS = ['05:30 - 06:00', '06:00 - 06:30', '07:00 - 11:00'];
 
@@ -105,37 +103,6 @@ export function tutorialBlockAnalysis(): Promise<BlockAnalysis> {
       healthTips: ['Ngồi thẳng lưng', 'Nghỉ mắt định kỳ'],
       why: 'Khung giờ này phù hợp để cơ thể tiếp nhận và tập trung tốt nhất.',
     },
-    AI_BLOCK_DELAY,
-  );
-}
-
-export function tutorialDailyInsight(): Promise<string> {
-  return delay(
-    'Hôm nay bạn có một lịch khá cân bằng giữa học tập và nghỉ ngơi. Hãy giữ đúng giờ khối "Đi học" để duy trì đà tập trung, và đừng quên uống đủ nước nhé!',
-    AI_DAILY_DELAY,
-  );
-}
-
-export function tutorialAchievements(): Promise<AchievementIdea[]> {
-  return delay(
-    [
-      {
-        title: 'Chiến thần dậy sớm',
-        description: 'Duy trì thói quen thức dậy đúng giờ mỗi sáng.',
-        reason: 'Gắn với khối "Dậy sớm" trong lịch mới của bạn.',
-        target: 30,
-        unit: 'buổi',
-        emoji: '🌅',
-      },
-      {
-        title: 'Cỗ máy tập trung',
-        description: 'Hoàn thành các phiên học tập trung không xao nhãng.',
-        reason: 'Gắn với khối "Đi học" và "Tự học".',
-        target: 50,
-        unit: 'phiên',
-        emoji: '🎯',
-      },
-    ],
     AI_BLOCK_DELAY,
   );
 }

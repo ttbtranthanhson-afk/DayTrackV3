@@ -1,14 +1,12 @@
-import { Sparkles, Sun, Calendar, Trash2, ChevronDown, ChevronUp, Search, Loader2 } from 'lucide-react';
+import { Sun, Calendar, Trash2, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { useEffect } from 'react';
 import { CreateScheduleModal } from '../components/CreateScheduleModal';
 import { AIScheduleSuggestion } from '../components/AIScheduleSuggestion';
-import { DailyInsightBody } from '../components/DailyInsightBody';
 import { BusyHoursModal } from '../components/BusyHoursModal';
 import { AiPlannerModal } from '../components/AiPlannerModal';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTimetable, days, dayShorts, colorMap, type AddTasksFromSchedule } from '../hooks/useTimetable';
 import { useAiPlanner } from '../hooks/useAiPlanner';
-import { useDailyInsight } from '../hooks/useDailyInsight';
 
 interface TimetableProps {
   onAddTasks?: AddTasksFromSchedule;
@@ -36,8 +34,6 @@ export function Timetable({ onAddTasks }: TimetableProps) {
     handleSaveSchedule,
     handleDelete,
   } = useTimetable({ onAddTasks });
-
-  const dailyInsight = useDailyInsight(currentDay, schedule, isTodayMode);
 
   const planner = useAiPlanner(currentDay, schedule, {
     onAddTasks,
@@ -71,7 +67,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
               {isTodayMode ? 'Hôm nay' : 'Lịch trình'}
             </h1>
             <p className="text-sm text-gray-400 mt-0.5">
-              {isTodayMode ? 'Gợi ý AI hàng ngày' : 'Lịch trình tuần của bạn'}
+              {isTodayMode ? 'Lịch trình hôm nay' : 'Lịch trình tuần của bạn'}
             </p>
           </div>
           <button
@@ -214,7 +210,7 @@ export function Timetable({ onAddTasks }: TimetableProps) {
         </div>
 
         {/* Survey button */}
-        {!isTodayMode ? (
+        {!isTodayMode && (
           <div className="px-5">
             <button
               onClick={planner.openSurvey}
@@ -224,28 +220,6 @@ export function Timetable({ onAddTasks }: TimetableProps) {
               <Search className="w-4 h-4" />
               <span className="text-sm font-semibold">Khảo sát</span>
             </button>
-          </div>
-        ) : (
-          <div className="px-5">
-            <div data-tour="tt-insight" className="bg-blue-50 rounded-2xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                {dailyInsight.loading
-                  ? <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
-                  : <Sparkles className="w-4 h-4 text-blue-500" />}
-                <span className="text-sm font-bold text-blue-800">Gợi ý AI</span>
-              </div>
-              <DailyInsightBody
-                insight={dailyInsight.insight}
-                loading={dailyInsight.loading}
-                error={dailyInsight.error}
-                emptyHint={
-                  schedule.length === 0
-                    ? 'Thêm lịch cho hôm nay để nhận gợi ý từ AI.'
-                    : 'Đang phân tích lịch của bạn...'
-                }
-                className="text-xs text-blue-700"
-              />
-            </div>
           </div>
         )}
       </div>

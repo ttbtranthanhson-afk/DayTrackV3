@@ -11,6 +11,8 @@ export const config = { runtime: 'edge' };
 const MAX_BODY_BYTES = 20_000;
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 20;
+const PLAN_TIMEOUT_MS = 10_000;
+const GENERATE_TIMEOUT_MS = 20_000;
 
 const hits = new Map<string, number[]>();
 
@@ -19,6 +21,21 @@ function json(status: number, body: unknown): Response {
     status,
     headers: { 'Content-Type': 'application/json' },
   });
+}
+
+async function runWithTimeout<T>(run: (signal: AbortSignal) => Promise<T>, timeoutMs: number): Promise<T> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await run(controller.signal);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function isTimeoutError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return err.name === 'AbortError' || err.message.includes('Đã hủy yêu cầu AI');
 }
 
 function isRateLimited(ip: string): boolean {
@@ -44,13 +61,7 @@ function injectRuleContext(action: string, input: unknown): void {
   const obj = input as Record<string, unknown>;
   const profile = obj.profile as RetrieveInput['profile'];
   try {
-    if (action === 'daily' && Array.isArray(obj.schedule)) {
-      obj.ruleContext = buildRuleContext({
-        day: String(obj.day ?? ''),
-        schedule: obj.schedule as RetrieveInput['schedule'],
-        profile,
-      });
-    } else if ((action === 'suggest' || action === 'block') && typeof obj.title === 'string') {
+    if ((action === 'suggest' || action === 'block') && typeof obj.title === 'string') {
       obj.ruleContext = buildRuleContext({
         day: String(obj.day ?? ''),
         profile,
@@ -146,19 +157,24 @@ export default async function handler(req: Request): Promise<Response> {
     let llmOptions: PlanOption[] = [];
     try {
       const built = buildPrompt('plan', planInput);
-      const outcome = await generateWithFallback({
-        keys,
-        models,
-        buildBody: model => ({
-          contents: [{ role: 'user', parts: [{ text: built.prompt }] }],
-          systemInstruction: { parts: [{ text: built.system }] },
-          generationConfig: {
-            temperature: built.temperature,
-            responseMimeType: 'application/json',
-            ...(model.includes('2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
-          },
-        }),
-      });
+      const outcome = await runWithTimeout(
+        signal =>
+          generateWithFallback({
+            keys,
+            models,
+            signal,
+            buildBody: model => ({
+              contents: [{ role: 'user', parts: [{ text: built.prompt }] }],
+              systemInstruction: { parts: [{ text: built.system }] },
+              generationConfig: {
+                temperature: built.temperature,
+                responseMimeType: 'application/json',
+                ...(model.includes('2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+              },
+            }),
+          }),
+        PLAN_TIMEOUT_MS,
+      );
       const parsed = safeParse(outcome.text);
       if (parsed !== undefined) {
         llmOptions = hardGate(normalizePlan(parsed), planInput).result.options;
@@ -167,14 +183,14 @@ export default async function handler(req: Request): Promise<Response> {
       // fall back to deterministic engine options below
     }
 
-    const merged = dedupeOptions([...llmOptions, ...engineOptions]).slice(0, 3);
+    const merged = dedupeOptions([...llmOptions, ...engineOptions]).slice(0, 2);
     if (merged.length) {
       return json(200, { text: JSON.stringify({ options: merged }) });
     }
     return json(502, { error: 'Không thể tạo phương án lịch trình. Vui lòng thử lại.' });
   }
 
-  if (body.action === 'daily' || body.action === 'suggest' || body.action === 'block') {
+  if (body.action === 'suggest' || body.action === 'block') {
     injectRuleContext(body.action, body.input);
   }
 
@@ -187,20 +203,28 @@ export default async function handler(req: Request): Promise<Response> {
 
   let outcome: { text: string; model: string };
   try {
-    outcome = await generateWithFallback({
-      keys,
-      models,
-      buildBody: model => ({
-        contents: [{ role: 'user', parts: [{ text: built.prompt }] }],
-        systemInstruction: { parts: [{ text: built.system }] },
-        generationConfig: {
-          temperature: built.temperature,
-          ...(built.json ? { responseMimeType: 'application/json' } : {}),
-          ...(model.includes('2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
-        },
-      }),
-    });
+    outcome = await runWithTimeout(
+      signal =>
+        generateWithFallback({
+          keys,
+          models,
+          signal,
+          buildBody: model => ({
+            contents: [{ role: 'user', parts: [{ text: built.prompt }] }],
+            systemInstruction: { parts: [{ text: built.system }] },
+            generationConfig: {
+              temperature: built.temperature,
+              ...(built.json ? { responseMimeType: 'application/json' } : {}),
+              ...(model.includes('2.5') ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+            },
+          }),
+        }),
+      GENERATE_TIMEOUT_MS,
+    );
   } catch (err) {
+    if (isTimeoutError(err)) {
+      return json(504, { error: 'AI phản hồi quá chậm. Vui lòng thử lại.' });
+    }
     return json(502, { error: err instanceof Error ? err.message : 'Không thể gọi Gemini.' });
   }
 

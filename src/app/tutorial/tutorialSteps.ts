@@ -187,14 +187,6 @@ export const tutorialSteps: TutorialStep[] = [
     title: 'Chế độ Hôm nay',
     body: 'Lịch AI đã được áp dụng và tự bật chế độ Hôm nay. Bấm nút này để chuyển đổi giữa tuần và hôm nay.',
   },
-  {
-    id: 'tt-insight',
-    target: 'tt-insight',
-    timeout: 4000,
-    view: 'today',
-    title: 'Gợi ý AI mỗi ngày',
-    body: 'Mỗi ngày AI sẽ đưa ra một nhận xét ngắn về lịch của bạn tại đây.',
-  },
 
   // ── Phase 3: Lịch ──
   {

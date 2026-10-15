@@ -23,30 +23,6 @@ export interface SuggestBlockInput {
   ruleContext?: string;
 }
 
-export interface DailyInsightInput {
-  day: string;
-  schedule: ScheduleItem[];
-  profile?: {
-    job?: string;
-    health?: string;
-    mental?: string;
-  };
-  ruleContext?: string;
-}
-
-export interface DailyInsightItem {
-  time: string;
-  title: string;
-  detail: string;
-  method?: string;
-  steps?: string[];
-}
-
-export interface DailyInsight {
-  summary: string;
-  items: DailyInsightItem[];
-}
-
 export type BlockType = 'eating' | 'study' | 'exercise' | 'other';
 export type Need = 'gain' | 'lose' | 'muscle';
 
@@ -126,12 +102,6 @@ export interface AchievementIdea {
   emoji: string;
 }
 
-export interface AchievementsInput {
-  day: string;
-  scheduleName: string;
-  blocks: { title: string; type: BlockType; tasks: string[] }[];
-}
-
 export interface AiSuggestion {
   title: string;
   sections: AiSection[];
@@ -143,7 +113,7 @@ export interface AiSection {
   items: string[];
 }
 
-export type AiAction = 'analyze' | 'suggest' | 'daily' | 'plan' | 'block' | 'achievements';
+export type AiAction = 'analyze' | 'suggest' | 'plan' | 'block';
 
 export interface BuiltPrompt {
   prompt: string;
@@ -217,38 +187,6 @@ function buildSuggestPrompt(input: SuggestBlockInput): BuiltPrompt {
   };
 }
 
-function buildDailyPrompt(input: DailyInsightInput): BuiltPrompt {
-  return {
-    system: SYSTEM_PROMPT,
-    json: true,
-    temperature: 0.7,
-    prompt: [
-      `Ngày: ${input.day}`,
-      'Lịch trình hôm nay:',
-      scheduleLines(input.schedule),
-      ...(input.ruleContext
-        ? [
-            '',
-            '===== BỘ QUY TẮC DAYTRACK (BẮT BUỘC TUÂN THỦ) =====',
-            input.ruleContext,
-            '===== HẾT BỘ QUY TẮC =====',
-          ]
-        : []),
-      '',
-      'Hãy mô tả RÕ lịch trình hôm nay cho người dùng: một đoạn tổng quan ngắn, rồi với MỖI khối nêu cần làm gì và CÁCH THỰC HIỆN cụ thể.',
-      'KHÔNG đổi giờ, KHÔNG thêm/bớt khối, KHÔNG thêm nhiệm vụ mới.',
-      'Trả về DUY NHẤT JSON theo cấu trúc:',
-      '{"summary":"1-2 câu tổng quan về ngày","items":[{"time":"07:00 - 11:30","title":"Đi học","detail":"một câu cần làm gì trong khối","method":"tên phương pháp (chỉ cho khối học/làm việc)","steps":["bước 1","bước 2","bước 3"]}]}',
-      'Quy tắc:',
-      '- "items" phải có ĐÚNG một mục cho MỖI khối trong lịch trình, giữ nguyên "title" và "time".',
-      '- "time" PHẢI là đúng chuỗi giờ của khối đó trong danh sách "Lịch trình hôm nay" phía trên, giữ nguyên từng ký tự (kể cả dạng qua đêm "22:30 - 06:00"). Cấm tính lại, đoán lại hoặc sắp xếp lại giờ.',
-      '- Khối học/làm việc: điền "method" là TÊN phương pháp và "steps" là 3-5 bước thực hiện cụ thể (lấy từ phương pháp Mxx trong bộ quy tắc, điều chỉnh theo môn).',
-      '- Khối ăn uống/thể dục/nghỉ: "detail" nêu thực đơn/bài tập/cách nghỉ ngắn gọn; có thể bỏ "method"/"steps".',
-      '- Nội dung tiếng Việt, cụ thể, không markdown.',
-    ].join('\n'),
-  };
-}
-
 function buildPlanPrompt(input: PlanInput): BuiltPrompt {
   const busyText = input.busy.length ? input.busy.join(', ') : 'Không có';
 
@@ -269,7 +207,7 @@ function buildPlanPrompt(input: PlanInput): BuiltPrompt {
       '- Loại của khối bổ sung: Ăn sáng/Ăn trưa/Ăn tối = "eating"; Thức dậy/Nghỉ trưa/Ngủ = "other".',
       '- KHÔNG bịa thêm lịch khác dưới mọi hình thức.',
       '- Chỉ được đổi "start"/"end" của các khối (định dạng "HH:MM", 24 giờ), trong khoảng 05:00-23:00, không chồng lấn nhau và không nằm trong khung giờ bận.',
-      '- Tạo ĐÚNG 2 phương án sắp xếp KHÁC NHAU để người dùng chọn.',
+      '- Tạo ĐÚNG 1 phương án sắp xếp tối ưu nhất cho người dùng.',
       '',
       `Ngày: ${input.day}`,
       'Khối lịch hiện có:',
@@ -342,41 +280,8 @@ function buildBlockPrompt(input: BlockAnalysisInput): BuiltPrompt {
   };
 }
 
-function buildAchievementsPrompt(input: AchievementsInput): BuiltPrompt {
-  const blockLines = input.blocks.length
-    ? input.blocks.map(b => `- ${b.title} (${b.type})${b.tasks.length ? `: ${b.tasks.join(', ')}` : ''}`).join('\n')
-    : 'Không có.';
-
-  return {
-    system: SYSTEM_PROMPT,
-    json: true,
-    temperature: 1,
-    prompt: [
-      'Người dùng vừa lưu một lịch trình và DayTrack muốn tạo mục tiêu thành tựu từ đó.',
-      `Ngày: ${input.day}`,
-      `Tên lịch trình: "${input.scheduleName}"`,
-      'Các khối và nhiệm vụ:',
-      blockLines,
-      '',
-      'Hãy tạo 2 đến 3 thành tựu (mục tiêu) số hoá được, có thể đếm và xác nhận được, phù hợp để tăng tiến độ mỗi khi người dùng hoàn thành nhiệm vụ liên quan.',
-      'Tên thành tựu phải NGẦU, trẻ trung, dễ nhớ, hấp dẫn (kiểu game).',
-      'Trả về DUY NHẤT JSON:',
-      '{"achievements":[{"title":"Chiến thần giải toán","description":"mô tả ngắn","reason":"lý do gắn với lịch","target":100,"unit":"bài toán","emoji":"🔥"}]}',
-      'Quy tắc: target là số nguyên dương hợp lý (20-500), unit là đơn vị đếm (bài toán, km, hiệp, buổi...), emoji là 1 ký tự.',
-      'Tuyệt đối không trùng tên với nhau, đa dạng chủ đề.',
-    ].join('\n'),
-  };
-}
-
 export function isAiAction(value: unknown): value is AiAction {
-  return (
-    value === 'analyze' ||
-    value === 'suggest' ||
-    value === 'daily' ||
-    value === 'plan' ||
-    value === 'block' ||
-    value === 'achievements'
-  );
+  return value === 'analyze' || value === 'suggest' || value === 'plan' || value === 'block';
 }
 
 export function buildPrompt(action: AiAction, input: unknown): BuiltPrompt {
@@ -385,14 +290,10 @@ export function buildPrompt(action: AiAction, input: unknown): BuiltPrompt {
       return buildAnalyzePrompt(input as AnalyzeScheduleInput);
     case 'suggest':
       return buildSuggestPrompt(input as SuggestBlockInput);
-    case 'daily':
-      return buildDailyPrompt(input as DailyInsightInput);
     case 'plan':
       return buildPlanPrompt(input as PlanInput);
     case 'block':
       return buildBlockPrompt(input as BlockAnalysisInput);
-    case 'achievements':
-      return buildAchievementsPrompt(input as AchievementsInput);
     default:
       throw new Error(`Hành động không hợp lệ: ${String(action)}`);
   }
@@ -471,65 +372,6 @@ function normalizeAnalysis(value: unknown): PlanAnalysis {
   };
 }
 
-function timeToMinutes(time: string): number {
-  const m = /^(\d{1,2}):(\d{2})/.exec(time);
-  return m ? +m[1] * 60 + +m[2] : 24 * 60;
-}
-
-function minutesApart(a: string, b: string): number {
-  const d = Math.abs(timeToMinutes(a) - timeToMinutes(b));
-  return Math.min(d, 24 * 60 - d);
-}
-
-export function normalizeDailyInsight(value: unknown): DailyInsight {
-  const raw = (value ?? {}) as { summary?: unknown; items?: unknown };
-  const items = Array.isArray(raw.items)
-    ? raw.items
-        .slice(0, 20)
-        .map(item => {
-          const it = (item ?? {}) as Partial<DailyInsightItem>;
-          return {
-            time: asString(it.time).trim(),
-            title: asString(it.title).trim(),
-            detail: asString(it.detail).trim(),
-            method: asString(it.method).trim() || undefined,
-            steps: toMethodSteps(it.steps, 6),
-          };
-        })
-        .filter(it => it.title || it.detail)
-        .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
-    : [];
-  return { summary: asString(raw.summary).trim(), items };
-}
-
-export function reconcileDailyInsight(insight: DailyInsight, schedule: ScheduleItem[]): DailyInsight {
-  if (!schedule.length || !insight.items.length) return insight;
-  const used = new Set<number>();
-  const picked: (DailyInsightItem | undefined)[] = schedule.map(block => {
-    const idx = insight.items.findIndex((it, i) => !used.has(i) && it.title.trim() === block.title.trim());
-    if (idx < 0) return undefined;
-    used.add(idx);
-    return insight.items[idx];
-  });
-  for (let pos = 0; pos < schedule.length; pos++) {
-    if (picked[pos]) continue;
-    const idx = insight.items.findIndex(
-      (_, i) => !used.has(i) && minutesApart(insight.items[i].time, schedule[pos].time) <= 90
-    );
-    if (idx < 0) continue;
-    used.add(idx);
-    picked[pos] = insight.items[idx];
-  }
-  const items: DailyInsightItem[] = [];
-  for (let pos = 0; pos < schedule.length; pos++) {
-    const it = picked[pos];
-    if (!it) continue;
-    items.push({ ...it, title: schedule[pos].title, time: schedule[pos].time });
-  }
-  items.sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
-  return { summary: insight.summary, items };
-}
-
 export function normalizeSuggestion(value: unknown): AiSuggestion {
   const raw = (value ?? {}) as Partial<AiSuggestion>;
   const title = typeof raw.title === 'string' && raw.title.trim() ? raw.title : 'Gợi ý AI';
@@ -555,7 +397,7 @@ export function normalizePlan(value: unknown): PlanResult {
   const options = Array.isArray(raw.options) ? raw.options : [];
 
   const normalized: PlanOption[] = options
-    .slice(0, 3)
+    .slice(0, 2)
     .map((option, index) => {
       const blocks = Array.isArray(option?.blocks) ? option.blocks : [];
       return {
@@ -591,25 +433,4 @@ export function normalizeBlockAnalysis(value: unknown): BlockAnalysis {
     healthTips: analysis.healthTips,
     why: analysis.why,
   };
-}
-
-export function normalizeAchievements(value: unknown): AchievementIdea[] {
-  const raw = (value ?? {}) as { achievements?: unknown };
-  const list = Array.isArray(raw.achievements) ? raw.achievements : [];
-
-  return list
-    .slice(0, 3)
-    .map(item => {
-      const idea = (item ?? {}) as Partial<AchievementIdea>;
-      const target = Number(idea.target);
-      return {
-        title: asString(idea.title) || 'Mục tiêu mới',
-        description: asString(idea.description),
-        reason: asString(idea.reason),
-        target: Number.isFinite(target) ? Math.min(Math.max(Math.round(target), 1), 100000) : 30,
-        unit: asString(idea.unit) || 'lần',
-        emoji: asString(idea.emoji) || '🎯',
-      };
-    })
-    .filter(idea => idea.title);
 }

@@ -5,7 +5,7 @@ import { replaceScheduleDay } from './scheduleStore';
 import { replaceCalendarDay } from './calendarStore';
 import { setBusyRanges, useBusyData } from './busyStore';
 import { addAiAchievements } from './achievementStore';
-import { generateAchievements } from '../services/gemini';
+import { resolveAiAchievements } from '../data/achievementsAi';
 import type { ScheduleBlock, ScheduleTask } from './scheduleData';
 
 export type PlanBlockMeta = { title: string; type: BlockType; tasks: string[] };
@@ -55,16 +55,10 @@ export function useAiPlanner(day: string, schedule: ScheduleBlock[], options: Us
     options.onApplied?.();
     toast.success(options.successMessage ?? 'Đã áp dụng lịch AI');
 
-    generateAchievements({ day, scheduleName: optionName, blocks: meta })
-      .then(ideas => {
-        const created = addAiAchievements(ideas, { scheduleName: optionName, day });
-        if (created.length > 0) {
-          toast.success(`Mở khoá ${created.length} mục tiêu mới trong Thành tựu!`);
-        }
-      })
-      .catch(() => {
-        // achievement generation is best-effort
-      });
+    const created = addAiAchievements(resolveAiAchievements(meta), { scheduleName: optionName, day });
+    if (created.length > 0) {
+      toast.success(`Mở khoá ${created.length} mục tiêu mới trong Thành tựu!`);
+    }
   };
 
   return {

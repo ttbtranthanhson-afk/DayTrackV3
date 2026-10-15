@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Sun, Calendar, Search, Sparkles, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Trash2, Sun, Calendar, Search, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CreateScheduleModal } from '../../components/CreateScheduleModal';
 import { BusyHoursModal } from '../../components/BusyHoursModal';
 import { AiPlannerModal } from '../../components/AiPlannerModal';
 import { AIScheduleSuggestion } from '../../components/AIScheduleSuggestion';
-import { DailyInsightBody } from '../../components/DailyInsightBody';
 import {
   days,
   dayShorts,
@@ -23,10 +22,9 @@ import {
 } from '../../hooks/scheduleStore';
 import { useCalendarData, isAiPlannedDay, dateKey } from '../../hooks/calendarStore';
 import { useAiPlanner } from '../../hooks/useAiPlanner';
-import { useDailyInsight } from '../../hooks/useDailyInsight';
 import { useTutorial } from '../../tutorial/tutorialStore';
 import { tutorialSteps } from '../../tutorial/tutorialSteps';
-import { DesktopPageHeader, DesktopCard, DesktopEmpty } from '../DesktopUI';
+import { DesktopPageHeader, DesktopEmpty } from '../DesktopUI';
 
 interface DesktopTimetableProps {
   onAddTasks?: AddTasksFromSchedule;
@@ -91,7 +89,6 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
     busyKey: selectedDay,
     onApplied: () => setIsTodayMode(true),
   });
-  const dailyInsight = useDailyInsight(selectedDay, selectedSchedule, isTodayMode);
 
   useEffect(() => {
     const openCreate = () => openAdd(selectedDay);
@@ -185,7 +182,7 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
     <div>
       <DesktopPageHeader
         title={isTodayMode ? 'Hôm nay' : 'Lịch trình'}
-        subtitle={isTodayMode ? 'Gợi ý AI hàng ngày' : 'Lịch trình tuần của bạn'}
+        subtitle={isTodayMode ? 'Lịch trình hôm nay' : 'Lịch trình tuần của bạn'}
         actions={
           <>
             <button
@@ -282,9 +279,9 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
               exit={{ opacity: 0, scale: 0.985 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
-        <div className="grid grid-cols-3 gap-6">
+        <div>
           {/* Weekday strip + selected day schedule */}
-          <div className="col-span-2">
+          <div>
             <div className="grid grid-cols-7 gap-2 mb-5">
               {days.map((day, i) => {
                 const isActive = i === selectedIndex;
@@ -356,28 +353,6 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
                 )}
               </AnimatePresence>
             </div>
-          </div>
-
-          {/* AI insight */}
-          <div data-tour="tt-insight" className="col-span-1">
-            <DesktopCard
-              title="Gợi ý AI"
-              icon={dailyInsight.loading ? Loader2 : Sparkles}
-              accent={dailyInsight.loading ? 'text-blue-500 animate-spin' : 'text-blue-500'}
-              className="sticky top-0"
-            >
-              <DailyInsightBody
-                insight={dailyInsight.insight}
-                loading={dailyInsight.loading}
-                error={dailyInsight.error}
-                emptyHint={
-                  selectedSchedule.length === 0
-                    ? 'Thêm lịch cho hôm nay để nhận gợi ý từ AI.'
-                    : 'Đang phân tích lịch của bạn...'
-                }
-                className="text-sm text-blue-800"
-              />
-            </DesktopCard>
           </div>
         </div>
             </motion.div>

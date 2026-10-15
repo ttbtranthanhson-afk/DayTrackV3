@@ -253,13 +253,6 @@ const VARIANTS: Variant[] = [
     studyKey: 'D1',
     exerciseKey: 'VD',
   },
-  {
-    id: 'evening',
-    name: 'Ưu tiên buổi tối',
-    description: 'Giữ cố định bữa ăn, giấc ngủ; dồn việc học vào khối cao điểm buổi tối.',
-    studyKey: 'D2',
-    exerciseKey: 'VD',
-  },
 ];
 
 function syntheticRaw(
