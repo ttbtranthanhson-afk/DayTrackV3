@@ -286,7 +286,8 @@ function layout(raws: Raw[], p: ProfileResolution, variant: Variant, busy: Range
       if (win) {
         const ws = toMin(win[0]);
         const we = toMin(win[1]);
-        if (ws != null && we != null && we > ws) {
+        const conflicts = ws != null && we != null && occupied.some(o => ws < o.end && o.start < we);
+        if (ws != null && we != null && we > ws && !conflicts) {
           r.start = ws;
           r.end = we;
         }

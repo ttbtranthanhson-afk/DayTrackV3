@@ -40,19 +40,37 @@ function norm(s: unknown): string {
     .trim();
 }
 
+function wordIncludes(hay: string, needle: string): boolean {
+  const idx = hay.indexOf(needle);
+  if (idx < 0) return false;
+  const before = idx === 0 || /[\s,./|()\-]/.test(hay[idx - 1]);
+  const after = idx + needle.length === hay.length || /[\s,./|()\-]/.test(hay[idx + needle.length]);
+  return before && after;
+}
+
 function findBest(map: Record<string, unknown>, text: string): string | undefined {
   const t = norm(text);
   if (!t) return undefined;
   let best: string | undefined;
-  let bestLen = 0;
+  let bestScore = -Infinity;
   for (const key of Object.keys(map)) {
     const nk = norm(key);
-    if (nk === t) return key;
-    if (nk.includes(t) || t.includes(nk)) {
-      if (nk.length > bestLen) {
-        best = key;
-        bestLen = nk.length;
-      }
+    if (!nk) continue;
+    let score = -Infinity;
+    if (nk === t) {
+      return key;
+    } else if (nk.startsWith(`${t} `) || nk.startsWith(`${t},`) || nk.startsWith(`${t}/`)) {
+      score = 3000 - (nk.length - t.length);
+    } else if (t.startsWith(`${nk} `) || t.startsWith(`${nk},`) || t.startsWith(`${nk}/`)) {
+      score = 2800 - (t.length - nk.length);
+    } else if (wordIncludes(nk, t)) {
+      score = 2000 - (nk.length - t.length);
+    } else if (wordIncludes(t, nk)) {
+      score = 1500 + nk.length;
+    }
+    if (score > bestScore) {
+      best = key;
+      bestScore = score;
     }
   }
   return best;
@@ -176,50 +194,62 @@ export interface BlockClassification {
   value?: string;
 }
 
+const KIND_BY_WORK_TYPE: Record<string, BlockKind> = {
+  I: 'eating',
+  J: 'exercise',
+  K: 'rest',
+  P: 'rest',
+  O: 'other',
+  Y: 'other',
+};
+
 export function classifyBlock(title: string, time: string, tasks?: string[]): BlockClassification {
   const t = norm(title);
   const result: BlockClassification = { title, time, kind: 'other', methodCodes: [] };
 
-  const isEating = /(^|\s)(ăn|bữa|xế)(\s|$)/.test(t) || /ăn/.test(t);
-  const isRest = /ngủ|nghỉ|ngơi|nghỉ ngơi|thư giãn|relax/.test(t);
-  const isExercise = /tập|thể dục|chạy|gym|bơi|bóng|vận động|yoga|đạp|aerob|đá cầu|cầu lông/.test(t);
-
-  if (isEating) {
-    result.kind = 'eating';
-    return result;
-  }
-  if (isExercise) {
-    result.kind = 'exercise';
-    return result;
-  }
-  if (isRest) {
-    result.kind = 'rest';
-    return result;
-  }
-
+  // 1) Prefer the curated task table so that e.g. "Làm bài tập về nhà môn Toán"
+  //    maps to work type A (study) instead of being mistaken for exercise ("tập").
   const probe = [title, ...(tasks ?? [])].join(' ');
   const match = findBest(R.taskDetails, probe) ?? findBest(R.tasks, probe) ?? findBest(R.taskDetails, title);
   if (match) {
     const d = R.taskDetails[match] ?? R.tasks[match] ?? {};
-    result.kind = 'study';
     result.matchedTask = match;
     result.block = d.block || R.matrix[match]?.block;
     result.avoid = d.avoid;
     result.howto = d.howto;
     result.value = d.value;
     const wtLabel = String(d.workType ?? R.tasks[match]?.workType_raw ?? '');
+    let code = '';
     if (wtLabel) {
-      const code = wtLabel.trim().charAt(0).toUpperCase();
+      code = wtLabel.trim().charAt(0).toUpperCase();
       if (R.workTypes[code]) {
         result.workType = code;
         result.workTypeName = R.workTypes[code].name;
       }
     }
-    const codes = String(d.methods ?? '')
+    result.methodCodes = String(d.methods ?? '')
       .split(/[,/]/)
       .map(s => s.trim())
       .filter(s => /^M\d+/i.test(s));
-    result.methodCodes = codes;
+    result.kind = KIND_BY_WORK_TYPE[code] ?? 'study';
+    return result;
+  }
+
+  // 2) Fall back to keyword heuristics for titles not present in the task table.
+  const isEating = /(^|\s)(ăn|bữa|xế)(\s|$)/.test(t);
+  const isRest = /ngủ|nghỉ|ngơi|thư giãn|relax/.test(t);
+  const isExercise = /thể dục|chạy|gym|bơi|bóng|vận động|yoga|đạp|aerob|cardio|đá cầu|cầu lông/.test(t) && !/bài tập|ôn tập/.test(t);
+
+  if (isEating) {
+    result.kind = 'eating';
+    return result;
+  }
+  if (isRest) {
+    result.kind = 'rest';
+    return result;
+  }
+  if (isExercise) {
+    result.kind = 'exercise';
     return result;
   }
 
