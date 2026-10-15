@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { dailyInsight } from '../services/gemini';
+import type { DailyInsight } from '../../../shared/ai';
+import { readUserProfile } from './userProfile';
 import type { ScheduleBlock } from './scheduleData';
 
 interface DailyInsightState {
-  text: string;
+  insight: DailyInsight | null;
   loading: boolean;
   error: string | null;
 }
 
 export function useDailyInsight(day: string, schedule: ScheduleBlock[], enabled: boolean): DailyInsightState {
-  const [text, setText] = useState('');
+  const [insight, setInsight] = useState<DailyInsight | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +19,7 @@ export function useDailyInsight(day: string, schedule: ScheduleBlock[], enabled:
 
   useEffect(() => {
     if (!enabled || schedule.length === 0) {
-      setText('');
+      setInsight(null);
       setError(null);
       setLoading(false);
       return;
@@ -27,9 +29,13 @@ export function useDailyInsight(day: string, schedule: ScheduleBlock[], enabled:
     setLoading(true);
     setError(null);
 
-    dailyInsight({ day, schedule: schedule.map(s => ({ title: s.title, time: s.time })) })
+    dailyInsight({
+      day,
+      schedule: schedule.map(s => ({ title: s.title, time: s.time })),
+      profile: readUserProfile(),
+    })
       .then(result => {
-        if (!cancelled) setText(result);
+        if (!cancelled) setInsight(result);
       })
       .catch(err => {
         if (!cancelled) setError(err instanceof Error ? err.message : 'Không thể tải gợi ý AI.');
@@ -43,5 +49,5 @@ export function useDailyInsight(day: string, schedule: ScheduleBlock[], enabled:
     };
   }, [enabled, day, scheduleKey]);
 
-  return { text, loading, error };
+  return { insight, loading, error };
 }

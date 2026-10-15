@@ -2,6 +2,7 @@ import {
   buildPrompt,
   normalizeAchievements,
   normalizeBlockAnalysis,
+  normalizeDailyInsight,
   normalizePlan,
   normalizeSuggestion,
   type AchievementIdea,
@@ -12,6 +13,7 @@ import {
   type BlockAnalysis,
   type BlockAnalysisInput,
   type BuiltPrompt,
+  type DailyInsight,
   type DailyInsightInput,
   type PlanInput,
   type PlanResult,
@@ -95,8 +97,8 @@ async function callProxy(action: AiAction, input: unknown): Promise<string> {
 
 async function run(action: AiAction, input: unknown): Promise<string> {
   const keys = clientKeys();
-  if (action === 'plan') {
-    // The plan must run server-side so the DayTrack ruleset is injected.
+  if (action === 'plan' || action === 'daily' || action === 'suggest' || action === 'block') {
+    // These must run server-side so the DayTrack ruleset is injected.
     try {
       return await callProxy(action, input);
     } catch (err) {
@@ -146,9 +148,14 @@ export function suggestForBlock(input: SuggestBlockInput): Promise<AiSuggestion>
   });
 }
 
-export function dailyInsight(input: DailyInsightInput): Promise<string> {
-  if (isTutorialActive()) return tutorialDailyInsight();
-  return cached(`daily:${JSON.stringify(input)}`, () => run('daily', input));
+export function dailyInsight(input: DailyInsightInput): Promise<DailyInsight> {
+  if (isTutorialActive()) {
+    return tutorialDailyInsight().then(summary => ({ summary, items: [] }));
+  }
+  return cached(`daily:${JSON.stringify(input)}`, async () => {
+    const raw = await run('daily', input);
+    return normalizeDailyInsight(parseJson<unknown>(raw));
+  });
 }
 
 export function planSchedule(input: PlanInput): Promise<PlanResult> {

@@ -7,6 +7,7 @@ import {
   mealItemLines,
   mealWindowFrom,
   methodLabel,
+  methodSteps,
   resolveGoalKey,
   resolveProfile,
   type BlockClassification,
@@ -195,7 +196,9 @@ function analysisFor(raw: Raw, p: ProfileResolution, goalKey: string, advice: st
 
   if (raw.type === 'study') {
     const code = raw.cls.methodCodes[0];
-    base.method = (code && methodLabel(code)) || methodLabel('M16') || methodLabel('M01');
+    const resolved = code && methodLabel(code) ? code : methodLabel('M16') ? 'M16' : 'M01';
+    base.method = methodLabel(resolved);
+    base.methodSteps = methodSteps(resolved);
     base.healthTips = [
       `Chia phiên tối đa ${p.maxSessionMin} phút, nghỉ 5 phút giữa các phiên.`,
       'Ngồi thẳng lưng, để mắt nghỉ sau mỗi phiên.',

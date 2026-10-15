@@ -39,6 +39,35 @@ function safeParse(text: string): unknown {
   }
 }
 
+function injectRuleContext(action: string, input: unknown): void {
+  if (!input || typeof input !== 'object') return;
+  const obj = input as Record<string, unknown>;
+  const profile = obj.profile as RetrieveInput['profile'];
+  try {
+    if (action === 'daily' && Array.isArray(obj.schedule)) {
+      obj.ruleContext = buildRuleContext({
+        day: String(obj.day ?? ''),
+        schedule: obj.schedule as RetrieveInput['schedule'],
+        profile,
+      });
+    } else if ((action === 'suggest' || action === 'block') && typeof obj.title === 'string') {
+      obj.ruleContext = buildRuleContext({
+        day: String(obj.day ?? ''),
+        profile,
+        schedule: [
+          {
+            title: obj.title,
+            time: String(obj.time ?? ''),
+            tasks: Array.isArray(obj.tasks) ? (obj.tasks as string[]) : undefined,
+          },
+        ],
+      });
+    }
+  } catch {
+    // retrieval is best-effort; the prompt still works without it
+  }
+}
+
 function dedupeOptions(options: PlanOption[]): PlanOption[] {
   const seen = new Set<string>();
   const out: PlanOption[] = [];
@@ -143,6 +172,10 @@ export default async function handler(req: Request): Promise<Response> {
       return json(200, { text: JSON.stringify({ options: merged }) });
     }
     return json(502, { error: 'Không thể tạo phương án lịch trình. Vui lòng thử lại.' });
+  }
+
+  if (body.action === 'daily' || body.action === 'suggest' || body.action === 'block') {
+    injectRuleContext(body.action, body.input);
   }
 
   let built: BuiltPrompt;

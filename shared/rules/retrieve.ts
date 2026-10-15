@@ -311,6 +311,20 @@ export function methodLabel(code: string): string | undefined {
   return m ? `${code} ${clean(m.name)}` : undefined;
 }
 
+export function methodSteps(code: string): string[] {
+  const m = R.methods[code];
+  if (!m) return [];
+  const text = String(m.steps ?? '').replace(/\s+/g, ' ').trim();
+  if (!text) return [];
+  const first = /^\d{1,2}\)\s*/.exec(text);
+  const body = first ? text.slice(first[0].length) : text;
+  return body
+    .split(/\s+\d{1,2}\)\s+/)
+    .map(s => s.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .slice(0, 6);
+}
+
 function windowFrom(value: unknown): [string, string] | undefined {
   const m = String(value ?? '').match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
   return m ? [m[1], m[2]] : undefined;

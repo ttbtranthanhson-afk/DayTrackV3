@@ -15,11 +15,36 @@ export interface SuggestBlockInput {
   title: string;
   time: string;
   tasks?: string[];
+  profile?: {
+    job?: string;
+    health?: string;
+    mental?: string;
+  };
+  ruleContext?: string;
 }
 
 export interface DailyInsightInput {
   day: string;
   schedule: ScheduleItem[];
+  profile?: {
+    job?: string;
+    health?: string;
+    mental?: string;
+  };
+  ruleContext?: string;
+}
+
+export interface DailyInsightItem {
+  time: string;
+  title: string;
+  detail: string;
+  method?: string;
+  steps?: string[];
+}
+
+export interface DailyInsight {
+  summary: string;
+  items: DailyInsightItem[];
 }
 
 export type BlockType = 'eating' | 'study' | 'exercise' | 'other';
@@ -30,6 +55,7 @@ export interface PlanAnalysis {
   timeOptions: string[];
   suggestions: string[];
   method?: string;
+  methodSteps?: string[];
   healthTips: string[];
   why: string;
 }
@@ -73,6 +99,12 @@ export interface BlockAnalysisInput {
   time: string;
   need?: Need;
   tasks?: string[];
+  profile?: {
+    job?: string;
+    health?: string;
+    mental?: string;
+  };
+  ruleContext?: string;
 }
 
 export interface BlockAnalysis {
@@ -80,6 +112,7 @@ export interface BlockAnalysis {
   timeOptions: string[];
   suggestions: string[];
   method?: string;
+  methodSteps?: string[];
   healthTips: string[];
   why: string;
 }
@@ -166,6 +199,14 @@ function buildSuggestPrompt(input: SuggestBlockInput): BuiltPrompt {
       `Khối lịch: "${input.title}"`,
       `Thời gian: ${input.time}`,
       `Nhiệm vụ trong khối: ${input.tasks?.length ? input.tasks.join(', ') : 'Không có'}`,
+      ...(input.ruleContext
+        ? [
+            '',
+            '===== BỘ QUY TẮC DAYTRACK =====',
+            input.ruleContext,
+            '===== HẾT BỘ QUY TẮC =====',
+          ]
+        : []),
       '',
       'Hãy đưa ra gợi ý cách THỰC HIỆN khối lịch này dựa trên loại hoạt động (ăn uống, học tập, thể dục, nghỉ ngơi...).',
       'Không đề xuất thêm nhiệm vụ mới, không thay đổi lịch trình; chỉ hướng dẫn cách làm.',
@@ -179,14 +220,30 @@ function buildSuggestPrompt(input: SuggestBlockInput): BuiltPrompt {
 function buildDailyPrompt(input: DailyInsightInput): BuiltPrompt {
   return {
     system: SYSTEM_PROMPT,
-    json: false,
-    temperature: 0.8,
+    json: true,
+    temperature: 0.7,
     prompt: [
       `Ngày: ${input.day}`,
       'Lịch trình hôm nay:',
       scheduleLines(input.schedule),
+      ...(input.ruleContext
+        ? [
+            '',
+            '===== BỘ QUY TẮC DAYTRACK (BẮT BUỘC TUÂN THỦ) =====',
+            input.ruleContext,
+            '===== HẾT BỘ QUY TẮC =====',
+          ]
+        : []),
       '',
-      'Hãy đưa ra một nhận xét ngắn (tối đa 3 câu) về lịch của tôi trong hôm nay kèm một gợi ý cải thiện. Bằng tiếng Việt, súc tích.',
+      'Hãy mô tả RÕ lịch trình hôm nay cho người dùng: một đoạn tổng quan ngắn, rồi với MỖI khối nêu cần làm gì và CÁCH THỰC HIỆN cụ thể.',
+      'KHÔNG đổi giờ, KHÔNG thêm/bớt khối, KHÔNG thêm nhiệm vụ mới.',
+      'Trả về DUY NHẤT JSON theo cấu trúc:',
+      '{"summary":"1-2 câu tổng quan về ngày","items":[{"time":"07:00 - 11:30","title":"Đi học","detail":"một câu cần làm gì trong khối","method":"tên phương pháp (chỉ cho khối học/làm việc)","steps":["bước 1","bước 2","bước 3"]}]}',
+      'Quy tắc:',
+      '- "items" phải có ĐÚNG một mục cho MỖI khối trong lịch trình, giữ nguyên "title" và "time".',
+      '- Khối học/làm việc: điền "method" là TÊN phương pháp và "steps" là 3-5 bước thực hiện cụ thể (lấy từ phương pháp Mxx trong bộ quy tắc, điều chỉnh theo môn).',
+      '- Khối ăn uống/thể dục/nghỉ: "detail" nêu thực đơn/bài tập/cách nghỉ ngắn gọn; có thể bỏ "method"/"steps".',
+      '- Nội dung tiếng Việt, cụ thể, không markdown.',
     ].join('\n'),
   };
 }
@@ -226,14 +283,15 @@ function buildPlanPrompt(input: PlanInput): BuiltPrompt {
           ]
         : []),
       '',
+      '- "type" của mỗi khối PHẢI đúng loại theo mục "PHÂN LOẠI KHỐI LỊCH" trong bộ quy tắc: đi lại / nghỉ ngơi = "other", học và làm việc = "study", bữa ăn = "eating", thể dục = "exercise".',
       'Trả về DUY NHẤT JSON theo cấu trúc:',
-      '{"options":[{"id":"opt-1","name":"tên phương án ngắn","description":"mô tả ngắn","blocks":[{"title":"...","type":"study","start":"08:00","end":"09:30","tasks":[],"analysis":{"need":"muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["Ức gà 150g","Gạo lứt 100g"],"method":"phương pháp học","healthTips":["ngồi thẳng lưng"],"why":"vì sao xếp như vậy"}}]}]}',
+      '{"options":[{"id":"opt-1","name":"tên phương án ngắn","description":"mô tả ngắn","blocks":[{"title":"...","type":"study","start":"08:00","end":"09:30","tasks":[],"analysis":{"need":"muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["Ức gà 150g","Gạo lứt 100g"],"method":"tên phương pháp","methodSteps":["bước 1","bước 2","bước 3"],"healthTips":["ngồi thẳng lưng"],"why":"vì sao xếp như vậy"}}]}]}',
       'Phân tích "analysis" phải điền cho MỌI khối (kể cả khối giữ nguyên giờ) để lưu sẵn cho mục Hôm nay:',
       '- "timeOptions": luôn gồm 3 khung giờ hợp lý cho khối đó.',
       '- "why": một câu ngắn vì sao nên thực hiện khối này vào giờ đã xếp.',
       '- type "eating": điền "need" ("gain"|"lose"|"muscle") và "suggestions" là thực đơn kèm khối lượng gram.',
       '- type "exercise": điền "need" và "suggestions" là bài tập kèm số lượng (km, cái, giây).',
-      '- type "study": điền "method" (phương pháp học theo môn) và "healthTips" (tư thế, thời gian nghỉ).',
+      '- type "study": điền "method" là TÊN phương pháp học và "methodSteps" là 3-5 bước thực hiện cụ thể (lấy từ phương pháp Mxx tương ứng trong bộ quy tắc rồi điều chỉnh theo môn); "healthTips" gồm tư thế, thời gian học và nghỉ.',
       '- type "other" (nghỉ ngơi): "suggestions" và "healthTips" ngắn gọn, thiết thực, không đề xuất nhiệm vụ.',
       '- Không đề xuất nhiệm vụ mới trong bất kỳ trường nào.',
       '- Tất cả nội dung bằng tiếng Việt, cụ thể, không dùng markdown.',
@@ -256,14 +314,23 @@ function buildBlockPrompt(input: BlockAnalysisInput): BuiltPrompt {
       `Thời gian hiện tại: ${input.time}`,
       `Nhiệm vụ: ${input.tasks?.length ? input.tasks.join(', ') : 'Không có'}`,
       needText,
+      ...(input.ruleContext
+        ? [
+            '',
+            '===== BỘ QUY TẮC DAYTRACK =====',
+            input.ruleContext,
+            '===== HẾT BỘ QUY TẮC =====',
+            'Dùng bộ quy tắc trên để chọn phương pháp, món ăn / bài tập và các bước thực hiện phù hợp.',
+          ]
+        : []),
       '',
       'Trả về DUY NHẤT JSON theo cấu trúc:',
-      '{"need":"gain|lose|muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["..."],"method":"...","healthTips":["..."],"why":"..."}',
+      '{"need":"gain|lose|muscle","timeOptions":["16:00 - 17:00","16:30 - 17:30","17:00 - 18:00"],"suggestions":["..."],"method":"tên phương pháp","methodSteps":["bước 1","bước 2","bước 3"],"healthTips":["..."],"why":"..."}',
       'Quy tắc theo loại:',
       '- Không đổi tiêu đề, thời gian hay nhiệm vụ. Nếu khối không có nhiệm vụ thì tuyệt đối không đề xuất nhiệm vụ mới.',
       '- "eating": "suggestions" là thực đơn gợi ý kèm khối lượng gram, dựa theo nhu cầu (gain/lose/muscle); "why" giải thích dinh dưỡng.',
       '- "exercise": "suggestions" là các bài tập kèm số lượng (km, cái, giây) theo nhu cầu; "why" giải thích vì sao tập như thế.',
-      '- "study": "method" là phương pháp học phù hợp môn học; "healthTips" gồm tư thế, thời gian học và thời gian thư giãn; "why" giải thích.',
+      '- "study": "method" là TÊN phương pháp học phù hợp môn học; "methodSteps" là 3-5 bước thực hiện cụ thể; "healthTips" gồm tư thế, thời gian học và thư giãn; "why" giải thích.',
       '- "other": "suggestions" và "healthTips" ngắn gọn, thiết thực.',
       '- "timeOptions" gồm 3 khung giờ hợp lý chỉ để tham khảo.',
       '- Nội dung tiếng Việt, cụ thể, không markdown.',
@@ -372,6 +439,12 @@ function toList(value: unknown, max = 8): string[] {
   return out;
 }
 
+function toMethodSteps(value: unknown, max = 6): string[] {
+  return toList(value, max)
+    .map(step => step.replace(/^\d{1,2}\s*[).]\s*/, '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+}
+
 function normalizeType(value: unknown): BlockType {
   return BLOCK_TYPES.includes(value as BlockType) ? (value as BlockType) : 'other';
 }
@@ -388,9 +461,35 @@ function normalizeAnalysis(value: unknown): PlanAnalysis {
     timeOptions: timeOptions.length ? timeOptions : DEFAULT_TIME_OPTIONS,
     suggestions: toList(raw.suggestions, 10),
     method: asString(raw.method) || undefined,
+    methodSteps: toMethodSteps(raw.methodSteps, 6),
     healthTips: toList(raw.healthTips, 6),
     why: asString(raw.why),
   };
+}
+
+export function normalizeDailyInsight(value: unknown): DailyInsight {
+  const raw = (value ?? {}) as { summary?: unknown; items?: unknown };
+  const startOf = (time: string): number => {
+    const m = /^(\d{1,2}):(\d{2})/.exec(time);
+    return m ? +m[1] * 60 + +m[2] : 24 * 60;
+  };
+  const items = Array.isArray(raw.items)
+    ? raw.items
+        .slice(0, 20)
+        .map(item => {
+          const it = (item ?? {}) as Partial<DailyInsightItem>;
+          return {
+            time: asString(it.time).trim(),
+            title: asString(it.title).trim(),
+            detail: asString(it.detail).trim(),
+            method: asString(it.method).trim() || undefined,
+            steps: toMethodSteps(it.steps, 6),
+          };
+        })
+        .filter(it => it.title || it.detail)
+        .sort((a, b) => startOf(a.time) - startOf(b.time))
+    : [];
+  return { summary: asString(raw.summary).trim(), items };
 }
 
 export function normalizeSuggestion(value: unknown): AiSuggestion {
@@ -450,6 +549,7 @@ export function normalizeBlockAnalysis(value: unknown): BlockAnalysis {
     timeOptions: analysis.timeOptions,
     suggestions: analysis.suggestions,
     method: analysis.method,
+    methodSteps: analysis.methodSteps,
     healthTips: analysis.healthTips,
     why: analysis.why,
   };

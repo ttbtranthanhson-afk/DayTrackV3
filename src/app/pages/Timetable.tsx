@@ -2,6 +2,7 @@ import { Sparkles, Sun, Calendar, Trash2, ChevronDown, ChevronUp, Search, Loader
 import { useEffect } from 'react';
 import { CreateScheduleModal } from '../components/CreateScheduleModal';
 import { AIScheduleSuggestion } from '../components/AIScheduleSuggestion';
+import { DailyInsightBody } from '../components/DailyInsightBody';
 import { BusyHoursModal } from '../components/BusyHoursModal';
 import { AiPlannerModal } from '../components/AiPlannerModal';
 import { motion, AnimatePresence } from 'motion/react';
@@ -233,14 +234,17 @@ export function Timetable({ onAddTasks }: TimetableProps) {
                   : <Sparkles className="w-4 h-4 text-blue-500" />}
                 <span className="text-sm font-bold text-blue-800">Gợi ý AI</span>
               </div>
-              <p className="text-xs text-blue-700 leading-relaxed whitespace-pre-line">
-                {dailyInsight.error
-                  ? dailyInsight.error
-                  : dailyInsight.text
-                    || (schedule.length === 0
-                      ? 'Thêm lịch cho hôm nay để nhận gợi ý từ AI.'
-                      : 'Đang phân tích lịch của bạn...')}
-              </p>
+              <DailyInsightBody
+                insight={dailyInsight.insight}
+                loading={dailyInsight.loading}
+                error={dailyInsight.error}
+                emptyHint={
+                  schedule.length === 0
+                    ? 'Thêm lịch cho hôm nay để nhận gợi ý từ AI.'
+                    : 'Đang phân tích lịch của bạn...'
+                }
+                className="text-xs text-blue-700"
+              />
             </div>
           </div>
         )}

@@ -116,6 +116,18 @@ export function AIScheduleSuggestion({ scheduleTitle, scheduleTime, day = '', ta
               <div className="bg-blue-50 rounded-xl p-3">
                 <p className="text-sm font-medium text-gray-800 mb-1">Phương pháp</p>
                 <p className="text-sm text-gray-700 leading-relaxed">{analysis.method}</p>
+                {(analysis.methodSteps ?? []).length > 0 && (
+                  <ol className="mt-2 space-y-1.5">
+                    {(analysis.methodSteps ?? []).map((step, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-gray-600 leading-relaxed">
+                        <span className="mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-600">
+                          {i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                )}
               </div>
             )}
 

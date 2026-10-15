@@ -6,20 +6,8 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import type { BlockType, Need, PlanAnalysis, PlanOption, PlannedBlock } from '../../../shared/ai';
 import { analyzeBlock, planSchedule } from '../services/gemini';
-import { getAccountItem } from '../hooks/accountStorage';
+import { readUserProfile } from '../hooks/userProfile';
 import { blockColors, type ScheduleBlock, type ScheduleTask } from '../hooks/scheduleData';
-
-function readUserProfile(): { job?: string; health?: string; mental?: string } | undefined {
-  try {
-    const raw = getAccountItem('daytrack_user_data');
-    if (!raw) return undefined;
-    const data = JSON.parse(raw) as { job?: string; health?: string; mental?: string };
-    if (!data.job && !data.health && !data.mental) return undefined;
-    return { job: data.job, health: data.health, mental: data.mental };
-  } catch {
-    return undefined;
-  }
-}
 
 interface AiPlannerModalProps {
   isOpen: boolean;
@@ -666,6 +654,18 @@ function BlockAnalysisPanel({
           <div className="bg-blue-50 border border-blue-100 rounded-2xl p-3.5">
             <p className="text-xs font-bold text-blue-700 mb-1">Phương pháp học</p>
             <p className="text-xs text-blue-600 leading-relaxed">{block.analysis.method}</p>
+            {(block.analysis.methodSteps ?? []).length > 0 && (
+              <ol className="mt-2 space-y-1.5">
+                {(block.analysis.methodSteps ?? []).map((step, i) => (
+                  <li key={i} className="flex items-start gap-2 text-xs text-blue-700 leading-relaxed">
+                    <span className="mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-600">
+                      {i + 1}
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            )}
           </div>
         )}
 

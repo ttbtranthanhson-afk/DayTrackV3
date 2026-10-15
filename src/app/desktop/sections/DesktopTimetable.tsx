@@ -5,6 +5,7 @@ import { CreateScheduleModal } from '../../components/CreateScheduleModal';
 import { BusyHoursModal } from '../../components/BusyHoursModal';
 import { AiPlannerModal } from '../../components/AiPlannerModal';
 import { AIScheduleSuggestion } from '../../components/AIScheduleSuggestion';
+import { DailyInsightBody } from '../../components/DailyInsightBody';
 import {
   days,
   dayShorts,
@@ -365,14 +366,17 @@ export function DesktopTimetable({ onAddTasks }: DesktopTimetableProps) {
               accent={dailyInsight.loading ? 'text-blue-500 animate-spin' : 'text-blue-500'}
               className="sticky top-0"
             >
-              <p className="text-sm text-blue-800 leading-relaxed whitespace-pre-line">
-                {dailyInsight.error
-                  ? dailyInsight.error
-                  : dailyInsight.text ||
-                    (selectedSchedule.length === 0
-                      ? 'Thêm lịch cho hôm nay để nhận gợi ý từ AI.'
-                      : 'Đang phân tích lịch của bạn...')}
-              </p>
+              <DailyInsightBody
+                insight={dailyInsight.insight}
+                loading={dailyInsight.loading}
+                error={dailyInsight.error}
+                emptyHint={
+                  selectedSchedule.length === 0
+                    ? 'Thêm lịch cho hôm nay để nhận gợi ý từ AI.'
+                    : 'Đang phân tích lịch của bạn...'
+                }
+                className="text-sm text-blue-800"
+              />
             </DesktopCard>
           </div>
         </div>
